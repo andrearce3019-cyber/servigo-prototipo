@@ -1,0 +1,1094 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ServiGo · Prototipo MVP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0F172A; --sub:#475569; --muted:#5B6578; --line:#E2E8F0; --bg:#F4F6FA; --card:#FFFFFF;
+  --blue:#1D4ED8; --blue-d:#1E3A8A; --blue-s:#EAF0FF;
+  --orange:#C2410C; --orange-s:#FFF1E8;
+  --green:#15803D; --green-s:#E9F7EF;
+  --red:#B91C1C; --red-s:#FDECEC;
+  --star:#F59E0B;
+  --night:#0C2350; --xred:#C8102E; --xgreen:#0F6B3A; --gold:#F4B400;
+}
+:root{--page:#DDE3EC}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--page:#0B1220}}
+:root[data-theme="dark"]{--page:#0B1220}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--page);-webkit-font-smoothing:antialiased}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid #93B4FF;outline-offset:2px}
+.shell{min-height:100%;display:flex;justify-content:center;align-items:flex-start;padding:24px 16px}
+.phone{width:100%;max-width:400px;height:min(860px,calc(100vh - 48px));background:var(--bg);border-radius:32px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 30px 80px -30px rgba(15,23,42,.45),0 0 0 1px rgba(15,23,42,.06)}
+@media (max-width:480px){.shell{padding:0}.phone{max-width:none;height:100vh;height:100dvh;border-radius:0;box-shadow:none}}
+.top{display:flex;align-items:center;gap:6px;height:58px;padding:0 8px 0 6px;background:#fff;border-bottom:1px solid var(--line);flex-shrink:0}
+.top h1{font-size:17px;margin:0;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .sub{font-size:12px;color:var(--muted);font-weight:500}
+.iconbtn{width:44px;height:44px;border:0;background:transparent;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--ink);flex-shrink:0}
+.iconbtn:hover{background:var(--bg)}
+.content{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
+.pad{padding:16px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;align-items:center;gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}
+.h2{font-size:16px;font-weight:700;margin:0}
+.small{font-size:13px;color:var(--sub)}
+.tiny{font-size:12px;color:var(--muted)}
+.btn{min-height:48px;border:0;border-radius:14px;padding:0 18px;font-weight:700;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%}
+.btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:var(--blue-d)}
+.btn-ghost{background:#fff;color:var(--blue);border:1.5px solid #C9D6F5}
+.btn-orange{background:var(--orange);color:#fff}
+.btn-xmas{background:var(--xred);color:#fff}.btn-xmas:hover{background:#A50D26}
+.btn-disabled{background:#CBD5E1;color:#475569}
+.chip{min-height:40px;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:0 14px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:999px}
+.pill-blue{background:var(--blue-s);color:var(--blue)}
+.pill-green{background:var(--green-s);color:var(--green)}
+.pill-gray{background:#EEF1F5;color:#475569}
+.pill-orange{background:var(--orange-s);color:var(--orange)}
+.pill-red{background:#FDE8EC;color:var(--xred)}
+.avatar{border-radius:16px;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0}
+.stars{color:var(--star);letter-spacing:1px}
+.nav{display:grid;grid-template-columns:repeat(5,1fr);background:#fff;border-top:1px solid var(--line);flex-shrink:0;padding-bottom:env(safe-area-inset-bottom)}
+.nav button{border:0;background:transparent;min-height:62px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:600;color:var(--muted)}
+.nav button.on{color:var(--blue)}
+.demo{background:#FFF8DB;color:#6B4E00;font-size:11.5px;font-weight:600;text-align:center;padding:5px 10px;flex-shrink:0;position:relative;z-index:6}
+.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+.field input,.field textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:12px;background:#fff;font-size:15px}
+.field textarea{min-height:90px;resize:vertical}
+.field.err input,.field.err textarea{border-color:var(--red);background:#FFFBFB}
+.field .hint{font-size:12px;color:var(--muted);margin-top:5px}
+.field.err .hint{color:var(--red);font-weight:600}
+.errmsg{background:var(--red-s);color:var(--red);border-radius:12px;padding:10px 12px;font-size:13px;font-weight:600}
+.okmsg{background:var(--green-s);color:var(--green);border-radius:12px;padding:10px 12px;font-size:13px;font-weight:600}
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.45);display:flex;align-items:flex-end;z-index:20}
+.sheet{background:#fff;width:100%;border-radius:24px 24px 0 0;padding:22px 18px 22px}
+.toast{position:absolute;top:70px;left:16px;right:16px;background:var(--ink);color:#fff;border-radius:14px;padding:12px 14px;font-size:13.5px;font-weight:600;z-index:40;box-shadow:0 10px 30px -10px rgba(0,0,0,.5)}
+.scrollx{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.scrollx::-webkit-scrollbar{display:none}
+.bubble{max-width:80%;padding:10px 12px;border-radius:16px;font-size:14px;line-height:1.4}
+.me{align-self:flex-end;background:var(--blue);color:#fff;border-bottom-right-radius:6px}
+.them{align-self:flex-start;background:#fff;border:1px solid var(--line);border-bottom-left-radius:6px}
+.meta{font-size:11px;margin-top:4px;opacity:.85;display:flex;gap:6px;justify-content:flex-end}
+.steps{display:flex;gap:6px}
+.steps span{flex:1;height:5px;border-radius:9px;background:#D7DEE8}
+.steps span.on{background:var(--blue)}
+.opt{width:100%;text-align:left;border:1.5px solid var(--line);background:#fff;border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;min-height:56px}
+.opt.on{border-color:var(--blue);background:var(--blue-s)}
+.cat{border:1px solid var(--line);background:#fff;border-radius:16px;padding:12px 2px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;font-weight:600;min-height:86px;min-width:0}
+.cat span:last-child{text-align:center;line-height:1.15;overflow-wrap:anywhere;hyphens:auto}
+.cat .ic{width:40px;height:40px;border-radius:12px;background:var(--blue-s);color:var(--blue);display:flex;align-items:center;justify-content:center}
+.techcard{width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;display:flex;gap:12px}
+.techcard:hover{border-color:#B9C8EC}
+.dropdown{position:absolute;left:16px;right:16px;top:58px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 16px 40px -16px rgba(15,23,42,.35);z-index:10;padding:6px;max-height:360px;overflow:auto}
+.dropdown button{width:100%;text-align:left;border:0;background:transparent;border-radius:10px;padding:12px;font-size:14.5px;font-weight:600;display:flex;justify-content:space-between}
+.dropdown button:hover{background:var(--bg)}
+.dropdown button.on{color:var(--blue);background:var(--blue-s)}
+.map{position:relative;height:300px;background:#E8EEF3;overflow:hidden}
+.marker{position:absolute;transform:translate(-50%,-50%);transition:left .8s ease,top .8s ease}
+.sticky-cta{position:sticky;bottom:0;background:linear-gradient(to top,var(--bg) 70%,rgba(244,246,250,0));padding:14px 16px 16px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.4}
+.check input{width:22px;height:22px;margin:0;accent-color:var(--blue);flex-shrink:0}
+
+/* ---------- Buscador ---------- */
+.search{position:relative}
+.search input{width:100%;height:52px;border:0;border-radius:16px;padding:0 44px 0 46px;font-size:15px;background:#fff;color:var(--ink);box-shadow:0 8px 24px -14px rgba(0,0,0,.5)}
+.search input::placeholder{color:#64748B}
+.search .lead{position:absolute;left:14px;top:15px;color:var(--muted)}
+.search .clear{position:absolute;right:4px;top:4px}
+.sugg{position:absolute;left:0;right:0;top:58px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 40px -18px rgba(15,23,42,.45);z-index:15;max-height:430px;overflow:auto;padding:6px;color:var(--ink)}
+.sugg .grp{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);padding:10px 10px 4px}
+.sugg button{width:100%;border:0;background:transparent;text-align:left;border-radius:12px;padding:10px;display:flex;align-items:center;gap:10px;min-height:48px}
+.sugg button:hover,.sugg button.kb{background:var(--bg)}
+.sugg mark{background:#FFF0B3;color:inherit;border-radius:3px;padding:0 1px}
+.sugg .sic{width:34px;height:34px;border-radius:10px;background:var(--blue-s);color:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* ---------- Navidad ---------- */
+.hero{background:var(--night);color:#fff;position:relative;padding:8px 16px 18px;border-radius:0 0 28px 28px;overflow:visible}
+.hero .tiny{color:#C8D4EE}
+.garland{display:block;width:100%;height:34px;margin:0 0 2px}
+.bulb{animation:twinkle 1.4s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:1}50%{opacity:.35}}
+.snow{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:5}
+.flake{position:absolute;top:-12px;border-radius:50%;background:#fff;animation:fall linear infinite}
+.snow.soft .flake{background:#BFCDE6}
+@keyframes fall{0%{transform:translate(0,-12px)}50%{transform:translate(14px,50vh)}100%{transform:translate(-6px,105vh)}}
+.splash{flex:1;background:var(--night);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px;position:relative;overflow:hidden}
+.bounce{animation:bounce 2.4s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.script{font-family:Pacifico,cursive;font-weight:400}
+.promo{background:#fff;border:1.5px solid #F3C6CE;border-radius:20px;padding:16px;position:relative;overflow:hidden}
+.ribbon{position:absolute;right:-34px;top:14px;transform:rotate(35deg);background:var(--xred);color:#fff;font-size:11px;font-weight:800;padding:4px 40px}
+.gift{animation:wiggle 2.8s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes wiggle{0%,80%,100%{transform:rotate(0)}85%{transform:rotate(-8deg)}90%{transform:rotate(8deg)}95%{transform:rotate(-4deg)}}
+.fadein{animation:fadein .5s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ---------- Radar emergencia ---------- */
+.radar{position:relative;width:240px;height:240px;margin:4px auto 0}
+.radar .ring{position:absolute;inset:0;margin:auto;width:96px;height:96px;border-radius:50%;border:2px solid rgba(194,65,12,.55);animation:ring 2.4s ease-out infinite}
+.radar .ring:nth-child(2){animation-delay:.8s}.radar .ring:nth-child(3){animation-delay:1.6s}
+@keyframes ring{from{transform:scale(1);opacity:.9}to{transform:scale(2.5);opacity:0}}
+.radar .sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(194,65,12,.22),rgba(194,65,12,0) 70deg);animation:spin 2.6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.radar .grid{position:absolute;inset:0;border-radius:50%;border:1px dashed #F2B79A}
+.radar .grid.g2{inset:40px}.radar .grid.g3{inset:80px}
+.radar .core{position:absolute;left:50%;top:50%;width:92px;height:92px;margin:-46px 0 0 -46px;border-radius:50%;background:#fff;box-shadow:0 12px 30px -12px rgba(194,65,12,.7),inset 0 0 0 6px #FFE2D2;display:flex;align-items:center;justify-content:center}
+.radar .dot{position:absolute;transform:translate(-50%,-50%);animation:pop .4s ease both}
+@keyframes pop{from{transform:translate(-50%,-50%) scale(0)}to{transform:translate(-50%,-50%) scale(1)}}
+
+/* ---------- Llamada ---------- */
+.call{position:absolute;inset:0;background:#0B1730;color:#fff;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:56px 24px 40px;text-align:center}
+.call .ava{width:120px;height:120px;border-radius:50%;font-size:40px;font-weight:800;display:flex;align-items:center;justify-content:center;position:relative}
+.call .ava::after{content:"";position:absolute;inset:-10px;border-radius:50%;border:2px solid rgba(255,255,255,.35);animation:ring 1.8s ease-out infinite}
+.call .ctl{width:64px;height:64px;border-radius:50%;border:0;display:flex;align-items:center;justify-content:center;color:#fff;background:rgba(255,255,255,.14)}
+.call .ctl.on{background:#fff;color:#0B1730}
+.call .hang{background:#DC2626}
+@media (prefers-reduced-motion:reduce){.bulb,.flake,.bounce,.gift,.radar .ring,.radar .sweep,.call .ava::after{animation:none}.flake{display:none}}
+</style>
+</head>
+<body>
+<div class="shell"><div class="phone" id="app" aria-live="polite"></div></div>
+
+<script>
+/* ===================== DATOS DE EJEMPLO (reemplazar con datos reales: TA10) ===================== */
+const DISTRITOS=['Comas','Los Olivos','San Martín de Porres','Independencia','Carabayllo','Puente Piedra','Ancón','Santa Rosa'];
+const CATS=[
+ {k:'Gasfitería',ic:'drop'},{k:'Electricidad',ic:'bolt'},{k:'Cerrajería',ic:'key'},{k:'Carpintería',ic:'hammer'},
+ {k:'Pintura',ic:'roller'},{k:'Electrodomésticos',ic:'washer',label:'Electro&shy;domésticos'},{k:'Computadoras',ic:'pc',label:'Compu&shy;tadoras'},{k:'Albañilería',ic:'brick'},
+ {k:'Limpieza',ic:'sparkle'},{k:'Jardinería',ic:'leaf'},{k:'Gas',ic:'flame'},{k:'Aire acondicionado',ic:'snow',label:'Aire acondi&shy;cionado'},
+ {k:'Fumigación',ic:'bug'},{k:'Celulares',ic:'mobile'},{k:'Vidriería',ic:'window'},{k:'Mudanzas',ic:'truck'}];
+const QUOTES={
+ 'Gasfitería':[{c:'Mano de obra',d:'Cambio de unión y sellado de tubería',p:90},{c:'Materiales',d:'Unión PVC 1/2", cinta teflón y pegamento',p:35}],
+ 'Electricidad':[{c:'Mano de obra',d:'Revisión del tablero y cambio de llave',p:80},{c:'Materiales',d:'Llave termomagnética 2x20A',p:45}],
+ 'Cerrajería':[{c:'Mano de obra',d:'Apertura de puerta y cambio de cilindro',p:70},{c:'Materiales',d:'Cilindro de seguridad',p:55}],
+ 'Carpintería':[{c:'Mano de obra',d:'Reparación de puertas de mueble',p:60},{c:'Materiales',d:'Bisagras y tornillos',p:20}],
+ 'Pintura':[{c:'Mano de obra',d:'Pintado de habitación (2 manos)',p:300},{c:'Materiales',d:'Pintura y rodillos los pone el cliente',p:0}]
+};
+/* Tarifas referenciales de ejemplo (reemplazar con TA10) */
+const TARIFAS=[
+ {s:'Destaponar lavadero',c:'Gasfitería',min:40,max:80,mat:false,kw:'desague atoro atorado caño lavadero'},
+ {s:'Cambio de grifería',c:'Gasfitería',min:50,max:90,mat:false,kw:'caño grifo llave de agua'},
+ {s:'Reparar fuga en tubería',c:'Gasfitería',min:60,max:150,mat:false,kw:'fuga agua tubo tuberia goteo'},
+ {s:'Reparar inodoro',c:'Gasfitería',min:50,max:100,mat:false,kw:'baño wc inodoro tanque'},
+ {s:'Cambio de válvula de tanque',c:'Gasfitería',min:35,max:60,mat:true,kw:'baño tanque inodoro valvula sapito'},
+ {s:'Instalar terma eléctrica',c:'Gasfitería',min:120,max:200,mat:false,kw:'terma agua caliente ducha'},
+ {s:'Cambio de tomacorriente',c:'Electricidad',min:25,max:45,mat:true,kw:'enchufe toma corriente'},
+ {s:'Instalar luminaria',c:'Electricidad',min:35,max:70,mat:false,kw:'foco lampara luz'},
+ {s:'Instalar ventilador de techo',c:'Electricidad',min:70,max:130,mat:false,kw:'ventilador techo'},
+ {s:'Revisión de tablero eléctrico',c:'Electricidad',min:80,max:150,mat:false,kw:'corto circuito llave termica se fue la luz apagon'},
+ {s:'Instalación de luces navideñas',c:'Electricidad',min:60,max:120,mat:false,kw:'navidad luces arbol adornos fachada'},
+ {s:'Cableado de habitación',c:'Electricidad',min:150,max:300,mat:true,kw:'cable cableado instalacion electrica'},
+ {s:'Apertura de puerta',c:'Cerrajería',min:50,max:100,mat:false,kw:'llave perdida puerta trabada me quede afuera'},
+ {s:'Cambio de chapa',c:'Cerrajería',min:70,max:140,mat:true,kw:'chapa cerradura seguridad'},
+ {s:'Copia de llave de seguridad',c:'Cerrajería',min:15,max:30,mat:true,kw:'copia llave duplicado'},
+ {s:'Apertura de auto',c:'Cerrajería',min:80,max:150,mat:false,kw:'auto carro llaves adentro'},
+ {s:'Instalar cerradura digital',c:'Cerrajería',min:150,max:280,mat:false,kw:'cerradura digital huella clave'},
+ {s:'Reparar bisagras de mueble',c:'Carpintería',min:30,max:60,mat:true,kw:'mueble ropero puerta madera'},
+ {s:'Reparar cajones',c:'Carpintería',min:35,max:70,mat:true,kw:'cajon riel mueble'},
+ {s:'Ajuste de puertas',c:'Carpintería',min:40,max:80,mat:false,kw:'puerta roza no cierra'},
+ {s:'Instalar repisas',c:'Carpintería',min:40,max:90,mat:false,kw:'repisa estante pared'},
+ {s:'Armado de mueble',c:'Carpintería',min:60,max:120,mat:false,kw:'armar mueble ropero escritorio'},
+ {s:'Resane y empaste',c:'Pintura',min:60,max:120,mat:true,kw:'empaste resane pared'},
+ {s:'Pintado de rejas',c:'Pintura',min:120,max:250,mat:false,kw:'reja puerta metal anticorrosivo'},
+ {s:'Pintado de habitación',c:'Pintura',min:250,max:450,mat:false,kw:'pintar pared cuarto'},
+ {s:'Pintado de fachada',c:'Pintura',min:600,max:1200,mat:false,kw:'fachada exterior casa pintar'},
+ {s:'Reparar microondas',c:'Electrodomésticos',min:50,max:90,mat:false,kw:'microondas no calienta'},
+ {s:'Mantenimiento de cocina',c:'Electrodomésticos',min:60,max:110,mat:false,kw:'cocina hornillas horno'},
+ {s:'Mantenimiento de lavadora',c:'Electrodomésticos',min:80,max:140,mat:false,kw:'lavadora no lava no exprime'},
+ {s:'Reparar refrigeradora',c:'Electrodomésticos',min:90,max:180,mat:false,kw:'refri refrigeradora congeladora no enfria'},
+ {s:'Configurar router e internet',c:'Computadoras',min:40,max:80,mat:false,kw:'internet wifi router red'},
+ {s:'Formateo e instalación de Windows',c:'Computadoras',min:50,max:90,mat:false,kw:'formatear windows pc lenta'},
+ {s:'Mantenimiento de PC o laptop',c:'Computadoras',min:60,max:120,mat:false,kw:'pc laptop computadora lenta virus limpieza'},
+ {s:'Instalar cámaras de seguridad',c:'Computadoras',min:250,max:500,mat:false,kw:'camaras seguridad cctv vigilancia'},
+ {s:'Colocar mayólica (m²)',c:'Albañilería',min:30,max:50,mat:false,kw:'mayolica ceramica piso baño cocina'},
+ {s:'Resane de pared',c:'Albañilería',min:60,max:120,mat:true,kw:'pared rajadura tarrajeo cemento'},
+ {s:'Construir muro (m²)',c:'Albañilería',min:70,max:120,mat:false,kw:'muro pared ladrillo construir'},
+ {s:'Reparar piso',c:'Albañilería',min:100,max:250,mat:false,kw:'piso roto contrapiso'},
+ {s:'Limpieza de alfombras',c:'Limpieza',min:50,max:100,mat:true,kw:'alfombra limpieza lavado'},
+ {s:'Limpieza de colchón',c:'Limpieza',min:60,max:110,mat:true,kw:'colchon lavado limpieza acaros'},
+ {s:'Limpieza de muebles y sofá',c:'Limpieza',min:80,max:150,mat:true,kw:'sofa mueble tapiz lavado'},
+ {s:'Limpieza de tanque de agua',c:'Limpieza',min:120,max:200,mat:true,kw:'tanque cisterna agua limpieza'},
+ {s:'Limpieza profunda de casa',c:'Limpieza',min:150,max:300,mat:true,kw:'limpieza casa departamento profunda'},
+ {s:'Corte de césped',c:'Jardinería',min:40,max:80,mat:false,kw:'cesped grass jardin cortar'},
+ {s:'Poda de árboles',c:'Jardinería',min:80,max:200,mat:false,kw:'arbol poda ramas'},
+ {s:'Diseño de jardín',c:'Jardinería',min:200,max:500,mat:false,kw:'jardin plantas diseño'},
+ {s:'Cambio de válvula de balón',c:'Gas',min:25,max:45,mat:true,kw:'balon gas valvula regulador'},
+ {s:'Revisión de fuga de gas',c:'Gas',min:50,max:90,mat:false,kw:'fuga gas olor'},
+ {s:'Instalar cocina a gas',c:'Gas',min:60,max:100,mat:false,kw:'cocina gas instalar'},
+ {s:'Instalar punto de gas natural',c:'Gas',min:80,max:150,mat:false,kw:'gas natural tuberia punto'},
+ {s:'Mantenimiento de aire acondicionado',c:'Aire acondicionado',min:100,max:180,mat:false,kw:'aire acondicionado split limpieza calor'},
+ {s:'Recarga de gas refrigerante',c:'Aire acondicionado',min:150,max:250,mat:true,kw:'aire no enfria recarga gas'},
+ {s:'Instalación de aire acondicionado',c:'Aire acondicionado',min:250,max:450,mat:false,kw:'instalar aire split verano'},
+ {s:'Fumigación de casa',c:'Fumigación',min:120,max:250,mat:true,kw:'cucarachas insectos fumigar casa'},
+ {s:'Control de roedores',c:'Fumigación',min:150,max:280,mat:true,kw:'ratas ratones roedores'},
+ {s:'Fumigación de negocio',c:'Fumigación',min:200,max:400,mat:true,kw:'restaurante bodega negocio fumigar'},
+ {s:'Reparar pin de carga',c:'Celulares',min:40,max:90,mat:true,kw:'celular no carga pin puerto'},
+ {s:'Cambio de batería',c:'Celulares',min:60,max:150,mat:true,kw:'bateria celular se descarga'},
+ {s:'Cambio de pantalla',c:'Celulares',min:120,max:350,mat:true,kw:'pantalla rota celular display'},
+ {s:'Instalar espejo',c:'Vidriería',min:50,max:120,mat:false,kw:'espejo baño pared'},
+ {s:'Cambio de vidrio de ventana',c:'Vidriería',min:60,max:150,mat:true,kw:'vidrio roto ventana luna'},
+ {s:'Mampara de baño',c:'Vidriería',min:350,max:700,mat:true,kw:'mampara ducha baño vidrio templado'},
+ {s:'Flete por hora',c:'Mudanzas',min:60,max:90,mat:false,kw:'flete camion carga'},
+ {s:'Mudanza pequeña',c:'Mudanzas',min:150,max:300,mat:false,kw:'mudanza cuarto pocos muebles'},
+ {s:'Mudanza de casa',c:'Mudanzas',min:400,max:900,mat:false,kw:'mudanza casa departamento'}
+];
+/* Técnicos de ejemplo: [nombre, categoría, años, calificación, reseñas, km] */
+const TECH_ROWS=[
+ ['Jorge Quispe Ramos','Gasfitería',12,4.8,126,1.2],['Raúl Mendoza Chávez','Gasfitería',9,4.7,88,2.9],['Carmen Vílchez Soto','Gasfitería',6,4.5,41,4.4],['Teodoro Apaza Lima','Gasfitería',20,4.9,301,6.3],
+ ['Kevin Ramírez Ochoa','Electricidad',5,4.6,37,1.8],['Rosa Huamán Torres','Electricidad',9,4.9,98,2.4],['Miguel Salazar Ríos','Electricidad',15,4.6,210,4.6],['Hugo Flores Pinedo','Electricidad',11,4.7,140,7.1],
+ ['Wilmer Condori Ríos','Cerrajería',8,4.8,72,1.6],['Luis Paredes Cano','Cerrajería',7,4.7,64,3.1],['Susana Llanos Vera','Cerrajería',10,4.6,55,5.5],
+ ['Pedro Ccori Mamani','Carpintería',10,4.8,77,3.8],['Julio Cárdenas Arce','Carpintería',18,4.9,190,6.0],
+ ['Marco Tello Gutiérrez','Pintura',6,4.6,44,2.2],['Ana Rojas Flores','Pintura',8,4.7,53,5.9],
+ ['Víctor Inga Salas','Electrodomésticos',14,4.8,163,2.7],['Lucía Paz Ventura','Electrodomésticos',7,4.6,49,4.9],
+ ['Diego Morales Cruz','Computadoras',6,4.9,112,1.4],['Fiorella Campos Ruiz','Computadoras',4,4.7,58,3.6],
+ ['Néstor Huaylla Rojas','Albañilería',22,4.7,134,4.1],['Fredy Sánchez Arias','Albañilería',9,4.5,40,6.8],
+ ['Milagros Ortiz Peña','Limpieza',5,4.9,152,2.0],['Yesenia Castro León','Limpieza',3,4.7,61,3.3],
+ ['Óscar Tapia Medina','Jardinería',12,4.8,70,4.7],
+ ['Ernesto Villanueva Soto','Gas',16,4.8,118,2.6],['Patricia Rengifo Díaz','Gas',7,4.6,39,5.2],
+ ['Renato Aguilar Bravo','Aire acondicionado',8,4.7,66,3.9],
+ ['Gloria Espinoza Rivas','Fumigación',11,4.8,95,4.3],
+ ['Brayan Huerta Silva','Celulares',5,4.6,208,0.9],['Daniela Quispe Loayza','Celulares',6,4.8,131,2.8],
+ ['Alberto Navarro Gil','Vidriería',13,4.7,57,3.5],
+ ['Javier Ponce Ugarte','Mudanzas',9,4.6,83,5.0]
+];
+const PALETTE=[['#DBEAFE','#1E3A8A'],['#FCE7F3','#831843'],['#DCFCE7','#14532D'],['#FEF3C7','#78350F'],['#E0E7FF','#312E81'],['#FFEDD5','#7C2D12'],['#CCFBF1','#134E4A'],['#F3E8FF','#581C87']];
+const REVIEWERS=['María F.','Carlos M.','Luz S.','Kely M.','Airton M.','Marcia S.','Aynnet R.','Yanela P.','José S.','Gabriela A.','Felipe R.','Valeria T.','Janzi G.','Erick G.','Andrea V.','Mariana T.','Jhonny V.','Rosmari S.','Daniela R.','Miguel C.','Paola D.','Rosa H.'];
+const REVTXT=['Llegó a la hora acordada y dejó todo limpio.','Me explicó qué hizo y cobró lo mismo que aceptamos en la app.','Muy amable y ordenado, lo volvería a contratar.','Resolvió el problema rápido, se nota la experiencia.','Avisó por el chat cuando estaba en camino, muy puntual.','Buen trabajo y precio justo.','Me dio consejos para que no vuelva a pasar.','Trabajo prolijo, todo quedó funcionando.','Respondió al toque y vino el mismo día.'];
+const REVDATES=['21 oct 2026','18 oct 2026','14 oct 2026','09 oct 2026','03 oct 2026','27 sep 2026','20 sep 2026'];
+const TECHS=TECH_ROWS.map((r,i)=>{
+ const [name,cat,years,rating,reviews,kmv]=r,svc=TARIFAS.filter(t=>t.c===cat),pal=PALETTE[i%PALETTE.length];
+ const zones=[DISTRITOS[i%6],DISTRITOS[(i+2)%6],DISTRITOS[(i+3)%6]].filter((v,j,a)=>a.indexOf(v)===j);
+ if(i%3===0)zones.length=2;
+ const mid=(svc[0].min+svc[0].max)/2;
+ return {id:'t'+(i+1),name,ini:name.split(' ').slice(0,2).map(w=>w[0]).join(''),cat,years,rating,reviews,jobs:Math.round(reviews*1.7),zones,km:kmv,
+  from:Math.min(...svc.map(s=>s.min)),bg:pal[0],fg:pal[1],
+  offer:Math.round((mid*1.4+(i%3)*10-10)/5)*5,eta:Math.round(kmv*3.2+6),
+  revs:[0,1,2].map(j=>({who:REVIEWERS[(i*3+j)%REVIEWERS.length],s:(i+j)%4===3?4:5,d:REVDATES[(i+j*2)%REVDATES.length],t:REVTXT[(i*2+j)%REVTXT.length]})),
+  base:svc.slice(0,3).map(s=>[s.s,`S/ ${s.min} – ${s.max}`])};
+});
+const SLOTS=[['09:00','11:00','15:00','17:00'],['08:00','10:00','14:00'],['10:00','12:00','16:00','18:00'],['09:00','13:00'],['11:00','15:00','19:00']];
+const EMERG=[{k:'agua',label:'Fuga de agua',cat:'Gasfitería',ic:'dropF',col:'#2563EB'},{k:'luz',label:'Falla eléctrica',cat:'Electricidad',ic:'boltF',col:'#D97706'},{k:'llave',label:'Cerrajería',cat:'Cerrajería',ic:'keyF',col:'#0F766E'}];
+const ROUTE=[[14,86],[33,70],[52,62],[70,38],[83,24]];
+const RADAR_POS=[[18,26],[80,22],[78,78],[22,76]];
+
+/* ===================== ÍCONOS ===================== */
+const P={
+ back:'<path d="m15 18-6-6 6-6"/>',
+ drop:'<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',
+ bolt:'<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>',
+ key:'<circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M15 8l2 2"/>',
+ hammer:'<path d="M15 4l5 5-3 3-5-5zM12 7l-9 9 3 3 9-9"/>',
+ roller:'<rect x="3" y="3" width="15" height="6" rx="1.5"/><path d="M18 6h3v5h-9v3"/><rect x="10" y="14" width="4" height="7" rx="1"/>',
+ washer:'<rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="13" r="5"/><path d="M8 6h.01M11 6h.01"/>',
+ pc:'<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>',
+ brick:'<rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 12h18M9 5v7M15 12v7"/>',
+ home:'<path d="M3 11 12 3l9 8"/><path d="M5 10v10h14V10"/>',
+ users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/>',
+ user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+ tag:'<path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z"/><circle cx="8" cy="8" r="1.5"/>',
+ book:'<path d="M4 4h11a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3z"/><path d="M4 17a3 3 0 0 1 3-3h11"/>',
+ pin:'<path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/>',
+ nav:'<path d="m3 11 18-8-8 18-2-8z"/>',
+ chev:'<path d="m6 9 6 6 6-6"/>',
+ right:'<path d="m9 6 6 6-6 6"/>',
+ search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+ lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+ send:'<path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/>',
+ cam:'<path d="M4 7h3l2-3h6l2 3h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="4"/>',
+ video:'<rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-3v10l-6-3"/>',
+ alert:'<path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17h.01"/>',
+ shield:'<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ x:'<path d="M6 6l12 12M18 6 6 18"/>',
+ ok:'<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',
+ file:'<path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5"/>',
+ sort:'<path d="M7 4v16M3 16l4 4 4-4M17 20V4M13 8l4-4 4 4"/>',
+ phone:'<path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z"/>',
+ mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
+ micoff:'<path d="M3 3l18 18M9 9v2a3 3 0 0 0 5 2.2M15 9.3V6a3 3 0 0 0-5.7-1.3M5 11a7 7 0 0 0 11 5.7M19 11a7 7 0 0 1-.6 2.8M12 18v3"/>',
+ speaker:'<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',
+ gift:'<rect x="3" y="9" width="18" height="12" rx="1.5"/><path d="M3 13h18M12 9v12"/><path d="M12 9c-2-4-6-4-6-1.5S10 9 12 9zM12 9c2-4 6-4 6-1.5S14 9 12 9z"/>',
+ sparkle:'<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
+ leaf:'<path d="M5 19c0-9 6-14 15-14 0 9-5 15-14 15"/><path d="M5 19 13 11"/>',
+ flame:'<path d="M12 3c1 4 6 6 6 11a6 6 0 0 1-12 0c0-3 2-4 2-7 2 1 3 3 3 5 1-2 1-6 1-9z"/>',
+ snow:'<path d="M12 2v20M4 6.5l16 11M20 6.5l-16 11"/><path d="m9 4 3 2 3-2M9 20l3-2 3 2"/>',
+ bug:'<rect x="8" y="7" width="8" height="13" rx="4"/><path d="M12 7V4M9 4l1.5 3M15 4l-1.5 3M4 11h4M16 11h4M4 17h4M16 17h4"/>',
+ mobile:'<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+ window:'<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M12 3v18M4 12h16"/>',
+ truck:'<path d="M2 6h11v10H2zM13 9h4l4 4v3h-8"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>',
+ logout:'<path d="M9 21H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4M16 17l5-5-5-5M21 12H9"/>'
+};
+const ic=(n,s=22,w=2)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
+/* Íconos rellenos para emergencias (reemplazan al rayito simple) */
+const FILLED={
+ dropF:(c,s=46)=>`<svg width="${s}" height="${s}" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4C24 4 10 19.5 10 29a14 14 0 0 0 28 0C38 19.5 24 4 24 4z" fill="${c}"/><path d="M17 30a7 7 0 0 0 7 7" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" opacity=".85"/><circle cx="34" cy="12" r="3" fill="${c}" opacity=".45"/></svg>`,
+ boltF:(c,s=46)=>`<svg width="${s}" height="${s}" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="${c}" opacity=".16"/><path d="M27 4 11 27h11l-3 17 18-25H25.5z" fill="${c}" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/><path d="M38 9l3-3M40 16h4M8 34l-3 3M4 30h4" stroke="${c}" stroke-width="2.6" stroke-linecap="round"/></svg>`,
+ keyF:(c,s=46)=>`<svg width="${s}" height="${s}" viewBox="0 0 48 48" aria-hidden="true"><circle cx="16" cy="30" r="11" fill="${c}"/><circle cx="16" cy="30" r="4.5" fill="#fff"/><path d="M23 23 40 6M33 13l5 5M28 18l4 4" stroke="${c}" stroke-width="5" stroke-linecap="round"/></svg>`
+};
+const verified=(s=16)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" role="img" aria-label="Verificado"><circle cx="12" cy="12" r="11" fill="#1D4ED8"/><path d="m7.5 12.5 3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+/* Logo con gorro navideño */
+const logo=(s=34)=>`<svg width="${s}" height="${s}" viewBox="0 0 44 44" aria-hidden="true">
+ <rect x="2" y="8" width="34" height="34" rx="10" fill="#1D4ED8"/>
+ <path d="M10 26l5 5 10-11" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+ <path d="M18 11 C22 2 34 0 40 6 L36 13 Z" fill="#C8102E"/>
+ <rect x="16" y="9" width="22" height="6" rx="3" fill="#fff"/>
+ <circle cx="40" cy="6" r="3.4" fill="#fff"/></svg>`;
+const garland=()=>{const cols=['#E63946','#F4B400','#2AB673','#4C8DFF'];let b='';
+ for(let i=0;i<13;i++){const x=10+i*30,y=10+Math.sin(i*0.95)*5+8;b+=`<line x1="${x}" y1="${y-6}" x2="${x}" y2="${y-1}" stroke="#2D3E62" stroke-width="2"/><ellipse class="bulb" style="animation-delay:${(i%4)*0.35}s" cx="${x}" cy="${y+5}" rx="5" ry="7" fill="${cols[i%4]}"/>`}
+ return `<svg class="garland" viewBox="0 0 380 34" preserveAspectRatio="none" aria-hidden="true"><path d="M0 8 Q 50 22 100 10 T 200 12 T 300 10 T 380 14" fill="none" stroke="#2D3E62" stroke-width="2"/>${b}</svg>`};
+const snow=(n=26,soft=false)=>{let f='';for(let i=0;i<n;i++){const s=(2+Math.random()*4).toFixed(1);
+ f+=`<span class="flake" style="left:${(Math.random()*100).toFixed(1)}%;width:${s}px;height:${s}px;opacity:${(.5+Math.random()*.5).toFixed(2)};animation-duration:${(7+Math.random()*8).toFixed(1)}s;animation-delay:-${(Math.random()*12).toFixed(1)}s"></span>`}
+ return `<div class="snow ${soft?'soft':''}" aria-hidden="true">${f}</div>`};
+
+/* ===================== UTILIDADES ===================== */
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=s=>String(s).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const soles=n=>'S/ '+n.toFixed(2);
+const km=n=>n.toFixed(1).replace('.',',')+' km';
+const stars=n=>'★'.repeat(Math.round(n))+'☆'.repeat(5-Math.round(n));
+const hora=()=>new Date().toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
+const fecha=(add=0)=>{const d=new Date();d.setDate(d.getDate()+add);return d.toLocaleDateString('es-PE',{day:'numeric',month:'short',year:'numeric'})};
+const dias=()=>Array.from({length:7},(_,i)=>{const d=new Date();d.setDate(d.getDate()+i);
+  return {wd:i===0?'Hoy':i===1?'Mañana':d.toLocaleDateString('es-PE',{weekday:'short'}).replace('.',''),num:d.getDate()}});
+const tech=()=>TECHS.find(t=>t.id===S.techId)||TECHS[0];
+const quoteOf=t=>(S.serv&&TARIFAS.some(x=>x.s===S.serv&&x.c===t.cat)?null:QUOTES[t.cat])||(()=>{const v=TARIFAS.find(x=>x.s===S.serv&&x.c===t.cat)||TARIFAS.find(x=>x.c===t.cat);const r5=n=>Math.round(n/5)*5;
+ return [{c:'Mano de obra',d:v.s,p:r5(v.max*0.7)},{c:'Materiales',d:v.mat?'Materiales y repuestos básicos':'No incluye materiales',p:v.mat?r5(v.max*0.3):0}]})();
+const total=t=>quoteOf(t).reduce((a,b)=>a+b.p,0);
+const first=()=>(S.user.nombre.trim().split(/\s+/)[0]||'vecino');
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1).toLowerCase();
+const catIc=k=>(CATS.find(c=>c.k===k)||CATS[0]).ic;
+const initials=n=>n.trim().split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'TU';
+const maskDni=d=>d?('••••'+d.slice(-4)):'—';
+const fmtTel=t=>t?t.replace(/(\d{3})(\d{3})(\d{0,3})/,'$1 $2 $3').trim():'—';
+
+/* ===================== ESTADO ===================== */
+const S={serv:null,screen:'splash',catsAll:false,openCats:['Gasfitería'],user:{nombre:'',dni:'',tel:''},regErr:[],regTerms:false,
+ district:'Todos',cat:'Todas',geo:false,geoAsked:false,distOpen:false,locModal:false,
+ techId:'t1',day:0,slot:null,msgs:[],chatTech:null,replied:false,attachErr:'',
+ garantia:false,quoteErr:'',accepted:false,when:'asap',prog:0,emergency:false,price:0,
+ stars:0,comment:'',rateErr:'',sortAsc:false,
+ claim:{nombre:'',dni:'',email:'',servicio:'',tipo:'Reclamo',detalle:'',pedido:''},claimMissing:[],claimCode:'',
+ wStep:1,wIssue:null,wDesc:'',wPhoto:false,wCode:'',
+ emStep:1,emType:null,emMedia:[],emErr:'',emNote:'',offers:[],emPick:null,emGar:false,emGarErr:'',
+ call:null,callSec:0,muted:false,spk:false,toast:''};
+const EMPTY_CLAIM=()=>({nombre:S.user.nombre,dni:S.user.dni,email:'',servicio:'',tipo:'Reclamo',detalle:'',pedido:''});
+let toastT,offerT=[],callT;
+function toast(m){S.toast=m;render();clearTimeout(toastT);toastT=setTimeout(()=>{S.toast='';render()},2600)}
+function go(screen,extra){Object.assign(S,extra||{},{screen,distOpen:false});render();const c=document.querySelector('.content');if(c&&screen!=='chat')c.scrollTop=0}
+const PARENT={list:'home',profile:'list',rates:'home',chat:'profile',quote:'chat',track:'quote',rate:'track',done:'home',warranty:'done',claim:'home',emergency:'home',me:'home',register:'splash'};
+function back(){
+ if(S.screen==='emergency'){if(S.emStep===4){S.emStep=3;return render()}if(S.emStep===2){S.emStep=1;return render()}if(S.emStep===3){offerT.forEach(clearTimeout);S.emStep=2;S.offers=[];return render()}}
+ if(S.screen==='warranty'&&S.wStep>1&&S.wStep<4){S.wStep--;return render()}
+ if(S.screen==='track'&&S.emergency){S.emStep=4;return go('emergency')}
+ if(S.screen==='claim'&&S.claimCode){S.claimCode='';S.claim=EMPTY_CLAIM()}
+ go(PARENT[S.screen]||'home');
+}
+
+/* ===================== ONBOARDING ===================== */
+function splash(){
+ return `<div class="splash">${snow(40)}
+  <div style="position:absolute;top:0;left:0;right:0">${garland()}</div>
+  <div class="bounce" style="position:relative;z-index:6">${logo(112)}</div>
+  <div style="font-size:38px;font-weight:800;letter-spacing:-1px;margin-top:14px;position:relative;z-index:6">ServiGo</div>
+  <div class="script" style="font-size:26px;color:#FFD36B;margin-top:2px;position:relative;z-index:6">¡Feliz Navidad!</div>
+  <div style="color:#C8D4EE;font-size:15px;margin-top:14px;max-width:290px;line-height:1.45;position:relative;z-index:6">Técnicos verificados en Lima Norte para que esta Navidad tu casa y tu negocio estén listos, sin sorpresas en el precio.</div>
+  <div style="width:100%;margin-top:34px;position:relative;z-index:6" class="stack">
+   <button class="btn btn-xmas" data-a="go" data-s="register">Comenzar</button>
+   <div style="font-size:12px;color:#9FB0D3">Campaña Navideña 2026</div>
+  </div></div>`;
+}
+function register(){
+ const E=k=>S.regErr.includes(k)?'err':'';
+ return `<div class="pad stack" style="gap:14px">
+  <div class="row" style="gap:10px;margin-top:4px">${logo(40)}<div><div style="font-weight:800;font-size:20px">Crea tu cuenta</div><div class="tiny">Solo te tomará un minuto</div></div></div>
+  <div class="card row" style="align-items:flex-start;background:var(--blue-s);border-color:#CBD8F7">${ic('shield',22)}<div class="small" style="color:#1E3A8A">Pedimos tus datos para que los técnicos sepan a quién atienden. Los técnicos también están verificados.</div></div>
+  <div class="field ${E('nombre')}"><label for="r_nombre">Nombres y apellidos</label><input id="r_nombre" data-r="nombre" autocomplete="name" placeholder="Ej.: Pedro López Ramírez" value="${esc(S.user.nombre)}"><div class="hint">${S.regErr.includes('nombre')?'Escribe tu nombre y al menos un apellido.':'Como aparece en tu DNI'}</div></div>
+  <div class="field ${E('dni')}"><label for="r_dni">DNI</label><input id="r_dni" data-r="dni" inputmode="numeric" maxlength="8" placeholder="8 dígitos" value="${esc(S.user.dni)}"><div class="hint">${S.regErr.includes('dni')?'El DNI debe tener exactamente 8 números.':'Solo números, 8 dígitos'}</div></div>
+  <div class="field ${E('tel')}"><label for="r_tel">Celular</label><input id="r_tel" data-r="tel" type="tel" inputmode="numeric" maxlength="9" placeholder="9XX XXX XXX" value="${esc(S.user.tel)}"><div class="hint">${S.regErr.includes('tel')?'El celular debe tener 9 dígitos y empezar con 9.':'Te avisaremos por aquí cuando el técnico esté en camino'}</div></div>
+  <label class="check ${S.regErr.includes('terms')?'errmsg':''}"><input type="checkbox" id="r_terms" ${S.regTerms?'checked':''}><span>Acepto los términos de uso y el tratamiento de mis datos personales (Ley N.° 29733).</span></label>
+  <button class="btn btn-primary" data-a="register">Crear mi cuenta</button>
+ </div>`;
+}
+function welcome(){
+ const pillars=[['shield','Técnicos verificados','DNI y antecedentes revisados antes de publicarse'],['tag','Precios claros','Tarifas referenciales y cotización detallada'],['lock','Precio bloqueado','No te cobran nada que no hayas aceptado'],['alert','Emergencias','Los técnicos cercanos te envían su precio']];
+ return `<div style="background:var(--night);color:#fff;padding:0 16px 26px;position:relative;border-radius:0 0 28px 28px">${snow(22)}
+   ${garland()}
+   <div class="fadein" style="text-align:center;position:relative;z-index:6;padding-top:6px">
+    <div class="bounce" style="display:inline-block">${logo(76)}</div>
+    <div class="script" style="font-size:24px;color:#FFD36B;margin-top:6px">¡Bienvenido!</div>
+    <div style="font-size:24px;font-weight:800;letter-spacing:-.5px">${esc(cap(first()))}, ya eres parte de ServiGo</div>
+   </div></div>
+  <div class="pad stack" style="gap:14px">
+   <div class="card fadein" style="animation-delay:.1s">
+    <div class="row"><div class="avatar" style="width:52px;height:52px;background:var(--blue-s);color:var(--blue);font-size:18px">${esc(initials(S.user.nombre))}</div>
+     <div><b style="font-size:16px">${esc(S.user.nombre)}</b><div class="tiny">DNI ${maskDni(S.user.dni)} · Cel. ${fmtTel(S.user.tel)}</div></div></div>
+   </div>
+   <div class="card fadein" style="animation-delay:.2s">
+    <div class="row" style="gap:8px">${logo(28)}<b style="font-size:16px">¿Qué es ServiGo?</b></div>
+    <div class="small" style="margin-top:8px;line-height:1.5">Una plataforma que conecta a los hogares y negocios de Lima Norte con técnicos verificados: gasfiteros, electricistas, cerrajeros y más. Compara perfiles, reseñas reales y precios antes de contratar.</div>
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px">
+     ${pillars.map(p=>`<div style="background:var(--bg);border-radius:14px;padding:12px"><div style="color:var(--blue)">${ic(p[0],22)}</div><b style="font-size:13.5px;display:block;margin-top:6px">${p[1]}</b><div class="tiny" style="margin-top:2px">${p[2]}</div></div>`).join('')}
+    </div>
+   </div>
+   <div class="card fadein" style="animation-delay:.3s">
+    <div class="tiny" style="font-weight:800;letter-spacing:.5px">NUESTRA MISIÓN</div>
+    <div class="small" style="margin-top:4px;line-height:1.5">Facilitar la contratación de técnicos independientes para que encuentres profesionales verificados de forma rápida, segura y transparente.</div>
+   </div>
+   <button class="btn btn-xmas" data-a="go" data-s="home">${ic('gift',20)} Empezar</button>
+  </div>`;
+}
+
+/* ===================== PANTALLAS ===================== */
+const TITLES={list:'Técnicos verificados',profile:'Perfil del técnico',rates:'Tabla de tarifas',quote:'Cotización',track:'Seguimiento en vivo',rate:'Califica el servicio',done:'Servicio completado',warranty:'Garantía ServiGo',claim:'Libro de reclamaciones',emergency:'Solicitud de emergencia',me:'Mi perfil',register:'Registro'};
+
+function header(){
+ if(['home','splash','welcome'].includes(S.screen))return '';
+ let title=TITLES[S.screen]||'',sub='',right='';
+ if(S.screen==='chat'){const t=tech();title=t.name;sub='En línea · responde en ~5 min';right=`<button class="iconbtn" data-a="call" data-id="${t.id}" aria-label="Llamar a ${t.name}" style="background:var(--green-s);color:var(--green)">${ic('phone',20)}</button>`}
+ return `<div class="top"><button class="iconbtn" data-a="back" aria-label="Volver">${ic('back',24)}</button>
+  <div style="min-width:0;flex:1"><h1>${esc(title)}</h1>${sub?`<div class="sub">${sub}</div>`:''}</div>${right}</div>`;
+}
+
+function home(){
+ const near=TECHS.filter(t=>t.km<=5).sort((a,b)=>a.km-b.km).slice(0,3);
+ return `<div class="hero">${snow(18)}
+   ${garland()}
+   <div class="row" style="justify-content:space-between;position:relative;z-index:6">
+    <div class="row" style="gap:8px">${logo(38)}<div><div style="font-weight:800;font-size:19px;letter-spacing:-.3px">ServiGo</div><div class="tiny">Técnicos verificados en Lima Norte</div></div></div>
+    <button class="chip" data-a="openDistrict" aria-label="Cambiar distrito" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25);color:#fff">${ic('pin',16)} ${S.district==='Todos'?'Comas':esc(S.district)}</button>
+   </div>
+   <div style="position:relative;z-index:6;margin:16px 0 12px">
+    <div class="script" style="font-size:18px;color:#FFD36B">Feliz Navidad,</div>
+    <div style="font-size:24px;font-weight:800;letter-spacing:-.4px">${esc(cap(first()))}</div>
+   </div>
+   <div class="search" style="z-index:16">
+    <span class="lead">${ic('search',20)}</span>
+    <input id="q" type="text" enterkeyhint="search" autocomplete="off" placeholder="¿Qué necesitas arreglar hoy?" aria-label="Buscar servicio, técnico o problema" aria-controls="sugg" aria-autocomplete="list">
+    <button class="iconbtn clear" id="qclear" data-a="qclear" aria-label="Borrar búsqueda" style="display:none;color:var(--muted)">${ic('x',18)}</button>
+    <div id="sugg" class="sugg" role="listbox" style="display:none"></div>
+   </div>
+  </div>
+  <div class="pad stack" style="gap:16px">
+  <div class="card" style="background:var(--orange-s);border-color:#F8C9AE">
+   <div class="row" style="align-items:flex-start;gap:12px">
+    <div style="width:48px;height:48px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0">${FILLED.boltF('#C2410C',32)}</div>
+    <div><div class="h2" style="color:#7C2D12">¿Tienes una emergencia?</div>
+    <div class="small" style="color:#7C2D12;margin-top:2px">Fuga de agua, falla eléctrica o cerrajería. Los técnicos cercanos te envían su precio y tú eliges.</div></div>
+   </div>
+   <button class="btn btn-orange" style="margin-top:12px" data-a="startEmergency">Pedir ayuda urgente</button>
+  </div>
+  <div class="promo">
+   <div class="ribbon">NAVIDAD</div>
+   <div class="row" style="align-items:flex-start;gap:12px">
+    <div class="gift" style="width:52px;height:52px;border-radius:16px;background:#FDE8EC;color:var(--xred);display:flex;align-items:center;justify-content:center;flex-shrink:0">${ic('gift',28)}</div>
+    <div style="padding-right:36px"><div class="h2" style="color:var(--xred)">Navidad sin averías</div>
+    <div class="small" style="margin-top:2px">Instalación de luces navideñas, revisión de tablero y gasfitería antes de la cena familiar.</div>
+    <div style="margin-top:6px"><span class="pill pill-green">Luces navideñas desde S/ 60</span></div></div>
+   </div>
+   <button class="btn btn-xmas" style="margin-top:12px" data-a="xmas">Ver servicios navideños</button>
+  </div>
+  <div class="row" style="justify-content:space-between"><div class="h2">Categorías</div><button class="tiny" data-a="go" data-s="rates" style="border:0;background:none;color:var(--blue);font-weight:700;min-height:44px">Ver tarifas</button></div>
+  <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+   ${(S.catsAll?CATS:CATS.slice(0,7)).map(c=>`<button class="cat" data-a="cat" data-k="${c.k}"><span class="ic">${ic(c.ic,22)}</span><span>${c.label||c.k}</span></button>`).join('')}
+   ${S.catsAll?'':`<button class="cat" data-a="catsToggle" aria-expanded="false"><span class="ic" style="background:#FDE8EC;color:var(--xred)">${ic('plus',22)}</span><span>Ver las ${CATS.length}</span></button>`}
+  </div>
+  ${S.catsAll?`<button class="tiny" data-a="catsToggle" aria-expanded="true" style="border:0;background:none;color:var(--blue);font-weight:700;min-height:44px;align-self:center;margin-top:-8px">Ver menos categorías</button>`:''}
+  <div class="row" style="justify-content:space-between"><div class="h2">Cerca de ti</div><button class="tiny" data-a="go" data-s="list" style="border:0;background:none;color:var(--blue);font-weight:700;min-height:44px">Ver todos</button></div>
+  <div class="stack" style="gap:10px">${near.map(techCard).join('')}</div>
+  <div class="card row" style="background:var(--blue-s);border-color:#CBD8F7;align-items:flex-start">
+   ${verified(22)}<div class="small" style="color:#1E3A8A"><b>Todos los técnicos están verificados.</b> Validamos su DNI y certificado de antecedentes antes de publicarlos.</div>
+  </div>
+ </div>`;
+}
+
+/* ---------- Autocompletado ---------- */
+function hl(text,q){const n=norm(text),i=q?n.indexOf(q):-1;if(i<0)return esc(text);return esc(text.slice(0,i))+'<mark>'+esc(text.slice(i,i+q.length))+'</mark>'+esc(text.slice(i+q.length))}
+function suggest(raw){
+ const q=norm(raw.trim());const box=document.getElementById('sugg');const clr=document.getElementById('qclear');
+ if(!box)return; clr.style.display=raw?'flex':'none';
+ if(q.length<1){box.style.display='none';box.innerHTML='';return}
+ const words=q.split(/\s+/).filter(Boolean);
+ const match=str=>words.every(w=>norm(str).includes(w));
+ const serv=TARIFAS.filter(t=>match(t.s+' '+t.c+' '+t.kw)).slice(0,5);
+ const cats=CATS.filter(c=>match(c.k)||serv.some(s=>s.c===c.k)).slice(0,3);
+ const techs=TECHS.filter(t=>match(t.name+' '+t.cat)).slice(0,3);
+ let h='';
+ if(serv.length)h+=`<div class="grp">Servicios y tarifas</div>`+serv.map(s=>`<button role="option" data-a="pickServ" data-s="${esc(s.s)}"><span class="sic">${ic(catIc(s.c),18)}</span><span style="flex:1;min-width:0"><b style="font-size:14px">${hl(s.s,words[0])}</b><span class="tiny" style="display:block">${s.c} · Materiales: ${s.mat?'Sí':'No'}</span></span><b style="font-size:13.5px;white-space:nowrap">S/ ${s.min}–${s.max}</b></button>`).join('');
+ if(cats.length)h+=`<div class="grp">Categorías</div>`+cats.map(c=>`<button role="option" data-a="cat" data-k="${c.k}"><span class="sic">${ic(c.ic,18)}</span><span style="flex:1"><b style="font-size:14px">${hl(c.k,words[0])}</b><span class="tiny" style="display:block">${TECHS.filter(t=>t.cat===c.k).length} técnicos verificados</span></span>${ic('right',18)}</button>`).join('');
+ if(techs.length)h+=`<div class="grp">Técnicos</div>`+techs.map(t=>`<button role="option" data-a="profile" data-id="${t.id}"><span class="avatar" style="width:34px;height:34px;border-radius:10px;background:${t.bg};color:${t.fg};font-size:12px">${t.ini}</span><span style="flex:1;min-width:0"><b style="font-size:14px">${hl(t.name,words[0])}</b> ${verified(13)}<span class="tiny" style="display:block">${t.cat} · ★ ${String(t.rating).replace('.',',')}</span></span></button>`).join('');
+ if(!h)h=`<div style="padding:18px 12px;text-align:center"><b style="font-size:14px">Sin resultados para “${esc(raw.trim())}”</b><div class="tiny" style="margin-top:4px">Prueba con “fuga”, “luz”, “llave” o “pintar”.</div></div>`;
+ else h+=`<button data-a="searchAll" style="justify-content:center;color:var(--blue);font-weight:700;font-size:14px">Ver todos los técnicos</button>`;
+ box.innerHTML=h;box.style.display='block';
+}
+
+function techCard(t){
+ return `<button class="techcard" data-a="profile" data-id="${t.id}">
+  <div class="avatar" style="width:54px;height:54px;background:${t.bg};color:${t.fg};font-size:18px">${t.ini}</div>
+  <div style="flex:1;min-width:0">
+   <div class="row" style="gap:6px"><b style="font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.name}</b>${verified(16)}</div>
+   <div class="small">${t.cat} · ${t.years} años de experiencia</div>
+   <div class="row" style="gap:8px;margin-top:6px;flex-wrap:wrap">
+    <span style="font-size:13px;font-weight:700"><span class="stars">★</span> ${t.rating.toString().replace('.',',')} <span class="tiny">(${t.reviews})</span></span>
+    ${S.geo?`<span class="pill pill-blue">${ic('nav',12)} a ${km(t.km)}</span>`:`<span class="tiny">${t.zones.slice(0,2).join(', ')}</span>`}
+    <span class="pill pill-gray">Desde S/ ${t.from}</span>
+   </div>
+  </div></button>`;
+}
+
+function list(){
+ let L=TECHS.filter(t=>(S.district==='Todos'||t.zones.includes(S.district))&&(S.cat==='Todas'||t.cat===S.cat));
+ if(S.geo)L=L.filter(t=>t.km<=5).sort((a,b)=>a.km-b.km);
+ return `<div style="position:relative">
+  <div class="pad stack" style="padding-bottom:6px">
+   <div class="scrollx">
+    <button class="chip ${S.district!=='Todos'?'on':''}" data-a="toggleDistrict" aria-expanded="${S.distOpen}">${ic('pin',16)} ${S.district==='Todos'?'Distrito: Todos':esc(S.district)} ${ic('chev',16)}</button>
+    <button class="chip ${S.geo?'on':''}" data-a="near">${ic('nav',15)} Cerca de mí</button>
+    ${S.cat!=='Todas'?`<button class="chip on" data-a="clearCat" aria-label="Quitar filtro ${S.cat}">${S.cat} ${ic('x',14)}</button>`:''}
+   </div>
+   <div class="scrollx">${['Todas',...CATS.map(c=>c.k)].map(k=>`<button class="chip ${S.cat===k?'on':''}" style="min-height:36px;font-size:12.5px" data-a="catChip" data-k="${k}">${k==='Todas'?'Todas las categorías':k}</button>`).join('')}</div>
+   <div class="tiny">${L.length} técnico${L.length===1?'':'s'} verificado${L.length===1?'':'s'}${S.geo?' a menos de 5 km · del más cercano al más lejano':''}</div>
+  </div>
+  ${S.distOpen?`<div class="dropdown" role="listbox" aria-label="Distritos de Lima Norte">
+    ${['Todos',...DISTRITOS].map(d=>`<button role="option" aria-selected="${S.district===d}" class="${S.district===d?'on':''}" data-a="district" data-d="${d}">${d==='Todos'?'Todos los distritos':d}${S.district===d?ic('ok',18):''}</button>`).join('')}
+   </div>`:''}
+  <div class="pad stack" style="padding-top:8px;gap:10px">
+   ${L.length?L.map(techCard).join(''):`<div class="card" style="text-align:center;padding:28px 18px">
+     <div style="color:var(--muted);display:flex;justify-content:center">${ic('search',34,1.6)}</div>
+     <div class="h2" style="margin-top:10px">Aún no hay técnicos verificados aquí</div>
+     <div class="small" style="margin-top:6px">Estamos sumando técnicos${S.district!=='Todos'?' en '+esc(S.district):' de '+esc(S.cat.toLowerCase())}. Prueba con otro distrito o categoría.</div>
+     <button class="btn btn-ghost" style="margin-top:14px" data-a="resetFilters">Ver todos los técnicos</button></div>`}
+  </div></div>`;
+}
+
+function profile(){
+ const t=tech(),ti=TECHS.indexOf(t),D=dias(),slots=SLOTS[(S.day+ti)%SLOTS.length];
+ return `<div class="pad stack" style="padding-bottom:0">
+  <div class="card" style="text-align:center">
+   <div class="avatar" style="width:84px;height:84px;margin:0 auto;background:${t.bg};color:${t.fg};font-size:28px;border-radius:24px">${t.ini}</div>
+   <div class="row" style="justify-content:center;gap:6px;margin-top:10px"><b style="font-size:19px">${t.name}</b>${verified(20)}</div>
+   <div style="margin-top:6px"><span class="pill pill-blue">${ic('shield',13)} DNI y antecedentes verificados</span></div>
+   <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px">
+    <div style="background:var(--bg);border-radius:12px;padding:10px 4px"><div class="tiny">Especialidad</div><b style="font-size:14px">${t.cat}</b></div>
+    <div style="background:var(--bg);border-radius:12px;padding:10px 4px"><div class="tiny">Experiencia</div><b style="font-size:14px">${t.years} años</b></div>
+    <div style="background:var(--bg);border-radius:12px;padding:10px 4px"><div class="tiny">Calificación</div><b style="font-size:14px"><span class="stars">★</span> ${t.rating.toString().replace('.',',')}</b></div>
+   </div>
+   <div class="tiny" style="margin-top:10px">${t.reviews} reseñas de clientes reales · ${t.jobs} servicios completados en ServiGo</div>
+   <div class="tiny" style="margin-top:2px">Atiende en: ${t.zones.join(', ')}</div>
+  </div>
+  <div class="card">
+   <div class="row" style="justify-content:space-between"><div class="h2">Precios base</div><span class="pill pill-gray">Referenciales</span></div>
+   ${t.base.map(b=>`<div class="row" style="justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px"><span>${b[0]}</span><b>${b[1]}</b></div>`).join('')}
+   <button data-a="go" data-s="rates" style="border:0;background:none;color:var(--blue);font-weight:700;padding:10px 0 0;min-height:44px">Ver tabla de tarifas completa</button>
+  </div>
+  <div class="card">
+   <div class="h2">Horarios disponibles</div><div class="tiny" style="margin:2px 0 10px">Próximos 7 días · te recordamos 1 hora antes</div>
+   <div class="scrollx">${D.map((d,i)=>`<button class="chip ${S.day===i?'on':''}" style="flex-direction:column;min-height:58px;border-radius:14px;padding:6px 12px;gap:0" data-a="day" data-i="${i}"><span style="font-size:11.5px;text-transform:capitalize">${d.wd}</span><span style="font-size:17px">${d.num}</span></button>`).join('')}</div>
+   <div class="row" style="flex-wrap:wrap;gap:8px;margin-top:10px">${slots.map(h=>`<button class="chip ${S.slot===D[S.day].wd+' '+h?'on':''}" data-a="slot" data-v="${D[S.day].wd} ${h}">${h}</button>`).join('')}</div>
+  </div>
+  <div class="card">
+   <div class="h2">Últimas reseñas</div>
+   ${t.revs.map(r=>`<div style="padding:12px 0;border-bottom:1px solid var(--line)">
+     <div class="row" style="justify-content:space-between"><b style="font-size:14px">${r.who}</b><span class="tiny">${r.d}</span></div>
+     <div class="stars" style="font-size:14px" aria-label="${r.s} de 5 estrellas">${stars(r.s)}</div>
+     <div class="small" style="margin-top:2px">${r.t}</div></div>`).join('')}
+   <div class="tiny" style="margin-top:8px">Solo pueden opinar clientes que contrataron por ServiGo.</div>
+  </div>
+ </div>
+ <div class="sticky-cta row" style="gap:8px">
+  <button class="btn btn-ghost" style="width:auto;flex:0 0 auto;color:var(--green);border-color:#BFE3CB" data-a="call" data-id="${t.id}">${ic('phone',18)} Llamar</button>
+  <button class="btn btn-primary" style="flex:1" data-a="openChat">${ic('send',18)} Pedir cotización</button>
+ </div>`;
+}
+
+function rates(){
+ const allOpen=S.openCats.length===CATS.length;
+ return `<div class="pad stack">
+  <div class="small">Precios referenciales por servicio en Lima Norte (mínimo y máximo), agrupados por categoría. El precio final te lo envía el técnico.</div>
+  <div class="row" style="gap:8px;flex-wrap:wrap">
+   <button class="chip ${S.sortAsc?'on':''}" data-a="sort">${ic('sort',16)} ${S.sortAsc?'Menor a mayor':'Ordenar de menor a mayor'}</button>
+   <button class="chip" data-a="accAll">${ic('chev',16)} ${allOpen?'Contraer todo':'Desplegar todo'}</button>
+  </div>
+  <div class="tiny">${TARIFAS.length} servicios en ${CATS.length} categorías</div>
+  ${CATS.map(c=>{
+   let R=TARIFAS.filter(t=>t.c===c.k); if(S.sortAsc)R=[...R].sort((a,b)=>a.min-b.min);
+   const open=S.openCats.includes(c.k),n=TECHS.filter(t=>t.cat===c.k).length;
+   return `<div class="card" style="padding:0;overflow:hidden">
+    <button data-a="acc" data-k="${c.k}" aria-expanded="${open}" style="width:100%;border:0;background:${open?'var(--blue-s)':'#fff'};display:flex;align-items:center;gap:12px;padding:14px;text-align:left;min-height:64px">
+     <span style="width:40px;height:40px;border-radius:12px;background:${open?'#fff':'var(--blue-s)'};color:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0">${ic(c.ic,21)}</span>
+     <span style="flex:1;min-width:0"><b style="font-size:15px">${c.k}</b><span class="tiny" style="display:block">${R.length} servicios · desde S/ ${Math.min(...R.map(x=>x.min))} · ${n} técnico${n===1?'':'s'}</span></span>
+     <span style="transition:transform .2s;transform:rotate(${open?180:0}deg);color:var(--muted)">${ic('chev',20)}</span>
+    </button>
+    ${open?`<div class="fadein" style="padding:0 14px 6px">${R.map(r=>`<div class="row" style="justify-content:space-between;padding:12px 0;border-top:1px solid var(--line);align-items:flex-start">
+      <div style="min-width:0"><div style="font-size:14.5px;font-weight:600">${r.s}${r.s.includes('navideñas')?' <span class="pill pill-red">Navidad</span>':''}</div>
+       <span class="pill ${r.mat?'pill-green':'pill-gray'}" style="margin-top:4px">Incluye materiales: ${r.mat?'Sí':'No'}</span></div>
+      <div style="text-align:right;flex-shrink:0"><div style="font-weight:800;font-size:14.5px">S/ ${r.min} – ${r.max}</div>
+       <button data-a="pickServ" data-s="${esc(r.s)}" style="border:0;background:none;color:var(--blue);font-weight:700;font-size:12.5px;min-height:36px;padding:0">Ver técnicos</button></div></div>`).join('')}</div>`:''}
+   </div>`}).join('')}
+  <div class="tiny">Tarifas de ejemplo para el prototipo. Se reemplazan con los precios recopilados en TA10.</div>
+ </div>`;
+}
+
+function chat(){
+ const t=tech();
+ return `<div style="display:flex;flex-direction:column;height:100%">
+  <div id="msgs" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px">
+   ${S.msgs.map(m=>{
+    if(m.k==='sys')return `<div class="tiny" style="align-self:center;text-align:center;background:#E9EEF5;border-radius:12px;padding:8px 12px;max-width:90%">${m.t}</div>`;
+    if(m.k==='them')return `<div class="bubble them">${esc(m.t)}<div class="meta" style="color:var(--muted)">${m.h}</div></div>`;
+    if(m.k==='quote')return `<div class="card" style="align-self:flex-start;max-width:82%;padding:14px">
+      <div class="row" style="gap:8px">${ic('file',20)}<b>Cotización CT-0481</b></div>
+      <div class="small" style="margin-top:4px">${t.name.split(' ')[0]} puso su precio: mano de obra + materiales</div>
+      <div style="font-size:22px;font-weight:800;margin-top:6px">${soles(total(t))}</div>
+      <button class="btn btn-primary" style="margin-top:10px;min-height:44px" data-a="go" data-s="quote">Ver cotización</button>
+      <div class="meta" style="color:var(--muted)">${m.h}</div></div>`;
+    if(m.k==='call')return `<div class="tiny row" style="align-self:center;background:#E9F7EF;color:var(--green);border-radius:12px;padding:8px 12px;font-weight:600;gap:6px">${ic('phone',13)} ${m.t}</div>`;
+    const read=m.st==='Leído';
+    return `<div class="bubble me">${m.media?`<div class="row" style="gap:8px;background:rgba(255,255,255,.16);border-radius:10px;padding:10px">${ic(m.media==='foto'?'cam':'video',20)}<span>${esc(m.t)}</span></div>`:esc(m.t)}
+      <div class="meta"><span>${m.h}</span><span style="font-weight:700;color:${read?'#BFE3FF':'#E0E7FF'}">${read?'✓✓ Leído':'✓ Enviado'}</span></div></div>`;
+   }).join('')}
+  </div>
+  ${S.attachErr?`<div class="errmsg" style="margin:0 12px 8px;display:flex;gap:8px;align-items:flex-start"><span style="flex:1">${S.attachErr}</span><button class="iconbtn" style="width:28px;height:28px" data-a="clearErr" aria-label="Cerrar aviso">${ic('x',16)}</button></div>`:''}
+  <div class="row" style="gap:4px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--line)">
+   <button class="iconbtn" data-a="photo" aria-label="Adjuntar foto (máx. 10 MB)">${ic('cam',22)}</button>
+   <button class="iconbtn" data-a="video" aria-label="Adjuntar video (máx. 30 s)">${ic('video',22)}</button>
+   <input id="draft" aria-label="Mensaje" placeholder="Escribe un mensaje" style="flex:1;min-width:0;border:1.5px solid var(--line);border-radius:999px;padding:11px 14px;font-size:15px">
+   <button class="iconbtn" data-a="send" aria-label="Enviar" style="background:var(--blue);color:#fff;border-radius:50%">${ic('send',19)}</button>
+  </div></div>`;
+}
+
+const garantiaBox=(id,on)=>`<div class="card" style="background:var(--blue-s);border-color:#CBD8F7">
+    <div class="row" style="gap:8px;color:var(--blue-d)">${ic('shield',20)}<b>Garantía ServiGo · 7 días</b></div>
+    <div class="small" style="color:#1E3A8A;margin-top:6px">Si el problema vuelve dentro de los 7 días posteriores al servicio, el técnico regresa sin costo. Puedes solicitarla en 3 pasos desde la app.</div>
+    <label class="check" style="margin-top:12px"><input type="checkbox" id="${id}" ${on?'checked':''}><span>He leído y acepto la política de garantía y las condiciones del servicio.</span></label>
+   </div>`;
+
+function quote(){
+ const t=tech(),Q=quoteOf(t);
+ return `<div class="pad stack">
+  <div class="card">
+   <div class="row" style="justify-content:space-between"><div><div class="tiny">Cotización CT-0481 · precio puesto por el técnico</div><b style="font-size:16px">${t.cat} · ${t.name}</b></div>${verified(20)}</div>
+   <div style="margin-top:10px">
+   ${Q.map(q=>`<div class="row" style="justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)">
+     <div><div style="font-weight:700;font-size:14.5px">${q.c}</div><div class="tiny">${esc(q.d)}</div></div><b>${soles(q.p)}</b></div>`).join('')}
+   <div class="row" style="justify-content:space-between;padding-top:12px"><b style="font-size:16px">Total</b><b style="font-size:22px">${soles(total(t))}</b></div>
+   <div class="tiny">Incluye visita. Sin cobros adicionales fuera de esta cotización.</div>
+   </div>
+  </div>
+  ${S.accepted?`
+   <div class="okmsg row" style="align-items:flex-start">${ic('lock',20)}<span>Precio bloqueado en ${soles(total(t))}. Si el técnico necesita cambiarlo, tendrás que aceptar una nueva cotización.</span></div>
+   <div class="card">
+    <div class="h2">¿Cuándo vienen?</div>
+    <div class="stack" style="margin-top:10px;gap:8px">
+     <button class="opt ${S.when==='asap'?'on':''}" data-a="when" data-v="asap">${ic('clock',20)}<span><b>Lo antes posible</b><br><span class="tiny">Llega en ~14 min</span></span></button>
+     <button class="opt ${S.when==='slot'?'on':''}" data-a="when" data-v="slot">${ic('home',20)}<span><b>${S.slot?esc(S.slot):'Elegir un horario del perfil'}</b><br><span class="tiny">Recordatorio 1 hora antes</span></span></button>
+    </div>
+   </div>
+   <button class="btn btn-primary" data-a="confirmVisit">Confirmar visita</button>`
+  :`
+   ${garantiaBox('garantia',S.garantia)}
+   ${S.quoteErr?`<div class="errmsg">${S.quoteErr}</div>`:''}
+   <button class="btn ${S.garantia?'btn-primary':'btn-disabled'}" data-a="accept" aria-disabled="${!S.garantia}">Aceptar cotización</button>
+   <div class="row" style="gap:8px"><button class="btn btn-ghost" data-a="go" data-s="chat">${ic('send',18)} Preguntar</button><button class="btn btn-ghost" style="color:var(--green);border-color:#BFE3CB" data-a="call" data-id="${t.id}">${ic('phone',18)} Llamar</button></div>`}
+ </div>`;
+}
+
+function track(){
+ const t=tech(),dist=[3.2,2.3,1.4,0.45,0][S.prog],eta=[14,10,6,2,0][S.prog],p=ROUTE[S.prog],near=S.prog===3,arrived=S.prog===4;
+ return `<div class="map" role="img" aria-label="Mapa con la ubicación del técnico">
+   <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;inset:0">
+    <rect x="0" y="0" width="100" height="100" fill="#E8EEF3"/>
+    <rect x="58" y="70" width="30" height="22" fill="#D7EBDD"/>
+    <path d="M0 30H100M0 56H100M0 80H100M22 0V100M48 0V100M76 0V100" stroke="#fff" stroke-width="3.2"/>
+    <path d="M0 45 100 18" stroke="#fff" stroke-width="4.5"/>
+    <polyline points="${ROUTE.map(r=>r.join(',')).join(' ')}" fill="none" stroke="#1D4ED8" stroke-dasharray="3 2" vector-effect="non-scaling-stroke" style="stroke-width:4px"/>
+   </svg>
+   <div class="marker" style="left:83%;top:24%"><div style="width:40px;height:40px;border-radius:50%;background:#0F172A;color:#fff;display:flex;align-items:center;justify-content:center;border:3px solid #fff">${ic('home',18)}</div></div>
+   <div class="marker" style="left:${p[0]}%;top:${p[1]}%"><div class="avatar" style="width:44px;height:44px;border-radius:50%;background:${t.bg};color:${t.fg};font-size:14px;border:3px solid #1D4ED8;box-shadow:0 6px 16px -6px rgba(0,0,0,.5)">${t.ini}</div></div>
+   <div style="position:absolute;left:12px;top:12px" class="pill pill-blue">${ic('clock',12)} Ubicación actualizada cada 30 s</div>
+  </div>
+  <div class="pad stack" style="margin-top:-24px;position:relative">
+   ${near?`<div class="okmsg row">${ic('pin',20)} ${t.name.split(' ')[0]} está a menos de 500 m. ¡Prepárate para recibirlo!</div>`:''}
+   ${S.emergency?`<span class="pill pill-orange" style="align-self:flex-start">${ic('alert',12)} Emergencia</span>`:''}
+   <div class="card">
+    ${arrived?`<div class="h2">${t.name.split(' ')[0]} llegó a tu domicilio</div><div class="small">Servicio en curso. Cuando termine, confirma que todo quedó bien.</div>`
+    :`<div class="row" style="justify-content:space-between;align-items:flex-end">
+      <div><div class="tiny">Llega en</div><div style="font-size:34px;font-weight:800;line-height:1">${eta} <span style="font-size:17px">min</span></div></div>
+      <div style="text-align:right"><div class="tiny">Distancia</div><b style="font-size:17px">${km(dist)}</b></div></div>`}
+    <div class="row" style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line)">
+     <div class="avatar" style="width:44px;height:44px;background:${t.bg};color:${t.fg};font-size:15px">${t.ini}</div>
+     <div style="flex:1;min-width:0"><div class="row" style="gap:6px"><b>${t.name}</b>${verified(15)}</div><div class="tiny">${t.cat} · <span class="stars">★</span> ${t.rating.toString().replace('.',',')}</div></div>
+     <button class="iconbtn" data-a="call" data-id="${t.id}" aria-label="Llamar a ${t.name}" style="background:var(--green-s);color:var(--green)">${ic('phone',18)}</button>
+     <button class="iconbtn" data-a="chatFromTrack" aria-label="Abrir chat" style="background:var(--blue-s);color:var(--blue)">${ic('send',18)}</button>
+    </div>
+    <div class="row tiny" style="margin-top:10px;gap:6px">${ic('lock',14)} Precio acordado: <b style="color:var(--ink)">${soles(S.price)}</b> (bloqueado)</div>
+   </div>
+   ${arrived?`<button class="btn btn-primary" data-a="go" data-s="rate">${ic('ok',20)} Confirmar que el servicio terminó</button>`
+   :`<button class="btn btn-ghost" data-a="advance">Simular avance del técnico</button><div class="tiny" style="text-align:center">Botón solo para la demo del prototipo</div>`}
+  </div>`;
+}
+
+function rate(){
+ const t=tech();
+ return `<div class="pad stack">
+  <div class="okmsg row">${ic('ok',20)} Confirmaste la conformidad del servicio. Ya puedes calificar.</div>
+  <div class="card" style="text-align:center">
+   <div class="avatar" style="width:64px;height:64px;margin:0 auto;background:${t.bg};color:${t.fg};font-size:22px;border-radius:20px">${t.ini}</div>
+   <div class="h2" style="margin-top:10px">¿Cómo te fue con ${t.name.split(' ')[0]}?</div>
+   <div class="row" style="justify-content:center;gap:2px;margin-top:8px" role="radiogroup" aria-label="Calificación">
+    ${[1,2,3,4,5].map(i=>`<button role="radio" aria-checked="${S.stars===i}" aria-label="${i} estrella${i>1?'s':''}" data-a="star" data-i="${i}" style="border:0;background:none;width:48px;height:48px;font-size:36px;line-height:1;color:${i<=S.stars?'#F59E0B':'#CBD5E1'}">★</button>`).join('')}
+   </div>
+   <div class="tiny">${['Toca las estrellas','Muy malo','Malo','Regular','Bueno','Excelente'][S.stars]}</div>
+  </div>
+  <div class="field"><label for="comment">Comentario (opcional)</label><textarea id="comment" placeholder="Cuéntanos sobre la puntualidad, la limpieza y el trabajo">${esc(S.comment)}</textarea></div>
+  ${S.rateErr?`<div class="errmsg">${S.rateErr}</div>`:''}
+  <button class="btn btn-primary" data-a="sendRate">Enviar calificación</button>
+ </div>`;
+}
+
+function done(){
+ return `<div style="position:relative">${snow(18,true)}<div class="pad stack" style="text-align:center;padding-top:36px;position:relative;z-index:6">
+  <div style="width:84px;height:84px;border-radius:50%;background:var(--green-s);color:var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto">${ic('ok',46,2)}</div>
+  <div style="font-size:22px;font-weight:800">¡Gracias, ${esc(cap(first()))}!</div>
+  <div class="script" style="font-size:18px;color:var(--xred)">Que tengas una feliz Navidad</div>
+  <div class="small">Tu calificación ayuda a otros vecinos de Lima Norte a elegir con confianza.</div>
+  <div class="card row" style="text-align:left;align-items:flex-start;margin-top:8px">${ic('shield',22)}<div><b>Garantía activa hasta el ${fecha(7)}</b><div class="tiny">7 días desde que terminó el servicio</div></div></div>
+  <button class="btn btn-ghost" data-a="startWarranty">Solicitar garantía</button>
+  <button class="btn btn-ghost" data-a="go" data-s="claim">Libro de reclamaciones</button>
+  <button class="btn btn-primary" data-a="reset">Volver al inicio</button>
+ </div></div>`;
+}
+
+function warranty(){
+ const I=['El problema volvió','El trabajo quedó incompleto','Hubo un daño durante el servicio'];
+ if(S.wStep===4)return `<div class="pad stack" style="text-align:center;padding-top:36px">
+   <div style="width:84px;height:84px;border-radius:50%;background:var(--green-s);color:var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto">${ic('shield',44,2)}</div>
+   <div style="font-size:21px;font-weight:800">Solicitud enviada</div>
+   <div class="card" style="text-align:left"><div class="tiny">Código</div><b style="font-size:18px">${S.wCode}</b>
+   <div class="small" style="margin-top:8px">El técnico y ServiGo revisan tu caso. Te avisamos por la app y al ${fmtTel(S.user.tel)}.</div></div>
+   <button class="btn btn-primary" data-a="reset">Volver al inicio</button></div>`;
+ return `<div class="pad stack">
+  <div class="steps" aria-label="Paso ${S.wStep} de 3"><span class="on"></span><span class="${S.wStep>=2?'on':''}"></span><span class="${S.wStep>=3?'on':''}"></span></div>
+  <div class="tiny">Paso ${S.wStep} de 3</div>
+  ${S.wStep===1?`<div class="h2">¿Qué pasó?</div><div class="stack" style="gap:8px">${I.map((x,i)=>`<button class="opt ${S.wIssue===i?'on':''}" data-a="wIssue" data-i="${i}">${ic(S.wIssue===i?'ok':'alert',20)}<b>${x}</b></button>`).join('')}</div>
+   <button class="btn ${S.wIssue!==null?'btn-primary':'btn-disabled'}" data-a="wNext">Continuar</button>`:''}
+  ${S.wStep===2?`<div class="h2">Cuéntanos el detalle</div>
+   <div class="field"><label for="wdesc">Descripción</label><textarea id="wdesc" placeholder="Ej.: la fuga volvió a aparecer debajo del lavadero">${esc(S.wDesc)}</textarea></div>
+   <button class="opt ${S.wPhoto?'on':''}" data-a="wPhoto">${ic('cam',20)}<b>${S.wPhoto?'Foto adjunta: evidencia.jpg':'Adjuntar foto (opcional)'}</b></button>
+   <button class="btn btn-primary" data-a="wNext">Continuar</button>`:''}
+  ${S.wStep===3?`<div class="h2">Confirma tu solicitud</div>
+   <div class="card stack" style="gap:8px"><div><div class="tiny">Motivo</div><b>${I[S.wIssue]}</b></div>
+   <div><div class="tiny">Detalle</div><div class="small">${esc(S.wDesc||'Sin descripción')}</div></div>
+   <div><div class="tiny">Servicio</div><div class="small">${tech().cat} · ${tech().name} · ${soles(S.price)}</div></div></div>
+   <button class="btn btn-primary" data-a="wSend">Enviar solicitud de garantía</button>`:''}
+ </div>`;
+}
+
+function claim(){
+ if(S.claimCode)return `<div class="pad stack" style="text-align:center;padding-top:30px">
+   <div style="width:84px;height:84px;border-radius:50%;background:var(--blue-s);color:var(--blue);display:flex;align-items:center;justify-content:center;margin:0 auto">${ic('book',40,2)}</div>
+   <div style="font-size:21px;font-weight:800">Reclamo registrado</div>
+   <div class="card" style="text-align:left"><div class="tiny">Código único</div><b style="font-size:20px">${S.claimCode}</b>
+    <div class="small" style="margin-top:10px">Enviamos una copia a <b>${esc(S.claim.email)}</b> (llega en máx. 10 minutos).</div>
+    <div class="small" style="margin-top:6px">Te responderemos en un plazo máximo de <b>15 días hábiles</b>.</div></div>
+   <button class="btn btn-primary" data-a="reset">Volver al inicio</button></div>`;
+ const F=(k,label,ph,type='text',area=false)=>`<div class="field ${S.claimMissing.includes(k)?'err':''}"><label for="c_${k}">${label} <span style="color:var(--red)">*</span></label>
+   ${area?`<textarea id="c_${k}" data-f="${k}" placeholder="${ph}">${esc(S.claim[k])}</textarea>`:`<input id="c_${k}" data-f="${k}" type="${type}" ${k==='dni'?'inputmode="numeric" maxlength="8"':''} placeholder="${ph}" value="${esc(S.claim[k])}">`}</div>`;
+ return `<div class="pad stack">
+  <div class="card row" style="align-items:flex-start;background:var(--blue-s);border-color:#CBD8F7">${ic('book',22)}<div class="small" style="color:#1E3A8A">Conforme al Código de Protección y Defensa del Consumidor (INDECOPI). Los campos con <b>*</b> son obligatorios. Ya completamos tus datos de registro.</div></div>
+  ${F('nombre','Nombres y apellidos','Tu nombre')}
+  ${F('dni','DNI','8 dígitos','text')}
+  ${F('email','Correo electrónico','tucorreo@ejemplo.com','email')}
+  ${F('servicio','Servicio contratado','Ej.: Gasfitería · Jorge Quispe · 20/10')}
+  <div class="field"><label>Tipo <span style="color:var(--red)">*</span></label><div class="row">
+   ${['Reclamo','Queja'].map(x=>`<button class="chip ${S.claim.tipo===x?'on':''}" style="flex:1;justify-content:center" data-a="tipo" data-v="${x}">${x}</button>`).join('')}</div>
+   <div class="tiny" style="margin-top:6px">${S.claim.tipo==='Reclamo'?'Disconformidad con el servicio contratado.':'Malestar con la atención recibida.'}</div></div>
+  ${F('detalle','Detalle','Describe lo que pasó','text',true)}
+  ${F('pedido','¿Qué solicitas?','Ej.: que el técnico vuelva a reparar sin costo','text',true)}
+  ${S.claimMissing.length?`<div class="errmsg">No se puede enviar: completa los campos obligatorios marcados en rojo.</div>`:''}
+  <button class="btn btn-primary" data-a="sendClaim">Registrar reclamo</button>
+ </div>`;
+}
+
+function me(){
+ return `<div>
+  <div style="background:var(--night);color:#fff;padding:0 16px 22px;position:relative;text-align:center">${snow(14)}${garland()}
+   <div style="position:relative;z-index:6"><div class="avatar" style="width:84px;height:84px;margin:0 auto;border-radius:50%;background:#fff;color:var(--blue);font-size:28px">${esc(initials(S.user.nombre))}</div>
+   <div style="font-size:20px;font-weight:800;margin-top:10px">${esc(S.user.nombre)}</div>
+   <div class="tiny" style="color:#C8D4EE">Cliente ServiGo desde ${new Date().toLocaleDateString('es-PE',{month:'long',year:'numeric'})}</div></div>
+  </div>
+  <div class="pad stack">
+   <div class="card stack" style="gap:0;padding:4px 16px">
+    ${[['user','Nombre',esc(S.user.nombre)],['shield','DNI',maskDni(S.user.dni)],['phone','Celular',fmtTel(S.user.tel)],['pin','Distrito',S.district==='Todos'?'Comas':esc(S.district)]].map(r=>`<div class="row" style="padding:13px 0;border-bottom:1px solid var(--line)"><span style="color:var(--muted)">${ic(r[0],20)}</span><span class="tiny" style="width:70px">${r[1]}</span><b style="font-size:14.5px">${r[2]}</b></div>`).join('')}
+   </div>
+   <div class="card">
+    <div class="row" style="gap:8px">${logo(28)}<b>Sobre ServiGo</b></div>
+    <div class="tiny" style="font-weight:800;letter-spacing:.5px;margin-top:12px">VISIÓN</div>
+    <div class="small" style="margin-top:2px">Ser la plataforma líder en el Perú para la contratación de servicios técnicos, reconocida por soluciones rápidas, seguras y confiables.</div>
+    <div class="tiny" style="font-weight:800;letter-spacing:.5px;margin-top:12px">MISIÓN</div>
+    <div class="small" style="margin-top:2px">Facilitar la contratación de trabajadores independientes para encontrar profesionales verificados de forma rápida, segura y transparente.</div>
+   </div>
+   <button class="btn btn-ghost" data-a="go" data-s="claim">${ic('book',18)} Libro de reclamaciones</button>
+   <button class="btn btn-ghost" style="color:var(--red);border-color:#F3C4C4" data-a="logout">${ic('logout',18)} Cerrar sesión (reiniciar demo)</button>
+  </div></div>`;
+}
+
+function emergency(){
+ const E=EMERG.find(e=>e.k===S.emType);
+ if(S.emStep===4){const o=S.offers.find(x=>x.id===S.emPick),t=TECHS.find(x=>x.id===o.id);
+  return `<div class="pad stack">
+   <div class="card">
+    <div class="row"><div class="avatar" style="width:54px;height:54px;background:${t.bg};color:${t.fg};font-size:18px">${t.ini}</div>
+     <div style="flex:1"><div class="row" style="gap:6px"><b>${t.name}</b>${verified(16)}</div><div class="small">${t.cat} · ${t.years} años · <span class="stars">★</span> ${String(t.rating).replace('.',',')}</div></div></div>
+    <div style="background:var(--bg);border-radius:14px;padding:14px;margin-top:12px">
+     <div class="tiny">Precio que puso el técnico</div>
+     <div style="font-size:30px;font-weight:800">${soles(o.price)}</div>
+     <div class="small">Mano de obra + materiales básicos · llega en ~${o.eta} min</div>
+     <div class="small" style="margin-top:8px;font-style:italic">“${esc(o.msg)}”</div>
+    </div>
+   </div>
+   ${garantiaBox('emgar',S.emGar)}
+   ${S.emGarErr?`<div class="errmsg">${S.emGarErr}</div>`:''}
+   <button class="btn ${S.emGar?'btn-orange':'btn-disabled'}" data-a="emAcceptOffer" aria-disabled="${!S.emGar}">${ic('lock',18)} Aceptar ${soles(o.price)}</button>
+   <button class="btn btn-ghost" style="color:var(--green);border-color:#BFE3CB" data-a="call" data-id="${t.id}">${ic('phone',18)} Llamar antes de aceptar</button>
+  </div>`}
+ if(S.emStep===3){
+  const N=TECHS.filter(t=>t.cat===E.cat&&t.km<=5).sort((a,b)=>a.km-b.km);
+  const waiting=S.offers.length<N.length;
+  return `<div class="pad stack" style="text-align:center;padding-top:8px">
+   <div class="radar" aria-hidden="true">
+    <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+    <div class="grid"></div><div class="grid g2"></div><div class="grid g3"></div>
+    <div class="sweep"></div>
+    <div class="core">${FILLED[E.ic](E.col,50)}</div>
+    ${N.map((t,i)=>`<div class="dot" style="left:${RADAR_POS[i%4][0]}%;top:${RADAR_POS[i%4][1]}%;animation-delay:${i*.5}s"><div class="avatar" style="width:38px;height:38px;border-radius:50%;background:${t.bg};color:${t.fg};font-size:12px;border:3px solid ${S.offers.some(o=>o.id===t.id)?'#15803D':'#fff'};box-shadow:0 4px 12px -4px rgba(0,0,0,.4)">${t.ini}</div></div>`).join('')}
+   </div>
+   <div style="font-size:20px;font-weight:800">${waiting?'Buscando técnicos de '+E.cat.toLowerCase():'¡Tienes '+S.offers.length+' oferta'+(S.offers.length===1?'':'s')+'!'}</div>
+   <div class="small">${waiting?`Notificamos a <b>${N.length} técnico${N.length===1?'':'s'} verificado${N.length===1?'':'s'}</b> a menos de 5 km. Cada uno te enviará su precio.`:'Compara el precio, la llegada y la calificación. Tú eliges.'}</div>
+   <div class="pill pill-orange" style="align-self:center">${ic('clock',13)} Tiempo máximo de respuesta: 10 min</div>
+   <div class="stack" style="gap:10px;text-align:left">
+    ${S.offers.map(o=>{const t=TECHS.find(x=>x.id===o.id);return `<button class="techcard fadein" data-a="pickOffer" data-id="${o.id}" style="align-items:center">
+      <div class="avatar" style="width:48px;height:48px;background:${t.bg};color:${t.fg};font-size:16px">${t.ini}</div>
+      <div style="flex:1;min-width:0"><div class="row" style="gap:6px"><b style="font-size:14.5px">${t.name}</b>${verified(14)}</div>
+       <div class="tiny">★ ${String(t.rating).replace('.',',')} · a ${km(t.km)} · llega en ~${o.eta} min</div></div>
+      <div style="text-align:right"><div class="tiny">Su precio</div><b style="font-size:17px">${soles(o.price)}</b></div></button>`}).join('')}
+    ${waiting?`<div class="card row" style="justify-content:center;color:var(--muted);font-size:13px;gap:8px">${ic('clock',16)} Esperando respuestas de los técnicos…</div>`:''}
+   </div>
+  </div>`;
+ }
+ return `<div class="pad stack">
+  <div class="steps" aria-label="Paso ${S.emStep} de 2"><span class="on"></span><span class="${S.emStep===2?'on':''}"></span></div>
+  <div class="tiny">Paso ${S.emStep} de 2</div>
+  ${S.emStep===1?`<div class="h2">¿Qué emergencia tienes?</div>
+   <div class="stack" style="gap:10px">${EMERG.map(e=>`<button class="opt" data-a="emType" data-k="${e.k}" style="min-height:78px"><span style="width:56px;height:56px;border-radius:16px;background:#fff;box-shadow:inset 0 0 0 1.5px var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0">${FILLED[e.ic](e.col,36)}</span><span style="flex:1"><b style="font-size:16px">${e.label}</b><br><span class="tiny">${TECHS.filter(t=>t.cat===e.cat&&t.km<=5).length} técnicos de ${e.cat.toLowerCase()} a menos de 5 km</span></span>${ic('right',20)}</button>`).join('')}</div>`
+  :`<div class="h2">Confirma y envía</div>
+   <div class="card stack" style="gap:10px">
+    <div class="row">${FILLED[E.ic](E.col,26)}<b>${E.label}</b><button data-a="emChange" style="margin-left:auto;border:0;background:none;color:var(--blue);font-weight:700;min-height:44px">Cambiar</button></div>
+    <div class="row" style="align-items:flex-start">${ic('pin',20)}<div><b>Tu ubicación actual</b><div class="tiny">Comas · se comparte solo con el técnico que elijas</div></div></div>
+   </div>
+   <div class="field"><label>Fotos o video del problema <span class="tiny" style="font-weight:500">(recomendado)</span></label>
+    <div class="row" style="gap:8px">
+     <button class="btn btn-ghost" style="flex:1;min-height:52px" data-a="emPhoto">${ic('cam',20)} Foto</button>
+     <button class="btn btn-ghost" style="flex:1;min-height:52px" data-a="emVideo">${ic('video',20)} Video</button>
+    </div>
+    ${S.emMedia.length?`<div class="row" style="flex-wrap:wrap;gap:8px;margin-top:10px">${S.emMedia.map((m,i)=>`<span class="pill pill-blue" style="padding:4px 4px 4px 10px;font-size:12.5px">${ic(m.k==='foto'?'cam':'video',14)} ${esc(m.n)}<button class="iconbtn" style="width:28px;height:28px;color:var(--blue)" data-a="emRm" data-i="${i}" aria-label="Quitar ${esc(m.n)}">${ic('x',14)}</button></span>`).join('')}</div>`:''}
+    ${S.emErr?`<div class="errmsg" style="margin-top:8px">${S.emErr}</div>`:''}
+    <div class="hint">Fotos de hasta 10 MB y videos de hasta 30 s. Así el técnico te da un precio más exacto.</div>
+   </div>
+   <div class="field"><label for="emnote">Nota para el técnico (opcional)</label><textarea id="emnote" placeholder="Ej.: el agua sale debajo del lavadero de la cocina">${esc(S.emNote)}</textarea></div>
+   <button class="btn btn-orange" data-a="emSend">${ic('alert',18)} Enviar alerta de emergencia</button>`}
+ </div>`;
+}
+
+function nav(){
+ const it=[['home','home','Inicio'],['list','users','Técnicos'],['rates','tag','Tarifas'],['claim','book','Reclamos'],['me','user','Perfil']];
+ return `<nav class="nav" aria-label="Navegación principal">${it.map(([s,i,l])=>`<button class="${S.screen===s?'on':''}" data-a="go" data-s="${s}" aria-current="${S.screen===s?'page':'false'}">${ic(i,22)}${l}</button>`).join('')}</nav>`;
+}
+
+function locModal(){
+ return `<div class="overlay" data-a="locBackdrop"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="loct">
+  <div style="width:56px;height:56px;border-radius:18px;background:var(--blue-s);color:var(--blue);display:flex;align-items:center;justify-content:center">${ic('nav',28)}</div>
+  <div class="h2" id="loct" style="font-size:19px;margin-top:12px">¿Usamos tu ubicación?</div>
+  <div class="small" style="margin-top:6px">ServiGo necesita acceder a tu ubicación para mostrarte los técnicos verificados más cercanos, en un radio de 5 km. No la compartimos con nadie hasta que contrates.</div>
+  <div class="stack" style="margin-top:16px;gap:8px"><button class="btn btn-primary" data-a="locYes">Permitir ubicación</button><button class="btn btn-ghost" data-a="locNo">Ahora no, buscar por distrito</button></div>
+ </div></div>`;
+}
+
+const callTime=()=>S.callSec<3?'Llamando…':String(Math.floor(S.callSec/60)).padStart(2,'0')+':'+String(S.callSec%60).padStart(2,'0');
+function callView(){
+ const t=TECHS.find(x=>x.id===S.call);
+ return `<div class="call" role="dialog" aria-modal="true" aria-label="Llamada con ${t.name}">
+  <div><div class="tiny" style="color:#9FB0D3">Llamada segura por ServiGo</div>
+   <div class="ava" style="background:${t.bg};color:${t.fg};margin:26px auto 0">${t.ini}</div>
+   <div style="font-size:24px;font-weight:800;margin-top:22px">${t.name}</div>
+   <div class="row" style="justify-content:center;gap:6px;color:#C8D4EE;font-size:14px;margin-top:4px">${verified(15)} ${t.cat}</div>
+   <div id="calltime" style="font-size:16px;margin-top:16px;color:#E5ECFA;font-variant-numeric:tabular-nums">${callTime()}</div>
+   <div class="tiny" style="color:#9FB0D3;margin:22px auto 0;max-width:270px">Tu número se mantiene privado: el técnico ve un número temporal de ServiGo.</div>
+  </div>
+  <div style="width:100%">
+   <div class="row" style="justify-content:center;gap:28px;margin-bottom:30px">
+    <div style="text-align:center"><button class="ctl ${S.muted?'on':''}" data-a="mute" aria-pressed="${S.muted}" aria-label="Silenciar">${ic(S.muted?'micoff':'mic',26)}</button><div class="tiny" style="color:#C8D4EE;margin-top:6px">Silencio</div></div>
+    <div style="text-align:center"><button class="ctl ${S.spk?'on':''}" data-a="spk" aria-pressed="${S.spk}" aria-label="Altavoz">${ic('speaker',26)}</button><div class="tiny" style="color:#C8D4EE;margin-top:6px">Altavoz</div></div>
+   </div>
+   <button class="ctl hang" style="margin:0 auto;width:72px;height:72px" data-a="hang" aria-label="Colgar"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform:rotate(135deg)">${P.phone}</svg></button>
+  </div></div>`;
+}
+
+/* ===================== RENDER ===================== */
+const VIEWS={splash,register,welcome,home,list,profile,rates,chat,quote,track,rate,done,warranty,claim,emergency,me};
+const app=document.getElementById('app');
+function render(){
+ const showNav=['home','list','rates','me'].includes(S.screen)||(S.screen==='claim'&&!S.claimCode);
+ const keepDraft=document.getElementById('draft')?.value||'';
+ const demo=S.screen==='splash'?'':`<div class="demo">Prototipo · datos de ejemplo</div>`;
+ const cs=S.screen==='chat'?'display:flex;flex-direction:column;overflow:hidden':S.screen==='splash'?'display:flex;flex-direction:column':'';
+ app.innerHTML=`${demo}${header()}<main class="content" style="${cs}">${VIEWS[S.screen]()}</main>
+  ${showNav?nav():''}${S.locModal?locModal():''}${S.call?callView():''}${S.toast?`<div class="toast" role="status">${esc(S.toast)}</div>`:''}`;
+ if(S.screen==='chat'){const d=document.getElementById('draft');if(d){d.value=keepDraft}const m=document.getElementById('msgs');if(m)m.scrollTop=m.scrollHeight}
+}
+
+/* ===================== CHAT ===================== */
+function pushMine(m){
+ S.msgs.push(Object.assign({k:'me',h:hora(),st:'Enviado'},m));S.attachErr='';render();
+ if(!S.replied){S.replied=true;const t=tech();
+  setTimeout(()=>{S.msgs.forEach(x=>{if(x.k==='me')x.st='Leído'});
+   S.msgs.push({k:'them',t:t.cat==='Gasfitería'?'Gracias, por la foto parece la unión del tubo. Te envío mi precio con mano de obra y materiales separados.':'Gracias por la info. Ya revisé y te envío mi precio detallado.',h:hora()});
+   S.msgs.push({k:'quote',h:hora()});if(S.screen==='chat')render()},1500);
+ } else setTimeout(()=>{S.msgs.forEach(x=>{if(x.k==='me')x.st='Leído'});if(S.screen==='chat')render()},1200);
+}
+function sendDraft(){const d=document.getElementById('draft');const v=(d?.value||'').trim();if(!v)return;d.value='';pushMine({t:v})}
+function openChatFor(t){if(S.chatTech!==t.id){Object.assign(S,{chatTech:t.id,replied:false,accepted:false,garantia:false,msgs:[
+  {k:'sys',t:'Describe el problema y envía fotos (máx. 10 MB) o videos (máx. 30 s). El técnico te enviará su precio.'},
+  {k:'them',t:`Hola ${cap(first())}, soy ${t.name.split(' ')[0]}. Cuéntame qué problema tienes y, si puedes, mándame una foto.`,h:hora()}]})}}
+
+/* ===================== LLAMADA ===================== */
+function startCall(id){clearInterval(callT);Object.assign(S,{call:id,callSec:0,muted:false,spk:false});render();
+ callT=setInterval(()=>{S.callSec++;const el=document.getElementById('calltime');if(el)el.textContent=callTime()},1000)}
+function endCall(){clearInterval(callT);const t=TECHS.find(x=>x.id===S.call),sec=S.callSec;S.call=null;
+ if(S.chatTech===t.id&&sec>=3)S.msgs.push({k:'call',t:`Llamada de ${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')} min`});
+ toast(sec>=3?`Llamada con ${t.name.split(' ')[0]} finalizada`:'Llamada cancelada')}
+
+/* ===================== EMERGENCIA: ofertas con precio del técnico ===================== */
+const OFFER_MSG={'Gasfitería':'Llevo uniones y cinta; si hay que cambiar el tubo te aviso antes.','Electricidad':'Reviso el tablero y dejo la llave cambiada si está dañada.','Cerrajería':'Abro sin dañar la puerta; si hay que cambiar el cilindro está incluido.'};
+function startOffers(){offerT.forEach(clearTimeout);offerT=[];S.offers=[];
+ const E=EMERG.find(e=>e.k===S.emType);const N=TECHS.filter(t=>t.cat===E.cat&&t.km<=5).sort((a,b)=>a.km-b.km);
+ N.forEach((t,i)=>offerT.push(setTimeout(()=>{if(S.screen!=='emergency'||S.emStep!==3)return;S.offers.push({id:t.id,price:t.offer,eta:t.eta,msg:OFFER_MSG[t.cat]});render()},2200+i*1800)));
+}
+
+/* ===================== EVENTOS ===================== */
+app.addEventListener('click',e=>{
+ const b=e.target.closest('[data-a]');
+ if(!b){const box=document.getElementById('sugg');if(box&&!e.target.closest('.search'))box.style.display='none';return}
+ const a=b.dataset.a;
+ if(a==='locBackdrop'){if(e.target===b){S.locModal=false;render()}return}
+ switch(a){
+  case 'back':back();break;
+  case 'go':go(b.dataset.s);break;
+  case 'register':{const u=S.user,err=[];
+   if(u.nombre.trim().split(/\s+/).length<2)err.push('nombre');
+   if(!/^\d{8}$/.test(u.dni))err.push('dni');
+   if(!/^9\d{8}$/.test(u.tel))err.push('tel');
+   if(!S.regTerms)err.push('terms');
+   S.regErr=err;if(err.length){render();return}
+   S.claim=EMPTY_CLAIM();go('welcome');break}
+  case 'logout':Object.assign(S,{user:{nombre:'',dni:'',tel:''},regErr:[],regTerms:false,chatTech:null,msgs:[]});go('splash');break;
+  case 'reset':Object.assign(S,{prog:0,accepted:false,garantia:false,quoteErr:'',stars:0,comment:'',rateErr:'',emergency:false,emStep:1,emType:null,emMedia:[],emNote:'',emErr:'',offers:[],emPick:null,emGar:false,wStep:1,wIssue:null,wDesc:'',wPhoto:false,claimCode:'',claimMissing:[],claim:EMPTY_CLAIM()});go('home');break;
+  case 'cat':go('list',{serv:null,cat:b.dataset.k,district:'Todos'});break;
+  case 'xmas':go('list',{cat:'Electricidad',district:'Todos'});toast('Instalación de luces navideñas: S/ 60 – 120');break;
+  case 'pickServ':{const s=TARIFAS.find(x=>x.s===b.dataset.s);S.serv=s.s;go('list',{cat:s.c,district:'Todos'});toast(`${s.s}: S/ ${s.min} – ${s.max} (referencial)`);break}
+  case 'searchAll':go('list',{cat:'Todas',district:'Todos'});break;
+  case 'qclear':{const q=document.getElementById('q');q.value='';suggest('');q.focus();break}
+  case 'clearCat':S.cat='Todas';render();break;
+  case 'resetFilters':Object.assign(S,{cat:'Todas',district:'Todos',geo:false});render();break;
+  case 'openDistrict':go('list',{});S.distOpen=true;render();break;
+  case 'toggleDistrict':S.distOpen=!S.distOpen;render();break;
+  case 'district':S.district=b.dataset.d;S.distOpen=false;if(S.district!=='Todos')S.geo=false;render();break;
+  case 'near':if(S.geo){S.geo=false;render()}else if(S.geoAsked){S.geo=true;S.district='Todos';render()}else{S.locModal=true;render()}break;
+  case 'locYes':Object.assign(S,{locModal:false,geo:true,geoAsked:true,district:'Todos',distOpen:false});toast('Mostrando técnicos a menos de 5 km');break;
+  case 'locNo':Object.assign(S,{locModal:false,geo:false,distOpen:true});toast('Sin ubicación: elige tu distrito en el menú');break;
+  case 'profile':go('profile',{techId:b.dataset.id,day:0,slot:null});break;
+  case 'day':S.day=+b.dataset.i;render();break;
+  case 'slot':S.slot=b.dataset.v;S.when='slot';toast('Horario elegido: '+S.slot);break;
+  case 'sort':S.sortAsc=!S.sortAsc;render();break;
+  case 'acc':{const k=b.dataset.k;S.openCats=S.openCats.includes(k)?S.openCats.filter(x=>x!==k):[...S.openCats,k];render();break}
+  case 'accAll':S.openCats=S.openCats.length===CATS.length?[]:CATS.map(c=>c.k);render();break;
+  case 'catsToggle':S.catsAll=!S.catsAll;render();break;
+  case 'catChip':S.cat=b.dataset.k;S.serv=null;render();break;
+  case 'openChat':case 'chatFromTrack':openChatFor(tech());go('chat');break;
+  case 'call':startCall(b.dataset.id);break;
+  case 'hang':endCall();break;
+  case 'mute':S.muted=!S.muted;render();break;
+  case 'spk':S.spk=!S.spk;render();break;
+  case 'send':sendDraft();break;
+  case 'photo':pushMine({media:'foto',t:'foto_problema.jpg · 2,4 MB'});break;
+  case 'video':S.attachErr='No se pudo adjuntar "video_fuga.mp4": dura 45 s y el máximo es 30 s. Recórtalo e inténtalo de nuevo.';render();break;
+  case 'clearErr':S.attachErr='';render();break;
+  case 'accept':if(!S.garantia){S.quoteErr='Para aceptar la cotización primero debes aceptar la política de garantía.';render()}else{S.accepted=true;S.quoteErr='';S.price=total(tech());toast('Cotización aceptada · precio bloqueado')}break;
+  case 'when':if(b.dataset.v==='slot'&&!S.slot){go('profile');toast('Elige un horario y vuelve a la cotización')}else{S.when=b.dataset.v;render()}break;
+  case 'confirmVisit':go('track',{prog:0,emergency:false});break;
+  case 'advance':S.prog=Math.min(4,S.prog+1);render();if(S.prog===3)toast('Tu técnico está a menos de 500 m');break;
+  case 'star':S.stars=+b.dataset.i;S.rateErr='';render();break;
+  case 'sendRate':S.comment=document.getElementById('comment')?.value||'';if(!S.stars){S.rateErr='Elige de 1 a 5 estrellas para enviar tu calificación.';render()}else go('done');break;
+  case 'startWarranty':go('warranty',{wStep:1,wIssue:null,wDesc:'',wPhoto:false});break;
+  case 'wIssue':S.wIssue=+b.dataset.i;render();break;
+  case 'wPhoto':S.wDesc=document.getElementById('wdesc')?.value||S.wDesc;S.wPhoto=!S.wPhoto;render();break;
+  case 'wNext':if(S.wStep===1&&S.wIssue===null)return toast('Elige un motivo para continuar');if(S.wStep===2)S.wDesc=document.getElementById('wdesc')?.value||'';S.wStep++;render();break;
+  case 'wSend':S.wCode='GR-2026-'+String(Math.floor(10000+Math.random()*89999));S.wStep=4;render();break;
+  case 'tipo':S.claim.tipo=b.dataset.v;render();break;
+  case 'sendClaim':{const req=['nombre','dni','email','servicio','detalle','pedido'];
+   S.claimMissing=req.filter(k=>!S.claim[k].trim()||(k==='dni'&&S.claim.dni.length!==8)||(k==='email'&&!/^\S+@\S+\.\S+$/.test(S.claim.email)));
+   if(!S.claimMissing.length)S.claimCode='RC-2026-'+String(Math.floor(10000+Math.random()*89999));render();document.querySelector('.content').scrollTop=0;break}
+  case 'startEmergency':go('emergency',{emStep:1,emType:null,emMedia:[],emNote:'',emErr:'',offers:[],emPick:null,emGar:false,emGarErr:''});break;
+  case 'emType':S.emType=b.dataset.k;S.emStep=2;render();break;
+  case 'emChange':S.emStep=1;render();break;
+  case 'emPhoto':S.emNote=document.getElementById('emnote')?.value||S.emNote;S.emErr='';S.emMedia.push({k:'foto',n:`foto_${S.emMedia.filter(m=>m.k==='foto').length+1}.jpg · 1,8 MB`});render();break;
+  case 'emVideo':S.emNote=document.getElementById('emnote')?.value||S.emNote;
+   if(S.emMedia.some(m=>m.k==='video')){S.emErr='Ya adjuntaste un video. Quítalo si quieres subir otro.'}else{S.emErr='';S.emMedia.push({k:'video',n:'video_problema.mp4 · 18 s'})}render();break;
+  case 'emRm':S.emMedia.splice(+b.dataset.i,1);S.emErr='';render();break;
+  case 'emSend':S.emNote=document.getElementById('emnote')?.value||'';S.emStep=3;render();startOffers();break;
+  case 'pickOffer':Object.assign(S,{emPick:b.dataset.id,emStep:4,emGar:false,emGarErr:''});render();document.querySelector('.content').scrollTop=0;break;
+  case 'emAcceptOffer':{if(!S.emGar){S.emGarErr='Acepta la política de garantía para confirmar la oferta.';render();break}
+   const o=S.offers.find(x=>x.id===S.emPick);offerT.forEach(clearTimeout);go('track',{techId:o.id,prog:1,emergency:true,price:o.price});toast(`Oferta aceptada · ${soles(o.price)} bloqueado`);break}
+ }
+});
+app.addEventListener('input',e=>{
+ const el=e.target;
+ if(el.id==='q'){suggest(el.value);return}
+ const r=el.dataset.r;
+ if(r){let v=el.value;if(r==='dni'){v=v.replace(/\D/g,'').slice(0,8);el.value=v}if(r==='tel'){v=v.replace(/\D/g,'').slice(0,9);el.value=v}S.user[r]=v;
+  if(S.regErr.includes(r)){S.regErr=S.regErr.filter(x=>x!==r);const f=el.closest('.field');f.classList.remove('err')}}
+ const f=el.dataset.f;
+ if(f){let v=el.value;if(f==='dni'){v=v.replace(/\D/g,'').slice(0,8);el.value=v}S.claim[f]=v;
+  if(S.claimMissing.includes(f)&&v.trim()){S.claimMissing=S.claimMissing.filter(x=>x!==f);el.closest('.field').classList.remove('err')}}
+ if(el.id==='comment')S.comment=el.value;
+ if(el.id==='wdesc')S.wDesc=el.value;
+ if(el.id==='emnote')S.emNote=el.value;
+});
+app.addEventListener('focusin',e=>{if(e.target.id==='q'&&e.target.value)suggest(e.target.value)});
+app.addEventListener('change',e=>{
+ if(e.target.id==='garantia'){S.garantia=e.target.checked;S.quoteErr='';render()}
+ if(e.target.id==='emgar'){S.emGar=e.target.checked;S.emGarErr='';render()}
+ if(e.target.id==='r_terms'){S.regTerms=e.target.checked;S.regErr=S.regErr.filter(x=>x!=='terms');render()}
+});
+app.addEventListener('keydown',e=>{
+ if(e.target.id==='draft'&&e.key==='Enter'){e.preventDefault();sendDraft()}
+ if(e.target.id==='q'){const box=document.getElementById('sugg');const opts=[...box.querySelectorAll('button')];if(!opts.length)return;
+  let i=opts.findIndex(o=>o.classList.contains('kb'));
+  if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();opts.forEach(o=>o.classList.remove('kb'));i=e.key==='ArrowDown'?Math.min(opts.length-1,i+1):Math.max(0,i-1);opts[i].classList.add('kb');opts[i].scrollIntoView({block:'nearest'})}
+  if(e.key==='Enter'){e.preventDefault();(opts[i>=0?i:0]).click()}
+  if(e.key==='Escape'){box.style.display='none'}}
+});
+render();
+</script>
+</body>
+</html>
