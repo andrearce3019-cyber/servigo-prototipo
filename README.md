@@ -8,6 +8,12 @@ Plataforma web que conecta a los hogares y pequeños negocios de **Lima Norte** 
 
 **https://andrearce3019-cyber.github.io/servigo-prototipo/**
 
+## 📚 App de estudio para la sustentación
+
+**https://andrearce3019-cyber.github.io/servigo-prototipo/estudio/**
+
+Se instala en el celular como app: lecciones con voz, preguntas, modo jurado, glosario y simulacro con nota de 0 a 20. Cada integrante entra con su usuario y contraseña.
+
 ## Equipo
 
 | Integrante | Rol Scrum |

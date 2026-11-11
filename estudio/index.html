@@ -1,0 +1,1097 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1E6B45">
+<meta name="description" content="Estudia tu tesis ServiGo: lecciones con voz, preguntas, modo jurado y simulacro de sustentación.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ServiGo">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.4 system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Estudia ServiGo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: una columna tipo app móvil (máx. 560px), tarjetas tipo "historia" para estudiar */
+:root{
+  --bg:#F3F7F4; --surface:#FFFFFF; --surface-2:#E7F2EC; --fg:#13241B; --muted:#55685E; --line:#D5E3DA;
+  --brand:#1E6B45; --brand-d:#154F33; --brand-ink:#FFFFFF; --accent:#F2B53A; --blue:#2563EB;
+  --ok:#1F8A4C; --bad:#C2412D; --warn-bg:#FFF4E0; --warn-fg:#8A4B00;
+  --f-display:'Montserrat',system-ui,sans-serif; --f-body:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --r:18px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0C1511; --surface:#14211A; --surface-2:#1B2E24; --fg:#E4EFE8; --muted:#9DB3A6; --line:#28402F;
+  --brand:#47B67C; --brand-d:#7FD3A6; --brand-ink:#06140D; --accent:#F2B53A; --blue:#6E9BFF;
+  --ok:#4CC27F; --bad:#FF7A66; --warn-bg:#2E2412; --warn-fg:#F5C36B; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0C1511; --surface:#14211A; --surface-2:#1B2E24; --fg:#E4EFE8; --muted:#9DB3A6; --line:#28402F;
+  --brand:#47B67C; --brand-d:#7FD3A6; --brand-ink:#06140D; --accent:#F2B53A; --blue:#6E9BFF;
+  --ok:#4CC27F; --bad:#FF7A66; --warn-bg:#2E2412; --warn-fg:#F5C36B; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 40px}
+h1,h2,h3{font-family:var(--f-display);line-height:1.15;margin:0;text-wrap:balance}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:10px}
+.muted{color:var(--muted)}
+.row{display:flex;gap:10px;align-items:center}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.logo{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:800;font-size:18px;color:var(--brand-d)}
+.logo svg{width:30px;height:30px}
+.count{font-size:13px;font-weight:600;background:var(--surface-2);color:var(--brand-d);padding:6px 10px;border-radius:99px;white-space:nowrap}
+.hero{background:var(--brand);color:var(--brand-ink);border-radius:var(--r);padding:18px;display:grid;gap:10px}
+.hero .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;opacity:.85}
+.hero h2{font-size:22px}
+.hero .chips{display:flex;flex-wrap:wrap;gap:8px}
+.chipbtn{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);color:inherit;padding:9px 12px;border-radius:12px;font-weight:600;font-size:14px;text-align:left}
+:root[data-theme="dark"] .chipbtn{background:rgba(0,0,0,.12)}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.act{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 8px;display:grid;justify-items:center;gap:6px;font-size:13px;font-weight:600;text-align:center}
+.act svg{width:26px;height:26px;color:var(--brand)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px;text-align:center}
+.stat b{display:block;font-family:var(--f-display);font-size:22px;color:var(--brand-d);font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted)}
+.sec{margin:22px 0 10px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.mods{display:grid;gap:8px}
+.mod{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px;text-align:left;width:100%}
+.mod .num{width:40px;height:40px;border-radius:12px;background:var(--surface-2);color:var(--brand-d);display:grid;place-items:center;font-family:var(--f-display);font-weight:800}
+.mod.done .num{background:var(--brand);color:var(--brand-ink)}
+.mod h3{font-size:15px}
+.mod small{display:block;color:var(--muted);font-size:12.5px}
+.mod .right{font-size:12px;color:var(--muted);text-align:right;white-space:nowrap}
+.you{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:var(--accent);color:#3B2600;padding:2px 7px;border-radius:99px;margin-left:6px;vertical-align:2px}
+/* Viewer */
+.vtop{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;margin-bottom:10px}
+.iconbtn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--surface);border:1px solid var(--line)}
+.iconbtn svg{width:22px;height:22px}
+.vtitle{font-size:13px;color:var(--muted);font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.segs{display:flex;gap:4px;margin-bottom:14px}
+.segs i{flex:1;height:5px;border-radius:9px;background:var(--line)}
+.segs i.on{background:var(--brand)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:22px 20px;min-height:52vh;display:flex;flex-direction:column;gap:14px;animation:in .28s ease}
+@keyframes in{from{transform:translateY(8px)}to{transform:none}}
+@media (prefers-reduced-motion:reduce){.card{animation:none}}
+.card .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--brand)}
+.card h2{font-size:24px}
+.card p{margin:0;font-size:17px}
+.key{background:var(--surface-2);border-radius:14px;padding:12px 14px;font-weight:700;color:var(--brand-d);display:flex;gap:10px;align-items:flex-start}
+.key svg{flex:none;width:20px;height:20px;margin-top:2px}
+.bign{font-family:var(--f-display);font-weight:800;font-size:clamp(44px,14vw,72px);line-height:1;color:var(--brand);font-variant-numeric:tabular-nums;word-break:break-word}
+.bigl{font-family:var(--f-display);font-weight:700;font-size:20px}
+.quote{font-family:var(--f-display);font-weight:700;font-size:20px;line-height:1.3;border-left:4px solid var(--accent);padding-left:14px}
+.list{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.list li{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start}
+.tagk{background:var(--surface-2);color:var(--brand-d);font-weight:700;font-size:12.5px;padding:4px 9px;border-radius:9px;white-space:nowrap;max-width:130px;white-space:normal}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:380px){.grid2{grid-template-columns:1fr}}
+.cell{background:var(--surface-2);border-radius:14px;padding:11px;min-width:0;overflow-wrap:break-word;hyphens:auto}
+.cell b{display:block;font-family:var(--f-display);font-size:14px;color:var(--brand-d);margin-bottom:6px}
+.cell ul{margin:0;padding-left:14px;font-size:13.5px;display:grid;gap:4px}.cell li{overflow-wrap:anywhere}
+.pairs{display:grid;gap:8px}
+.pair{display:grid;grid-template-columns:1fr 24px 1fr;gap:6px;align-items:center}
+.pair div{background:var(--surface-2);border-radius:12px;padding:10px;font-size:14px;min-width:0}
+.pair div:last-child{background:transparent;border:1.5px solid var(--brand);font-weight:600}
+.pair svg{width:20px;height:20px;color:var(--brand)}
+.phead{display:grid;grid-template-columns:1fr 24px 1fr;gap:6px;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.flow{display:grid;gap:0}
+.fstep{background:var(--surface-2);border-radius:14px;padding:12px 14px}
+.fstep b{font-family:var(--f-display);display:block;font-size:16px;color:var(--brand-d)}
+.fstep span{font-size:14px;color:var(--muted)}
+.farrow{display:grid;place-items:center;height:22px;color:var(--brand)}
+.farrow svg{width:18px;height:18px}
+.tl{display:grid;gap:0;position:relative}
+.tli{display:grid;grid-template-columns:54px 1fr;gap:12px;padding-bottom:12px;position:relative}
+.tli .dot{font-family:var(--f-display);font-weight:800;background:var(--brand);color:var(--brand-ink);border-radius:12px;display:grid;place-items:center;height:36px;font-size:13px}
+.tli b{display:block;font-variant-numeric:tabular-nums}
+.tli span{font-size:14px;color:var(--muted)}
+.bars{display:grid;gap:7px}
+.bar{display:grid;grid-template-columns:118px 1fr 22px;gap:8px;align-items:center;font-size:13px}
+.bar i{display:block;height:12px;border-radius:9px;background:var(--brand)}
+.bar em{font-style:normal;font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+.persona{display:grid;grid-template-columns:80px 1fr;gap:14px;align-items:center}
+.ava{width:80px;height:80px;border-radius:50%;background:var(--brand);color:var(--brand-ink);display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:28px}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.facts div{background:var(--surface-2);border-radius:12px;padding:8px 10px;font-size:14px}
+.facts small{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.tbl{overflow-x:auto}
+.tbl table{border-collapse:collapse;width:100%;font-size:13.5px}
+.tbl th,.tbl td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.tbl th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tbl td.num{text-align:center;font-variant-numeric:tabular-nums}
+.pill{font-size:11px;font-weight:700;padding:2px 7px;border-radius:99px;background:var(--surface-2);color:var(--brand-d)}
+.pill.Should{background:#E3ECFF;color:#1E40AF}.pill.Could{background:var(--warn-bg);color:var(--warn-fg)}
+:root[data-theme="dark"] .pill.Should{background:#1C2A4A;color:#A9C1FF}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .pill.Should{background:#1C2A4A;color:#A9C1FF}}
+.warn{background:var(--warn-bg);color:var(--warn-fg);border-radius:14px;padding:12px 14px;font-weight:600;font-size:14px}
+.card.warncard{border-color:var(--accent)}
+.remember{display:grid;gap:10px}
+.remember div{display:flex;gap:10px;align-items:center;background:var(--surface-2);border-radius:14px;padding:12px;font-weight:700;color:var(--brand-d)}
+.remember svg{width:22px;height:22px;flex:none}
+.youtag{align-self:flex-start;background:var(--accent);color:#3B2600;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px}
+.curve svg{width:100%;height:auto;display:block}
+.clist{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:13px;margin-top:6px}
+.clist span b{font-variant-numeric:tabular-nums;color:var(--brand)}
+/* Controls */
+.ctrl{display:grid;grid-template-columns:52px 1fr 52px;gap:10px;margin-top:14px;align-items:center}
+.btn{background:var(--brand);color:var(--brand-ink);font-weight:700;border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn svg{width:22px;height:22px}
+.btn.ghost{background:var(--surface);color:var(--fg);border:1px solid var(--line)}
+.btn.sm{padding:10px 12px;font-size:14px}
+.navb{height:52px;border-radius:14px;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center}
+.navb svg{width:24px;height:24px}
+.navb:disabled{opacity:.35}
+.speed{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.speed button{font-size:13px;font-weight:600;padding:6px 10px;border-radius:99px;border:1px solid var(--line);background:var(--surface)}
+.speed button.on{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.note{font-size:13px;color:var(--muted);text-align:center;margin-top:8px}
+/* Quiz */
+.opts{display:grid;gap:10px}
+.opt{background:var(--surface-2);border:2px solid transparent;border-radius:14px;padding:13px 14px;text-align:left;font-weight:600}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--surface))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.fb{border-radius:14px;padding:12px 14px;font-size:15px}
+.fb.ok{background:color-mix(in srgb,var(--ok) 14%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.fb b{display:block;margin-bottom:2px}
+.score{font-family:var(--f-display);font-weight:800;font-size:64px;color:var(--brand);line-height:1}
+/* Jury */
+.jq{font-family:var(--f-display);font-weight:700;font-size:22px;line-height:1.3}
+.ans{background:var(--surface-2);border-radius:14px;padding:14px;font-size:16px}
+.rate{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rate button{border-radius:14px;padding:12px 6px;font-weight:700;font-size:14px;border:2px solid var(--line);background:var(--surface)}
+.rate .r0{border-color:var(--bad);color:var(--bad)}.rate .r1{border-color:var(--accent)}.rate .r2{border-color:var(--ok);color:var(--ok)}
+.card textarea{width:100%;font:inherit;font-size:16px;color:var(--fg);background:var(--surface-2);border:1.5px solid var(--line);border-radius:14px;padding:12px;resize:vertical;min-height:140px}
+.card textarea:focus{outline:none;border-color:var(--brand)}
+.linkbtn{display:block;margin:12px auto 0;font-size:14px;font-weight:600;color:var(--muted);text-decoration:underline;padding:6px}
+.mine{border:1.5px dashed var(--line);border-radius:14px;padding:10px 12px;font-size:15px;white-space:pre-wrap}
+.mine small{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.res{display:grid;gap:8px}
+.resh{display:flex;justify-content:space-between;align-items:center}
+.pct{font-family:var(--f-display);font-weight:800;font-size:22px;color:var(--brand)}
+.kl{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.kl li{display:flex;gap:8px;align-items:flex-start;font-size:14.5px;font-weight:600}
+.kl svg{width:18px;height:18px;flex:none;margin-top:2px}
+.kl .kok svg{color:var(--ok)} .kl .kno{color:var(--muted)} .kl .kno svg{color:var(--bad)}
+.rate button.sug{box-shadow:0 0 0 3px color-mix(in srgb,var(--brand) 35%,transparent)}
+.who{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;background:var(--surface);border:1px solid var(--line);padding:6px 10px;border-radius:99px}
+.who svg{width:16px;height:16px}
+.dday{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;background:var(--surface-2);color:var(--brand-d);border-radius:14px;padding:10px 14px;margin-bottom:12px;font-size:13px}
+.dday b{font-family:var(--f-display);font-size:16px}
+.fab{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:15;display:flex;align-items:center;gap:8px;background:var(--accent);color:#3B2600;font-weight:800;padding:12px 16px;border-radius:99px;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.fab svg{width:22px;height:22px}
+.wrap{padding-bottom:90px}
+.login{display:grid;gap:16px;padding-top:10px}
+.logo.big{font-size:22px}.logo.big svg{width:38px;height:38px}
+.login h2{font-size:26px}
+.people{display:grid;gap:10px}
+.person{display:grid;grid-template-columns:52px 1fr 24px;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px;text-align:left}
+.person b{display:block;font-family:var(--f-display);font-size:18px}.person small{color:var(--muted)}
+.person svg{width:22px;height:22px;color:var(--brand)}
+.ava.sm{width:52px;height:52px;font-size:22px}
+.lform{display:grid;gap:8px}
+.lform label{font-weight:600;font-size:14px}
+.lform input,.askf input{font:inherit;font-size:16px;color:var(--fg);background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:13px 14px;width:100%}
+.lform input:focus,.askf input:focus{outline:none;border-color:var(--brand)}
+.err{color:var(--bad);font-weight:600;margin:0}
+.askf{display:grid;gap:8px;margin-bottom:10px}
+.tawrap{position:relative}
+.tawrap input{padding-right:52px}
+.mic{position:absolute;right:8px;top:8px;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--surface-2);color:var(--brand-d)}
+.mic svg{width:20px;height:20px}
+.mic.live{background:var(--bad);color:#fff;animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.6}}
+.chips2{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.chips2 button{font-size:13px;font-weight:600;padding:7px 11px;border-radius:99px;background:var(--surface);border:1px solid var(--line)}
+.chips2.all button{background:var(--surface-2);border-color:transparent;color:var(--brand-d)}
+.ansc{min-height:0;margin-bottom:12px}
+.aitext{font-size:16px;line-height:1.55}
+.hist{display:grid;gap:6px}
+.hist button{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px}
+.simbtn{width:100%;display:grid;grid-template-columns:44px 1fr 22px;gap:12px;align-items:center;text-align:left;background:var(--accent);color:#3B2600;border-radius:18px;padding:14px;margin-top:12px}
+.simbtn svg{width:28px;height:28px}.simbtn b{display:block;font-family:var(--f-display);font-size:17px}.simbtn small{font-size:12.5px;font-weight:600;opacity:.85}
+.inst{display:grid;grid-template-columns:34px 1fr;gap:10px;background:var(--surface);border:2px dashed var(--brand);border-radius:16px;padding:12px 14px;margin:12px 0 0}
+.inst>svg{width:30px;height:30px;color:var(--brand)}.inst>div>b{display:block;font-family:var(--f-display);font-size:16px}.inst span{font-size:14px}.inst .row{margin-top:8px}.inst .linkbtn{margin:0}
+.timer{font-family:var(--f-display);font-weight:800;font-variant-numeric:tabular-nums;color:var(--muted)}.timer.late{color:var(--bad)}
+.score small{font-size:24px;color:var(--muted)}
+.lvl{font-weight:800;font-size:13px;padding:4px 12px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.lvl.ok,.sn.ok{background:color-mix(in srgb,var(--ok) 18%,var(--surface));color:var(--ok)}.lvl.mid,.sn.mid{background:var(--warn-bg);color:var(--warn-fg)}.lvl.bad,.sn.bad{background:color-mix(in srgb,var(--bad) 15%,var(--surface));color:var(--bad)}
+.warnl div{background:var(--warn-bg);color:var(--warn-fg)}
+.simres{display:grid;gap:8px}
+.sq{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.sq summary{display:grid;grid-template-columns:40px 1fr;gap:10px;align-items:center;padding:12px;cursor:pointer;font-weight:600;font-size:14.5px;list-style:none}
+.sq summary::-webkit-details-marker{display:none}
+.sn{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:17px}
+.sqb{padding:0 12px 12px;display:grid;gap:10px;font-size:15px}.sqb p{margin:0}
+.hnotes{display:flex;gap:8px;flex-wrap:wrap}.hnotes span{background:var(--surface-2);border-radius:12px;padding:6px 10px;font-size:13px;text-align:center}.hnotes b{font-family:var(--f-display);font-size:18px;color:var(--brand-d)}.hnotes small{display:block;color:var(--muted);font-size:11px}
+.spin{width:44px;height:44px;border-radius:50%;border:4px solid var(--line);border-top-color:var(--brand);animation:sp 1s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tabs button{font-size:13px;font-weight:600;padding:7px 12px;border-radius:99px;border:1px solid var(--line);background:var(--surface)}
+.tabs button.on{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.plan{display:grid;gap:8px}
+.day{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;grid-template-columns:62px 1fr;gap:12px;align-items:center}
+.day.today{border:2px solid var(--brand)}
+.day.past{opacity:.6}
+.day .d{font-family:var(--f-display);font-weight:800;text-align:center;line-height:1.1;color:var(--brand-d)}
+.day .d small{display:block;font-family:var(--f-body);font-weight:600;font-size:11px;color:var(--muted);text-transform:uppercase}
+.day .t{font-size:14px}
+.day .m{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.day .m button{font-size:12px;font-weight:600;padding:4px 9px;border-radius:99px;background:var(--surface-2);color:var(--brand-d)}
+.day .m button.dn{background:var(--brand);color:var(--brand-ink)}
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600;font-size:14px;z-index:20;max-width:90vw}
+</style>
+
+<div class="wrap" id="app" lang="es"></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+// ====== CONTENIDO (fuente: tesis final + PPT de sustentación) ======
+const MODULES = [
+{ id:'m1', n:1, title:'ServiGo en 1 minuto', tag:'Introducción', mins:4, cards:[
+  {t:'title', eyebrow:'La pregunta de todo', h:'¿En quién puedo confiar?', p:'Es lo primero que piensa alguien cuando necesita un gasfitero, un electricista o un cerrajero. ServiGo nace para responder esa pregunta.'},
+  {t:'text', h:'¿Qué es ServiGo?', p:'Una plataforma digital que conecta a hogares y pequeños negocios de Lima Norte con técnicos verificados. Antes de contratar, el cliente ve el perfil, las calificaciones, las reseñas y un precio referencial.', key:'Conectar + verificar + mostrar precio antes'},
+  {t:'quote', h:'El How Might We (la pregunta guía)', q:'¿Cómo podríamos ayudar a los usuarios de Lima Norte a identificar prestadores de servicios confiables antes de contratarlos?', by:'Delimita 3 cosas: QUIÉNES (usuarios de Lima Norte) · PROBLEMA (identificar técnicos confiables en urgencias) · MOMENTO (antes de contratarlos)'},
+  {t:'list', h:'Visión y misión', items:[['Visión','Ser la plataforma líder en el Perú para contratar servicios técnicos: rápida, segura y confiable.'],['Misión','Facilitar la contratación de trabajadores independientes con profesionales verificados, de forma rápida, segura y transparente.']], say:'La visión es a dónde queremos llegar: ser la plataforma líder en el Perú para contratar servicios técnicos. La misión es lo que hacemos cada día: facilitar la contratación de técnicos verificados, de forma rápida, segura y transparente.'},
+  {t:'pairs', h:'Dos metodologías', lh:'Metodología', rh:'Para qué', items:[['Design Thinking','Entender al usuario: entrevistas, protopersona, mapas'],['Scrum','Construir el producto por partes: sprints de unos 9 días']], say:'Usamos dos metodologías. Design Thinking, para entender al usuario con entrevistas y mapas. Y Scrum, para construir el producto por partes, en sprints.'},
+  {t:'quote', h:'La frase final del Elevator Pitch', q:'ServiGo: encuentra, compara y contrata al técnico que necesitas, con rapidez y confianza.', by:'Apréndetela: sirve para abrir o cerrar cualquier respuesta.'},
+]},
+{ id:'m2', n:2, title:'El equipo Scrum', tag:'Equipo', mins:3, cards:[
+  {t:'grid', h:'Quién es quién', cells:[['Angel · Business Owner',['Identificó las necesidades de los usuarios','Revisó que las funciones sirvan al negocio']],['Andre (tú) · Scrum Master',['Coordinó la organización del equipo','Identificó impedimentos']],['Dulce · Product Owner',['Definió la visión y la propuesta de valor','Priorizó el backlog']],['Nayeli · Equipo Scrum',['Diseñó la búsqueda rápida y segura','Propuso mejoras de experiencia']]], say:'Angel es el Business Owner: identificó las necesidades del usuario y cuidó que las funciones sirvan al negocio. Tú, Andre, eres el Scrum Master: coordinaste al equipo e identificaste impedimentos. Dulce es la Product Owner: definió la visión y priorizó el backlog. Nayeli es el Equipo Scrum: diseñó la búsqueda rápida y segura y propuso mejoras de experiencia.'},
+  {t:'text', h:'Tu rol: Scrum Master', p:'El Scrum Master NO es el jefe. Es un facilitador: ayuda a que el equipo siga Scrum, organiza las reuniones y quita los obstáculos (impedimentos) que frenan el trabajo.', key:'Facilita y quita obstáculos. No da órdenes.', you:true},
+  {t:'list', h:'Los 4 roles en una línea', items:[['Business Owner','Mira el negocio: ¿esto sirve y genera valor?'],['Product Owner','Decide QUÉ se construye y en qué orden (prioriza el backlog)'],['Scrum Master','Cuida CÓMO trabaja el equipo y quita impedimentos'],['Equipo Scrum','Construye el producto']]},
+  {t:'list', h:'Valores de trabajo (Management 3.0)', items:[['1','Autonomía del equipo'],['2','Respeto en el equipo'],['3','Responsabilidad y autodisciplina'],['4','Foco en la tarea'],['5','Información, transparencia y visibilidad']], say:'Los valores de trabajo vienen de Management 3.0. Son cinco: autonomía del equipo, respeto, responsabilidad y autodisciplina, foco en la tarea, y transparencia y visibilidad de la información.'},
+]},
+{ id:'m3', n:3, title:'Pedro, nuestro cliente', tag:'Protopersona y empatía', mins:5, cards:[
+  {t:'persona', h:'Pedro López', facts:[['Edad','40 años'],['Ocupación','Comerciante'],['Distrito','Comas'],['Estado civil','Casado'],['Educación','Secundaria completa'],['Ingresos','S/ 3,800 al mes']], say:'Nuestra protopersona es Pedro López: 40 años, comerciante de Comas, casado, con secundaria completa y unos 3,800 soles de ingreso al mes.'},
+  {t:'list', h:'Cómo se comporta Pedro', items:[['Apurado','Vida acelerada, casi no tiene tiempo'],['Digital','Usa apps para pedir servicios y pagar'],['Cuidadoso','Compara calificaciones antes de contratar'],['Clave','Valora más la disponibilidad inmediata que el precio; paga más si es confiable']]},
+  {t:'text', h:'Qué necesita Pedro', p:'Soluciones rápidas cuando hay una emergencia. Técnicos confiables en un solo lugar. Resolver sin afectar su negocio ni perder dinero. Ver calificaciones y experiencia antes de contratar.', key:'Rápido · confiable · en un solo lugar'},
+  {t:'grid', h:'Mapa de empatía (1/2)', cells:[['¿Qué piensa y siente?',['Le falta tiempo libre','Estrés cuando hay un imprevisto']],['¿Qué ve?',['Comerciantes buscando técnicos confiables','Anuncios en afiches y redes']],['¿Qué oye?',['Lo difícil que es encontrar técnicos honestos','Recomendaciones de familia y amigos']],['¿Qué le duele?',['Técnicos que demoran horas o no llegan','Dejar entrar a un desconocido']]]},
+  {t:'grid', h:'Mapa de empatía (2/2)', cells:[['¿Qué esfuerzos hace?',['Prefiere pagar un precio justo por un servicio garantizado','Pide contactos de confianza a sus colegas']],['¿A qué aspira?',['Tranquilidad: resolver todo desde el celular','Ahorrar tiempo y dinero comparando en un solo lugar']]]},
+  {t:'remember', items:['Pedro = 40 años, comerciante, Comas','Disponibilidad > precio','Su mayor miedo: dejar entrar a un desconocido']},
+]},
+{ id:'m4', n:4, title:'Lo que escuchamos', tag:'Entrevistas y hallazgos', mins:6, cards:[
+  {t:'big', n:'24', l:'entrevistas de exploración', p:'Con una guía de 23 preguntas a personas que habían contratado técnicos. La mayoría de Lima Norte, como San Martín de Porres.', say:'Hicimos 24 entrevistas de exploración, con una guía de 23 preguntas, a personas que habían necesitado o contratado un técnico.'},
+  {t:'list', h:'Creencias', items:[['1','"Lo barato sale caro": mala calidad o riesgo de robo'],['2','Confianza = identidad + experiencia + trabajos anteriores + recomendaciones'],['3','Los precios son arbitrarios y las reseñas en redes no siempre son reales']]},
+  {t:'list', h:'Hábitos', items:[['1','Piden recomendaciones o buscan afiches en el mercado'],['2','Mandan fotos o videos por WhatsApp antes de contratar'],['3','Consultan 2 o 3 técnicos para comparar o regatear']]},
+  {t:'list', h:'Sugerencias', items:[['1','Validar DNI y antecedentes penales de los técnicos'],['2','Un catálogo con precios, calificaciones y disponibilidad'],['3','Garantía formal y canal de reclamos']]},
+  {t:'list', h:'Necesidades insatisfechas', items:[['1','No pueden verificar la reputación del técnico'],['2','No encuentran un técnico disponible en una emergencia'],['3','No saben cuánto cuesta ni qué incluye (mano de obra vs. materiales)']]},
+  {t:'list', h:'Puntos de dolor', items:[['1','Llegan tarde, no cumplen horarios o cancelan'],['2','Trabajo mal hecho y después no contestan'],['3','Cobran adicionales que no se pactaron']]},
+  {t:'list', h:'Lo que ya usan (competencia)', items:[['Redes','Facebook Marketplace e Instagram'],['Tienda','El servicio técnico de Sodimac'],['Videos','TikTok para ver presupuestos']]},
+  {t:'pairs', h:'De hallazgo a función', lh:'Lo que dijeron', rh:'Lo que construimos', items:[['Cobran adicionales','HU10 Botón de conformidad (precio bloqueado)'],['Mandan fotos por WhatsApp','HU04 Chat con fotos y videos'],['Piden validar DNI','HU05 Perfil verificado'],['No saben el precio','HU02 Tabla de tarifas']], say:'Cada hallazgo se convirtió en una historia de usuario. Por ejemplo: como cobran adicionales, creamos el botón de conformidad con precio bloqueado. Como mandan fotos por WhatsApp, creamos el chat con fotos y videos. Como piden validar el DNI, creamos el perfil verificado. Y como no saben el precio, creamos la tabla de tarifas.'},
+]},
+{ id:'m5', n:5, title:'Validation Board', tag:'Hipótesis', mins:4, cards:[
+  {t:'text', h:'¿Qué es el Validation Board?', p:'Una herramienta de Lean Startup para escribir hipótesis y probarlas con clientes reales antes de construir. Tiene columnas: Inicio, 1er pivote, 2do pivote… Si una hipótesis falla, se pivotea.', key:'Pivotear = cambiar de rumbo si la hipótesis resulta falsa'},
+  {t:'list', h:'Nuestras hipótesis (columna Inicio)', items:[['Cliente','Usuarios que tienen dificultades para encontrar técnicos confiables'],['Problema','Falta de confianza al contratar técnicos desconocidos'],['Solución','Plataforma con técnicos verificados, experiencia, calificaciones y referencias']]},
+  {t:'list', h:'El experimento', items:[['Mayor riesgo','Los usuarios de Lima Norte consideran importante tener información verificada del técnico antes de contratarlo'],['Método','Entrevistas a usuarios de Lima Norte que contrataron técnicos'],['Criterio de éxito','Al menos el 65% de los entrevistados']]},
+  {t:'big', n:'0', l:'pivotes', p:'Todas las hipótesis quedaron validadas: necesidad de contratar rápido, uso del boca a boca, interés en una plataforma, dificultad para comparar e importancia de la información verificada. Ninguna fue invalidada.', say:'No tuvimos que pivotear. Todas las hipótesis se validaron: la necesidad de contratar rápido, el uso del boca a boca, el interés en una plataforma, la dificultad para comparar y la importancia de la información verificada.'},
+]},
+{ id:'m6', n:6, title:'El tamaño del mercado', tag:'TAM · SAM · SOM', mins:4, cards:[
+  {t:'text', h:'Una sola idea', p:'Cada hogar gasta S/ 600 al año en arreglos y tiene 4 personas. Entonces cada persona gasta S/ 150 al año. El dinero de cada nivel siempre es: personas × S/ 150.', key:'S/ 600 ÷ 4 = S/ 150 por persona'},
+  {t:'flow', h:'El embudo', steps:[['TAM · 6,000,000 personas','10 M en Lima × 60% que contrata servicios → S/ 900 millones'],['SAM · 1,440,000 personas','× 30% Lima Norte × 80% con smartphone → S/ 216 millones'],['SOM · 72,000 personas','× 5% que usaría la app al inicio → S/ 10.8 millones']], say:'El TAM son 6 millones de personas: 10 millones en Lima por el 60% que contrata servicios. Son 900 millones de soles. El SAM es 1 millón 440 mil: solo Lima Norte, el 30%, y con smartphone, el 80%. Son 216 millones. Y el SOM son 72 mil personas: el 5% que usaría la app al inicio. Son 10.8 millones de soles.'},
+  {t:'list', h:'¿De dónde salen los datos?', items:[['10 M en Lima','INEI: unos 10,151,000 habitantes'],['80% smartphone','INEI: 89.9% usa internet y 92% lo hace por celular (≈83%)'],['30% Lima Norte','IPSOS dice ≈26%; lo redondeamos'],['60%, S/ 600, 5%','Supuestos del equipo, conservadores']]},
+  {t:'remember', items:['10 M → 6 M → 1.44 M → 72 mil','Dinero = personas × S/ 150','72,000 es la base del RSI']},
+]},
+{ id:'m7', n:7, title:'Competencia y FODA', tag:'Análisis', mins:5, cards:[
+  {t:'grid', h:'3 competidores directos', cells:[['Facebook Marketplace',['+ Muchos anuncios, gratis y conocido','− No verifica a nadie']],['Helpers',['+ Enfocado en el hogar, más confianza','− Poca cobertura en algunos distritos']],['Boca a boca',['+ Experiencias reales de gente cercana','− Difícil en emergencias, no compara precios']]], say:'Tenemos tres competidores directos. Facebook Marketplace: muchos anuncios y gratis, pero no verifica a nadie. Helpers: enfocado en el hogar, pero con poca cobertura en algunos distritos. Y el boca a boca: experiencias reales, pero difícil en emergencias y sin forma de comparar precios.'},
+  {t:'text', h:'Nuestra diferencia', p:'Ninguno verifica al técnico, muestra tarifas antes de contratar, da garantía y se enfoca en Lima Norte al mismo tiempo. ServiGo junta todo eso.', key:'Verificación + tarifas + garantía + Lima Norte'},
+  {t:'grid', h:'FODA', cells:[['Fortalezas',['Aprenden de experiencias previas','Recurren a recomendaciones','Definen un presupuesto','Comparan precios y opiniones']],['Debilidades',['Baja confianza al contratar por internet','Difícil verificar identidad','Poco tiempo para comparar','Poco conocimiento técnico']],['Oportunidades',['Crece el uso de apps de servicios','Más oferta de técnicos digitales','Más pagos digitales','Más necesidad de soluciones rápidas']],['Amenazas',['Prestadores informales y fraudes','Precios que varían según demanda','Exceso de opciones','Información engañosa']]]},
+  {t:'text', h:'Estrategias cruzadas (ejemplos)', p:'F+O: aprovechar que el usuario compara precios para responder rápido a hogares y negocios. D+A: fortalecer la verificación para disminuir el riesgo de fraudes de prestadores informales.', key:'FO = usar fortalezas para oportunidades · DA = reducir debilidades frente a amenazas'},
+]},
+{ id:'m8', n:8, title:'Lean Canvas y Customer Journey', tag:'Modelo de negocio', mins:5, cards:[
+  {t:'grid', h:'Lean Canvas (1/2)', cells:[['Problema',['Difícil encontrar técnicos confiables en emergencias','Riesgo de contratar sin referencias','Tiempo perdido comparando']],['Segmentos',['Hogares y comercios de Lima Norte','Técnicos independientes que buscan clientes']],['Propuesta única',['Conexión inmediata y segura con técnicos verificados de Lima Norte, precios transparentes y garantía desde tu celular']],['Ventaja diferencial',['Validación de seguridad','Cobertura local hiperenfocada']]]},
+  {t:'grid', h:'Lean Canvas (2/2)', cells:[['Solución',['Verificación y perfil digital','Tarifas y pago','Valoraciones y chat']],['Canales',['La app','Redes: Facebook, TikTok, Instagram','Referidos con código']],['Métricas',['Crecimiento de usuarios','Conversión y uso','Calidad y retención']],['Ingresos',['Comisión por servicio (10%)','Suscripción premium para técnicos','Cobro por emergencias nocturnas']]]},
+  {t:'curve', h:'Customer Journey Map (AS-IS)', stages:[['Necesidad',1],['Búsqueda (boca a boca)',-1],['Compara y elige',-1],['Coordina',-1],['Recibe el servicio',1],['Califica',-1],['Recomienda',-1]], say:'El Customer Journey Map muestra el recorrido de hoy. Empieza bien, con la necesidad. Pero buscar, comparar y coordinar son experiencias negativas. Recibir el servicio es positivo, y calificar y recomendar vuelven a ser negativas, porque no hay dónde hacerlo.'},
+  {t:'pairs', h:'Lo que propusimos en cada etapa negativa', lh:'Etapa', rh:'Propuesta ServiGo', items:[['Búsqueda','Técnicos disponibles en tu zona, en un solo lugar'],['Compara','Precios cotizados e información completa'],['Coordina','Contacto directo y rápido con el técnico'],['Califica / Recomienda','Estrellas, comentarios y perfil de reputación pública']]},
+]},
+{ id:'m9', n:9, title:'Propuesta de valor e ideas', tag:'VPC · Walt Disney', mins:5, cards:[
+  {t:'pairs', h:'Value Proposition: el cliente', lh:'Lado', rh:'Qué tiene', items:[['Trabajo','Encontrar un técnico que solucione su problema'],['Dolores','No sabe en quién confiar, no está disponible, no conoce el precio'],['Beneficios buscados','Rapidez, seguridad, comparar opciones, ahorrar tiempo']]},
+  {t:'pairs', h:'Cada dolor tiene su aliviador', lh:'Dolor', rh:'Aliviador', items:[['No sé en quién confiar','Perfil verificado (identidad y experiencia)'],['Dependo de recomendaciones','Calificaciones y reseñas reales'],['El técnico no está disponible','Calendario con horarios'],['No sé el precio','Tabla de precios por servicio']]},
+  {t:'flow', h:'Dinámica Walt Disney', steps:[['1. Soñador','Ideas sin límites: técnicos 24 h, seguimiento, fotos y videos, pagos en la app'],['2. Realista','Cómo hacerlo: verificación, calificaciones, ubicación, cotización, chat'],['3. Crítico / Riesgos','Datos personales, técnicos que fallan, precios que cambian, falta de técnicos']], say:'La dinámica Walt Disney tiene tres roles. El soñador propone ideas sin límites, como técnicos las 24 horas o pagos en la app. El realista ve cómo hacerlas posibles. Y el crítico busca los riesgos, como la protección de datos o técnicos que no cumplen.'},
+  {t:'quote', h:'Elevator Pitch', q:'¿Alguna vez has necesitado un técnico con urgencia y no has sabido a quién llamar? El verdadero problema no es encontrar un número, sino encontrar a alguien en quien confiar.', by:'Y ahí nace ServiGo.'},
+]},
+{ id:'m10', n:10, title:'Prototipo y su validación', tag:'Blueprint · Scope · Malla', mins:5, cards:[
+  {t:'list', h:'Service Blueprint (TO-BE)', items:[['Evidencias','Lo que el cliente ve: listado, perfiles, chat, calificaciones'],['Acciones del cliente','Busca, compara, solicita, califica'],['Contacto (frontstage)','Formulario, botón "Solicitar servicio", chat, llamada'],['Plataforma (backstage)','Filtra técnicos, envía la solicitud, registra la calificación'],['Soporte','Sistema 24/7, base de datos, reputación']], say:'El Service Blueprint muestra cómo funciona el servicio por dentro. Arriba, lo que el cliente ve y hace. En medio, los puntos de contacto con la plataforma. Y abajo, lo que la plataforma hace por detrás y los sistemas de soporte.'},
+  {t:'list', h:'Scope Canvas: metas', items:[['Propósito','Ser el puente digital que conecta en minutos a Lima Norte con técnicos verificados'],['3 meses','200 usuarios activos y 30 servicios completados'],['1er trimestre','80 técnicos verificados'],['4 meses','50 transacciones pagadas; retención 40% usuarios y 60% técnicos a 60 días']]},
+  {t:'big', n:'11', l:'entrevistas con el prototipo', p:'Con una guía de 9 preguntas: cómo lo usarían, cuándo, qué les gustó y qué mejorarían. La mayoría lo vio útil para emergencias del hogar o del negocio.', say:'Después hicimos 11 entrevistas mostrando el prototipo, con una guía de 9 preguntas. La mayoría lo vio útil para emergencias del hogar o del negocio.'},
+  {t:'pairs', h:'Malla receptora: 2 ideas nuevas', lh:'Idea', rh:'Qué pasó', items:[['AE01 Emergencia (María Fernanda, dueña de restaurante)','Reforzó la HU13: solicitud de emergencia'],['EI02 Asistente virtual (Israel)','Se volvió la HU14, priorizada como "No tendrá" en este lanzamiento']]},
+]},
+{ id:'m11', n:11, title:'El Product Backlog', tag:'Historias de usuario', mins:7, cards:[
+  {t:'quote', h:'Visión del producto', q:'Para hogares y pequeños negocios de Lima Norte que enfrentan emergencias técnicas, ServiGo conecta con técnicos verificados por DNI, experiencia y calificaciones reales, con precios estimados, tiempo de llegada real y seguimiento en vivo.', by:'A diferencia de la búsqueda informal por WhatsApp o redes sociales.'},
+  {t:'text', h:'Formato de una historia de usuario', p:'COMO (quién) · QUIERO (qué) · PARA (por qué). Ejemplo: Como usuario que prioriza su seguridad, quiero ver perfiles verificados, para sentir confianza al dejar entrar al técnico.', key:'Como… Quiero… Para…'},
+  {t:'hu'},
+  {t:'list', h:'Listo vs. Hecho vs. Aceptación', items:[['Definición de Listo','Lo que debe estar claro ANTES de empezar (diseño aprobado, datos definidos)'],['Definición de Hecho','Lo que debe estar construido para darla por TERMINADA'],['Criterios de aceptación','Las pruebas concretas que debe pasar (números medibles)']]},
+  {t:'list', h:'Ejemplo: HU05 Perfil verificado', items:[['Listo','Documentos definidos: DNI y antecedentes penales'],['Hecho','Formulario, panel de aprobación y check azul'],['Acepta si…','No aparece en búsquedas sin sus 2 documentos · DNI de 8 dígitos · revisión en 48 h máximo']]},
+  {t:'list', h:'Números de los criterios (los más preguntados)', items:[['HU01','3 últimas reseñas · carga en 3 s'],['HU03','6 categorías mínimo · perfil en 3 clics'],['HU04','Mensaje en 5 s · foto 10 MB · video 30 s'],['HU07','Garantía 7 días · solicitud en 3 pasos'],['HU08','Copia en 10 min · respuesta en 15 días hábiles'],['HU09','Ubicación cada 30 s · aviso a 500 m'],['HU12','Radio de 5 km'],['HU13','2 pasos · respuesta en 10 min']]},
+  {t:'grid', h:'MoSCoW (backlog priorizado)', cells:[['Must (debe)',['HU03 Plataforma','HU01 Perfil','HU11 Distrito','HU02 Tarifas','HU05 Verificado','HU10 Conformidad','HU08 Reclamos']],['Should (debería)',['HU07 Garantía','HU04 Chat','HU06 Horarios']],['Could (podría)',['HU12 Geolocalización','HU09 Rastreo','HU13 Emergencia']],["Won't (no tendrá)",['HU14 Asistente virtual']]], say:'Con MoSCoW priorizamos. Must, lo que debe tener: plataforma, perfil, filtro por distrito, tarifas, perfil verificado, botón de conformidad y libro de reclamaciones. Should: garantía, chat y horarios. Could: geolocalización, rastreo y emergencia. Y Won\'t, lo que no tendrá por ahora: el asistente virtual.'},
+]},
+{ id:'m12', n:12, title:'Los Sprints', tag:'Planificación', mins:6, you:true, cards:[
+  {t:'timeline', h:'Calendario', items:[['S0','05/10 – 11/10','Revisión y preparación'],['S1','12/10 – 20/10','HU03, 01, 11, 02, 05'],['S2','21/10 – 29/10','HU07, 08, 04, 10'],['S3','30/10 – 07/11','HU06, 12, 09, 13'],['Alpha','08/11/26','Lanzamiento (core mechanics)']], say:'El Sprint 0 fue del 5 al 11 de octubre, de revisión. El Sprint 1, del 12 al 20 de octubre. El Sprint 2, del 21 al 29. Y el Sprint 3, del 30 de octubre al 7 de noviembre. El lanzamiento Alpha fue el 8 de noviembre de 2026.'},
+  {t:'list', h:'Objetivo de cada sprint', items:[['Sprint 1','La base: encontrar técnicos confiables en tu distrito (perfil, reseñas, tarifas, verificación)'],['Sprint 2','Contratar seguro: de la cotización a la conformidad (chat, garantía, reclamos)'],['Sprint 3','Rapidez: horarios, cercanía, rastreo y emergencia']]},
+  {t:'text', h:'Planning Poker', p:'Cada uno estima en secreto el esfuerzo de una historia con la serie de Fibonacci (1, 2, 3, 5, 8…). Si no coinciden, se conversa y se vuelve a votar. Ejemplo: en el Chat (HU04) Dulce votó 5 y los demás 8 → quedó en 8.', key:'Estimar esfuerzo, no horas', you:true},
+  {t:'bars', h:'Puntos por historia', items:[['HU04 Chat',8],['HU09 Rastreo',8],['HU01 Perfil',5],['HU03 Plataforma',5],['HU05 Verificado',5],['HU06 Horarios',5],['HU07 Garantía',5],['HU08 Reclamos',5],['HU10 Conformidad',5],['HU12 Geolocalización',5],['HU13 Emergencia',5],['HU02 Tarifas',3],['HU11 Distrito',3]], say:'Las historias más pesadas fueron el chat y el rastreo, con 8 puntos. Las más livianas, la tabla de tarifas y el filtro por distrito, con 3. En total son 67 puntos: 21 en el Sprint 1, 23 en el Sprint 2 y 23 en el Sprint 3.'},
+  {t:'big', n:'45', l:'tareas (TA01–TA45)', p:'Cada historia se dividió en tareas con un responsable. Ejemplo HU03: dibujar el recorrido (Nayeli), elegir colores (Dulce), construir pantallas (Andre), publicar en internet (Angel).', you:true},
+]},
+{ id:'m13', n:13, title:'Daily, cambios y retros', tag:'Seguimiento', mins:6, you:true, cards:[
+  {t:'text', h:'Daily Standup', p:'Reunión corta donde cada uno dice qué hizo, qué hará y qué lo bloquea. Como Scrum Master, registraste los impedimentos y su solución.', key:'¿Qué hice? ¿Qué haré? ¿Qué me bloquea?', you:true},
+  {t:'list', h:'Los 3 impedimentos', items:[['Interno · 10/10','Falta de comunicación y horarios → canales formales y actas'],['Interno · 16/10','Validación de documentos lenta → flujo por etapas'],['Externo · 23/10','Retraso del servicio de mapas → pruebas con datos simulados']], you:true},
+  {t:'pairs', h:'Solicitud de cambio', lh:'Pedido', rh:'Decisión', items:[['Un stakeholder pidió reducir las categorías del inicio','NO aprobado: la validación de la HU03 mostró conformidad y no agregaba valor']]},
+  {t:'text', h:'Sprint Review', p:'Al final de cada sprint se mostró el tablero Kanban con todo en "Hecho" y se revisó cada historia contra sus criterios de aceptación: Aceptado o No aceptado.', key:'Review = mostrar lo construido'},
+  {t:'list', h:'Retrospectivas: lo que aprendimos', items:[['Sprint 1','Bien: organización. Mejorar: revisar criterios antes de programar. Acción: reuniones a mitad de semana'],['Sprint 2','Bien: mejor ritmo. Mejorar: tiempos de prueba. Acción: mini revisión de calidad'],['Sprint 3','Bien: cierre de calidad. Mejorar: no acumular al final. Acción: repetir el método']]},
+]},
+{ id:'m14', n:14, title:'El MVP y su valor', tag:'Informe del producto', mins:4, cards:[
+  {t:'text', h:'¿Qué es el MVP?', p:'El Producto Mínimo Viable: la versión más simple que sirve para probar la idea con usuarios reales. El nuestro es un prototipo web navegable: 16 categorías, 65 servicios con tarifas y 32 técnicos de ejemplo.', key:'Mínimo, pero que funcione'},
+  {t:'list', h:'Lo más innovador', items:[['Emergencia','En 2 pasos; los técnicos cercanos envían su precio'],['Precio bloqueado','Cotización aceptada que no puede subir + garantía 7 días'],['Verificado','DNI y antecedentes antes de aparecer, con check azul']]},
+  {t:'pairs', h:'Las 3 preguntas del informe', lh:'Pregunta', rh:'Respuesta', items:[['¿Solucionó el problema?','Sí, responde al problema; falta probarlo en un entorno real'],['¿Product Market Fit?','Señales positivas, pero aún no comprobado: faltan usuarios activos, contrataciones y retención reales'],['¿Rentable, replicable, escalable?','Rentable por comisiones; replicable a otros distritos; escalable por ser digital']]},
+]},
+{ id:'m15', n:15, title:'¿Es rentable? El RSI', tag:'Justificación', mins:7, you:true, cards:[
+  {t:'quote', h:'Las 2 fórmulas', q:'Ingresos = (LTV − CAC) × clientes   ·   RSI = (Ingresos − Costos) ÷ Costos', by:'Todo en base anual (año 1), igual que el ejemplo del curso.'},
+  {t:'flow', h:'Paso 1 · LTV', steps:[['Ticket promedio: S/ 85','Fuga S/ 85, destape S/ 105, grifo S/ 70'],['Comisión 10% → S/ 8.50','Baja para atraer técnicos (Workana cobra 10%)'],['× 3 servicios al año','Entrevistas: "3 o 4 veces al año"'],['LTV = S/ 25.50','Lo que deja un cliente en un año']]},
+  {t:'flow', h:'Paso 2 · CAC', steps:[['50% redes orgánicas → S/ 0','Publicaciones propias gratis'],['40% referidos → S/ 10','S/ 5 al que recomienda + S/ 5 al nuevo'],['10% anuncios → S/ 43.22','Clic US$ 0.63 × 3.43 ÷ (10% registro × 50% contrata)'],['CAC promedio = S/ 8.32','Ponderado por canal']]},
+  {t:'big', n:'S/ 1,236,830', l:'ingresos del año 1', p:'(S/ 25.50 − S/ 8.32) = S/ 17.18 por cliente × 72,000 clientes del SOM.'},
+  {t:'list', h:'Costos: S/ 23,183', items:[['Desarrollo','S/ 13,500 (1 dev junior × S/ 4,500 × 3 meses)'],['IA para programar','S/ 205.80'],['Marketing','S/ 1,500 (S/ 500 × 3 meses)'],['Mantenimiento','S/ 2,741.16 (20% del desarrollo)'],['Infraestructura','S/ 1,693.88 (Supabase, dominio, mapas, DNI de 80 técnicos)'],['Empresa y marca','S/ 1,434.90 (SAC + INDECOPI)'],['Imprevistos','S/ 2,107.57 (10%)']]},
+  {t:'big', n:'5,235%', l:'RSI', p:'Ganancia neta S/ 1,213,647 ÷ costos S/ 23,183. Por cada S/ 1 invertido se recupera y se ganan S/ 52.35 más. LTV/CAC = 3.06 (mayor que 3 = sano).'},
+  {t:'text', h:'Si dicen que es muy alto', p:'Sale alto porque asumimos captar todo el SOM en el año 1 y la inversión es baja (app digital). Escenario pesimista: con solo 10% del SOM, el RSI sigue en 433%. Punto de equilibrio: solo 1,350 clientes.', key:'10% del SOM → 433% · equilibrio 1,350 clientes', you:true},
+]},
+{ id:'m16', n:16, title:'Conclusiones y recomendaciones', tag:'Cierre', mins:4, cards:[
+  {t:'list', h:'Conclusiones', items:[['a','El problema central es la falta de confianza, información y transparencia'],['b','Design Thinking convirtió el problema en una solución centrada en el usuario'],['c','Scrum organizó el trabajo; la comunicación y la planificación fueron clave'],['d','Fue un aprendizaje profesional y personal']]},
+  {t:'list', h:'Recomendaciones', items:[['a','Fortalecer la verificación: identidad, antecedentes y experiencia'],['b','Seguir probando con clientes potenciales'],['c','Mejorar seguridad, claridad de precios y atención de principio a fin'],['d','Marketing digital y campañas locales para captar usuarios y técnicos']]},
+]},
+{ id:'m17', n:17, title:'Puntos débiles: prepárate', tag:'Lo que el jurado puede notar', mins:6, you:true, cards:[
+  {t:'warn', h:'1 · Dos versiones del MoSCoW', p:'El tablero MoSCoW (pág. 45) pone HU06 y HU13 en "Debe tener", HU02, HU11 y HU12 en "Debería" y HU07 en "Podría", pero el backlog priorizado (pág. 46) y la PPT los ordenan distinto. Defensa: "El tablero fue la primera priorización; el backlog de la pág. 46 es la versión final con la que armamos los sprints."'},
+  {t:'warn', h:'2 · 200 usuarios vs. 72,000 clientes', p:'El Scope Canvas dice 200 usuarios en 3 meses, pero el RSI asume 72,000 en el año. Defensa: "Las metas del Scope son de validación inicial; el RSI sigue el método del curso. Por eso calculamos el equilibrio: 1,350 clientes."'},
+  {t:'warn', h:'3 · ¿App móvil o web?', p:'La misión y el Lean Canvas dicen "aplicación móvil", pero el MVP es web. Defensa: "Empezamos con una plataforma web adaptable al celular, que es más barata y rápida de validar; la app nativa es el siguiente paso."'},
+  {t:'warn', h:'4 · FODA con fortalezas del usuario', p:'Las fortalezas del FODA describen hábitos del usuario, no de la empresa. Si lo preguntan: "Lo construimos desde el comportamiento del cliente para encontrar oportunidades; como empresa, nuestras fortalezas son la verificación y el enfoque en Lima Norte."'},
+  {t:'warn', h:'5 · Detalles de forma', p:'La portada de la PPT dice "PAT 2024" y en la tesis aparece "Mendoza James" (es Jaimes). Corrígelos antes del 23 si aún se puede.'},
+]},
+];
+
+const HU_LIST = [
+ ['HU01','Perfil e historial del técnico','Must',5,10,1],['HU02','Tabla de tarifas','Must',3,10,1],['HU03','Plataforma digital','Must',5,10,1],['HU04','Chat en línea','Should',8,8,2],['HU05','Perfil verificado','Must',5,8,1],['HU06','Horarios disponibles','Should',5,8,3],['HU07','Política de devoluciones','Should',5,9,2],['HU08','Libro de reclamaciones','Must',5,8,2],['HU09','Rastreo en tiempo real','Could',8,8,3],['HU10','Botón de conformidad','Must',5,10,2],['HU11','Filtro por distrito','Must',3,9,1],['HU12','Geolocalización','Could',5,9,3],['HU13','Solicitud de emergencia','Could',5,10,3]
+];
+
+const QUIZ = {
+m1:[{q:'¿Cuál es el How Might We de ServiGo?',o:['¿Cómo podríamos bajar el precio de los técnicos?','¿Cómo podríamos ayudar a los usuarios de Lima Norte a identificar prestadores confiables antes de contratarlos?','¿Cómo podríamos crear la app más grande del Perú?'],a:1,w:'Delimita quiénes (Lima Norte), el problema (técnicos confiables) y el momento (antes de contratar).'},
+ {q:'¿Qué metodología usaron para ENTENDER al usuario?',o:['Scrum','Design Thinking','Kanban'],a:1,w:'Design Thinking para entender; Scrum para construir.'},
+ {q:'Completa: "ServiGo: encuentra, compara y contrata…"',o:['…al precio más bajo','…al técnico que necesitas, con rapidez y confianza','…en todo el Perú'],a:1,w:'Es la frase de cierre del Elevator Pitch.'}],
+m2:[{q:'¿Qué hace el Scrum Master?',o:['Da órdenes al equipo','Facilita el trabajo y quita impedimentos','Prioriza el backlog'],a:1,w:'Priorizar es tarea del Product Owner. El Scrum Master facilita.'},
+ {q:'¿Quién es la Product Owner?',o:['Nayeli','Dulce','Angel'],a:1,w:'Dulce definió la visión y priorizó el backlog.'},
+ {q:'¿De dónde vienen los valores de trabajo del equipo?',o:['Management 3.0','ISO 9001','Lean Canvas'],a:0,w:'Autonomía, respeto, responsabilidad, foco y transparencia.'}],
+m3:[{q:'¿Dónde vive Pedro López?',o:['Los Olivos','Comas','San Juan de Lurigancho'],a:1,w:'Pedro: 40 años, comerciante de Comas.'},
+ {q:'¿Qué valora más Pedro?',o:['El precio más bajo','La disponibilidad inmediata','Que el técnico sea famoso'],a:1,w:'Paga un poco más si el servicio es rápido y confiable.'},
+ {q:'En el mapa de empatía, ¿qué le duele a Pedro?',o:['Que los técnicos demoren o no lleguen, y dejar entrar a desconocidos','Que la app tenga muchos colores','No tener redes sociales'],a:0,w:'Demoras e inseguridad son sus dolores.'}],
+m4:[{q:'¿Cuántas entrevistas de exploración hicieron?',o:['11','24','50'],a:1,w:'24 entrevistas con 23 preguntas. Las 11 fueron las del prototipo.'},
+ {q:'¿Qué hábito encontraron?',o:['Mandan fotos o videos por WhatsApp antes de contratar','Contratan siempre al primero','No comparan precios'],a:0,w:'Por eso existe el chat con fotos y videos (HU04).'},
+ {q:'"Cobran adicionales no pactados" se convirtió en…',o:['HU11 Filtro por distrito','HU10 Botón de conformidad','HU06 Horarios'],a:1,w:'El precio aceptado queda bloqueado.'}],
+m5:[{q:'¿Qué es pivotear?',o:['Cambiar de rumbo si una hipótesis resulta falsa','Subir los precios','Agregar un sprint'],a:0,w:'Se ve en las columnas del Validation Board.'},
+ {q:'¿Cuál fue el criterio mínimo de éxito?',o:['30% de los entrevistados','65% de los entrevistados','100%'],a:1,w:'Al menos el 65% debía confirmar la hipótesis.'},
+ {q:'¿Cuántas veces pivotearon?',o:['Ninguna','Una','Tres'],a:0,w:'Todas las hipótesis se validaron.'}],
+m6:[{q:'¿Cuánto es el SOM?',o:['1,440,000 personas','72,000 personas','6,000,000 personas'],a:1,w:'1,440,000 × 5% = 72,000.'},
+ {q:'¿Cuánto gasta cada persona al año?',o:['S/ 600','S/ 150','S/ 85'],a:1,w:'S/ 600 por hogar ÷ 4 personas.'},
+ {q:'¿Qué porcentajes llevan del TAM al SAM?',o:['30% Lima Norte y 80% smartphone','60% y 5%','50% y 40%'],a:0,w:'6 M × 30% × 80% = 1.44 M.'}],
+m7:[{q:'¿Cuáles son los 3 competidores directos?',o:['Facebook Marketplace, Helpers y boca a boca','Rappi, Uber y Glovo','Sodimac, Promart y Maestro'],a:0,w:'Los tres del análisis de competencia.'},
+ {q:'¿Qué NO hace Facebook Marketplace?',o:['Tener anuncios','Verificar a los prestadores','Ser gratis'],a:1,w:'No existe un proceso de verificación.'},
+ {q:'Una estrategia D+A es…',o:['Usar fortalezas para oportunidades','Reducir debilidades frente a amenazas','Ignorar el FODA'],a:1,w:'Ej.: fortalecer la verificación frente a los fraudes.'}],
+m8:[{q:'¿Cuál NO es una fuente de ingreso del Lean Canvas?',o:['Comisión por servicio','Suscripción premium para técnicos','Venta de herramientas'],a:2,w:'Comisión, premium para técnicos y emergencias nocturnas.'},
+ {q:'En el Customer Journey AS-IS, ¿qué etapa es POSITIVA?',o:['Búsqueda','Recibe el servicio','Compara y elige'],a:1,w:'Necesidad y recibir el servicio son positivas.'},
+ {q:'¿Qué ventaja diferencial tiene ServiGo?',o:['Precio más bajo','Validación de seguridad y cobertura local','Más técnicos que nadie'],a:1,w:'Seguridad + enfoque en Lima Norte.'}],
+m9:[{q:'¿Cuáles son los 3 roles de Walt Disney?',o:['Soñador, realista y crítico','Jefe, empleado y cliente','Diseñador, programador y tester'],a:0,w:'Soñar, ver cómo hacerlo y detectar riesgos.'},
+ {q:'En el VPC, "no sé el precio" se alivia con…',o:['Tabla de precios por servicio','Rastreo en tiempo real','Libro de reclamaciones'],a:0,w:'Precios base antes de contratar.'},
+ {q:'Según el pitch, ¿cuál es el verdadero problema?',o:['Encontrar un número','Encontrar a alguien en quien confiar','Pagar con tarjeta'],a:1,w:'Confianza, no contactos.'}],
+m10:[{q:'¿Cuántas entrevistas hicieron con el prototipo?',o:['24','11','5'],a:1,w:'11 entrevistas con una guía de 9 preguntas.'},
+ {q:'¿Qué historia salió de la idea de Israel?',o:['HU13 Emergencia','HU14 Asistente virtual','HU02 Tarifas'],a:1,w:'Quedó como "No tendrá" en este lanzamiento.'},
+ {q:'Meta del Scope Canvas en 3 meses:',o:['200 usuarios activos y 30 servicios','72,000 clientes','1,000 técnicos'],a:0,w:'Además: 80 técnicos en el trimestre y 50 transacciones en 4 meses.'}],
+m11:[{q:'¿Cuántas historias de usuario tiene el backlog del MVP?',o:['10','13','20'],a:1,w:'HU01 a HU13 (la HU14 queda fuera).'},
+ {q:'¿Qué es la Definición de Hecho?',o:['Lo que debe estar claro antes de empezar','Lo que debe estar construido para darla por terminada','El precio de la historia'],a:1,w:'Listo = antes de empezar; Hecho = terminada.'},
+ {q:'¿En qué categoría MoSCoW está la emergencia (HU13)?',o:['Must','Should','Could'],a:2,w:'En el backlog priorizado: Could, en el Sprint 3.'},
+ {q:'El campo DNI acepta…',o:['8 dígitos numéricos','Cualquier texto','10 dígitos'],a:0,w:'Criterio de aceptación de la HU05.'}],
+m12:[{q:'¿Cuándo fue el lanzamiento Alpha?',o:['08/11/26','05/10/26','23/11/26'],a:0,w:'Después del Sprint 3 (30/10 – 07/11).'},
+ {q:'¿Qué serie usan en Planning Poker?',o:['Fibonacci: 1, 2, 3, 5, 8…','1 al 10','Horas reales'],a:0,w:'Se estima esfuerzo relativo.'},
+ {q:'¿Qué historias pesaron 8 puntos?',o:['Chat y rastreo','Tarifas y distrito','Perfil y plataforma'],a:0,w:'HU04 y HU09: las más complejas.'},
+ {q:'¿Cuál era el objetivo del Sprint 2?',o:['Contratar de forma segura: de la cotización a la conformidad','Rapidez y emergencia','Publicar la plataforma'],a:0,w:'Chat, garantía, reclamos y conformidad.'}],
+m13:[{q:'¿Cuál fue el impedimento EXTERNO?',o:['Falta de comunicación','Retraso del servicio de mapas','Validación lenta de documentos'],a:1,w:'Se resolvió con datos simulados.'},
+ {q:'¿Qué pasó con la solicitud de reducir categorías?',o:['Se aprobó','No se aprobó: no agregaba valor','Se dejó para el Sprint 4'],a:1,w:'La validación de la HU03 mostró conformidad.'},
+ {q:'¿Qué se hace en la retrospectiva?',o:['Mostrar el producto al cliente','Ver qué salió bien, qué mejorar y qué acciones tomar','Estimar historias'],a:1,w:'Mostrar el producto es la Sprint Review.'}],
+m14:[{q:'¿ServiGo logró Product Market Fit?',o:['Sí, totalmente comprobado','Señales positivas, pero aún no comprobado','No, fracasó'],a:1,w:'Faltan usuarios, contrataciones y retención reales.'},
+ {q:'¿Por qué es escalable?',o:['Porque es digital y no necesita local en cada zona','Porque tiene muchos empleados','Porque es barato'],a:0,w:'Replicable a otros distritos; escalable por ser digital.'},
+ {q:'¿Qué es un MVP?',o:['La versión final','La versión más simple que permite probar la idea con usuarios reales','Un tipo de anuncio'],a:1,w:'Producto Mínimo Viable.'}],
+m15:[{q:'¿Cuánto es el LTV?',o:['S/ 8.50','S/ 25.50','S/ 85'],a:1,w:'S/ 85 × 10% × 3 servicios.'},
+ {q:'¿Cuánto es el CAC promedio?',o:['S/ 8.32','S/ 43.22','S/ 10'],a:0,w:'S/ 43.22 es solo el canal de anuncios.'},
+ {q:'¿Cuánto suman los costos del año 1?',o:['S/ 13,500','S/ 23,183','S/ 1,236,830'],a:1,w:'S/ 1,236,830 son los ingresos.'},
+ {q:'¿Cuál es el punto de equilibrio?',o:['72,000 clientes','1,350 clientes','200 clientes'],a:1,w:'S/ 23,183 ÷ S/ 17.18 ≈ 1,350.'}],
+m16:[{q:'¿Cuál es el problema central según las conclusiones?',o:['Falta de técnicos','Falta de confianza, información y transparencia','Precios altos'],a:1,w:'Primera conclusión.'},
+ {q:'¿Qué recomiendan fortalecer primero?',o:['La verificación de técnicos','El diseño del logo','Los colores'],a:0,w:'Identidad, antecedentes y experiencia.'}],
+m17:[{q:'Si te dicen "el MVP es web pero dicen app móvil", respondes:',o:['Que se equivocaron','Que la web adaptable al celular es más rápida de validar y la app nativa es el siguiente paso','Que no importa'],a:1,w:'Convierte la debilidad en decisión estratégica.'},
+ {q:'Si cuestionan 72,000 clientes vs. 200 del Scope:',o:['Lo niegas','Explicas que el Scope es validación inicial y que el equilibrio es solo 1,350 clientes','Cambias el tema'],a:1,w:'El punto de equilibrio es tu mejor argumento.'}],
+};
+
+const JURY = [
+ {m:'m1',q:'Explíquenos su proyecto en un minuto.',a:'ServiGo es una plataforma digital que conecta a hogares y pequeños negocios de Lima Norte con técnicos verificados. El problema que encontramos no es encontrar un número, sino encontrar a alguien en quien confiar. Por eso mostramos perfiles verificados por DNI y antecedentes, calificaciones reales y precios referenciales antes de contratar, con garantía y libro de reclamaciones. ServiGo: encuentra, compara y contrata al técnico que necesitas, con rapidez y confianza.'},
+ {m:'m1',q:'¿Por qué eligieron Lima Norte?',a:'Es la zona más poblada de Lima según IPSOS, con alta demanda de servicios técnicos, y es donde hicimos las entrevistas. Empezar enfocados nos permite verificar bien a los técnicos antes de crecer.'},
+ {m:'m1',q:'¿Qué metodologías usaron y para qué?',a:'Design Thinking para entender al usuario: entrevistas, protopersona, mapa de empatía, Customer Journey y Validation Board. Y Scrum para construir: backlog, MoSCoW, Planning Poker, sprints, daily, review y retrospectivas.'},
+ {m:'m2',q:'¿Cuál fue tu rol y qué hiciste?',a:'Fui el Scrum Master. Coordiné la organización del equipo, facilité las reuniones y registré los impedimentos con su solución. Por ejemplo, cuando teníamos problemas de comunicación y horarios, formalizamos los canales y llevamos actas de reunión.'},
+ {m:'m2',q:'¿Cuál es la diferencia entre Product Owner y Scrum Master?',a:'La Product Owner decide qué se construye y en qué orden, prioriza el backlog. El Scrum Master cuida cómo trabaja el equipo: que siga Scrum y que nada lo bloquee.'},
+ {m:'m3',q:'¿Quién es su cliente?',a:'Pedro López: 40 años, comerciante de Comas, con poco tiempo. Usa apps para pedir servicios y valora más la disponibilidad inmediata que el precio. Su mayor miedo es dejar entrar a un desconocido sin referencias.'},
+ {m:'m4',q:'¿Qué estudios realizaron para identificar las necesidades?',a:'Primero 24 entrevistas de exploración con una guía de 23 preguntas. Ordenamos los hallazgos con la protopersona, el mapa de empatía y el Customer Journey Map. Validamos hipótesis con el Validation Board, con un criterio de 65%. Y luego hicimos 11 entrevistas mostrando el prototipo.'},
+ {m:'m4',q:'¿Qué fue lo más importante que descubrieron en las entrevistas?',a:'Que el problema es de confianza: creen que lo barato sale caro, mandan fotos por WhatsApp, comparan 2 o 3 técnicos y les cobran adicionales no pactados. Y nos pidieron validar DNI y antecedentes, y tener garantía.'},
+ {m:'m4',q:'¿Cómo convirtieron los hallazgos en funciones?',a:'Cada hallazgo se volvió una historia de usuario. Si cobran adicionales, el botón de conformidad bloquea el precio. Si mandan fotos por WhatsApp, el chat permite fotos y videos. Si piden validar el DNI, existe el perfil verificado.'},
+ {m:'m5',q:'¿Qué es un pivoteo? ¿Pivotearon?',a:'Es cambiar de rumbo cuando una hipótesis resulta falsa. Lo vimos en el Validation Board. No tuvimos que pivotear: la hipótesis de mayor riesgo, que el usuario valora la información verificada, superó el criterio del 65%.'},
+ {m:'m6',q:'¿Cómo calcularon el tamaño del mercado?',a:'TAM: 10 millones en Lima por 60% que contrata servicios, 6 millones de personas, 900 millones de soles. SAM: 30% de Lima Norte por 80% con smartphone, 1.44 millones, 216 millones de soles. SOM: el 5%, 72,000 personas, 10.8 millones. Cada persona gasta S/ 150 al año.'},
+ {m:'m6',q:'¿De dónde sacaron esos datos?',a:'La población, del INEI. El peso de Lima Norte, de IPSOS. El uso de celular e internet, del INEI. El 60%, el gasto de S/ 600 y el 5% son supuestos del equipo basados en las entrevistas.'},
+ {m:'m7',q:'¿Quiénes son su competencia y en qué se diferencian?',a:'Facebook Marketplace, Helpers y el boca a boca. Ninguno verifica al técnico, muestra tarifas antes de contratar, da garantía y se enfoca en Lima Norte al mismo tiempo. ServiGo junta todo eso.'},
+ {m:'m8',q:'¿Cómo gana dinero ServiGo?',a:'Con una comisión del 10% por cada servicio contratado. Para el cliente, registrarse es gratis. A futuro, el Lean Canvas plantea una suscripción premium para técnicos y un cobro por emergencias nocturnas.'},
+ {m:'m8',q:'¿Qué muestra su Customer Journey Map?',a:'El recorrido actual: la necesidad y recibir el servicio son positivos, pero buscar, comparar, coordinar, calificar y recomendar son negativos. En cada etapa negativa propusimos una solución: búsqueda por zona, precios cotizados, contacto directo y calificaciones con reputación pública.'},
+ {m:'m9',q:'¿Cuál es su propuesta de valor?',a:'Conexión inmediata, rápida y segura con técnicos verificados de Lima Norte, con precios transparentes y garantía, desde el celular. Cada dolor tiene un aliviador: perfil verificado, reseñas reales, horarios y tabla de precios.'},
+ {m:'m9',q:'¿En qué consistió la dinámica Walt Disney?',a:'Analizamos la idea desde tres roles. El soñador propuso sin límites: técnicos 24 horas, seguimiento, pagos en la app. El realista vio cómo hacerlo posible. Y el crítico detectó riesgos: datos personales, técnicos que no cumplen y precios que cambian.'},
+ {m:'m10',q:'¿Cómo validaron el prototipo?',a:'Con 11 entrevistas y una guía de 9 preguntas. La mayoría lo vio útil para emergencias. De ahí salieron dos ideas: la de María Fernanda, que reforzó la solicitud de emergencia, y la de Israel, un asistente virtual que quedó como HU14 para un siguiente lanzamiento.'},
+ {m:'m10',q:'¿Cuáles son sus metas a corto plazo?',a:'Según el Scope Canvas: 200 usuarios activos y 30 servicios en 3 meses, 80 técnicos verificados en el primer trimestre y 50 transacciones pagadas en 4 meses, con 40% de retención de usuarios y 60% de técnicos.'},
+ {m:'m11',q:'¿Qué es MoSCoW y cómo priorizaron?',a:'Es una técnica de priorización: Must, Should, Could y Won\'t. Primero pusimos lo que da confianza: plataforma, perfil, verificación, tarifas, conformidad y reclamos. Luego la comunicación y la garantía, y al final la rapidez: geolocalización, rastreo y emergencia.'},
+ {m:'m11',q:'¿Por qué la emergencia quedó como Could si es lo más innovador?',a:'Porque sin confianza nadie contrata, aunque el técnico esté cerca. Primero aseguramos la base de confianza en los Sprints 1 y 2, y la rapidez llegó en el Sprint 3.'},
+ {m:'m11',q:'¿Qué diferencia hay entre Definición de Listo y Definición de Hecho?',a:'La Definición de Listo es lo que debe estar claro antes de empezar una historia, como el diseño aprobado. La de Hecho es lo que debe estar construido para darla por terminada. Y los criterios de aceptación son las pruebas medibles, como que el DNI tenga 8 dígitos.'},
+ {m:'m12',q:'¿Cómo organizaron los sprints?',a:'Cuatro sprints. El Sprint 0 de revisión, del 5 al 11 de octubre. El Sprint 1, la base para encontrar técnicos confiables. El Sprint 2, contratar de forma segura. El Sprint 3, rapidez y emergencia. El lanzamiento Alpha fue el 8 de noviembre.'},
+ {m:'m12',q:'¿Qué es el Planning Poker? Dé un ejemplo.',a:'Cada uno estima en secreto el esfuerzo de una historia con Fibonacci. Si no coinciden, se conversa y se vuelve a votar. En el chat, Dulce votó 5 y los demás 8; quedó en 8 porque incluye fotos y videos.'},
+ {m:'m13',q:'¿Qué impedimentos tuvieron y cómo los resolvieron?',a:'Tres. Falta de comunicación y horarios: formalizamos canales y actas. Validación de documentos lenta: la hicimos por etapas. Y uno externo, el retraso del servicio de mapas: probamos con datos simulados para no detenernos.'},
+ {m:'m13',q:'¿Hubo solicitudes de cambio?',a:'Sí. Un stakeholder pidió reducir las categorías del inicio. No se aprobó, porque la validación de la HU03 mostró que los usuarios estaban conformes y el cambio no agregaba valor.'},
+ {m:'m13',q:'¿Qué aprendieron en las retrospectivas?',a:'En el Sprint 1, que debíamos revisar los criterios de aceptación antes de programar; agregamos reuniones a mitad de semana. En el Sprint 2, ajustar los tiempos de prueba con una mini revisión de calidad. En el Sprint 3, no acumular entregables al final.'},
+ {m:'m14',q:'¿Qué funcionalidades consideran más innovadoras?',a:'Tres. La solicitud de emergencia en 2 pasos, donde los técnicos cercanos envían su precio. El precio bloqueado con garantía de 7 días. Y la verificación de DNI y antecedentes antes de aparecer, con el check azul.'},
+ {m:'m14',q:'¿Lograron Product Market Fit?',a:'Todavía no está comprobado. Hay señales positivas en las entrevistas, pero para confirmarlo necesitamos usuarios activos, contrataciones reales, satisfacción y retención.'},
+ {m:'m14',q:'¿Es escalable y replicable?',a:'Es replicable porque puede llevarse a otros distritos o ciudades sumando técnicos. Y es escalable porque, al ser digital, crece en usuarios sin necesitar un local en cada zona.'},
+ {m:'m15',q:'¿Cómo calcularon el RSI?',a:'Con el método del curso, en un año. LTV: S/ 85 por 10% por 3 servicios, S/ 25.50. CAC promedio: S/ 8.32. Ingresos: S/ 17.18 por 72,000 clientes, S/ 1,236,830. Costos: S/ 23,183. RSI: 5,235%.'},
+ {m:'m15',q:'Su RSI de 5,235% no es creíble. ¿Por qué deberíamos creerlo?',a:'Sale alto porque asumimos captar todo el SOM en el primer año y la inversión es baja al ser digital. Por eso calculamos un escenario pesimista: con el 10% del SOM el RSI sigue en 433%, y el punto de equilibrio es de solo 1,350 clientes. Además, el LTV es 3 veces el CAC.'},
+ {m:'m15',q:'¿Por qué una comisión de 10%?',a:'Es baja a propósito, para atraer técnicos informales que hoy no pagan nada. Workana cobra 10%. Si fuera más alta, el técnico preferiría arreglar por fuera de la app.'},
+ {m:'m15',q:'¿Qué pasa si el técnico cobra por fuera para no pagar comisión?',a:'Fuera de la app pierde la garantía, las reseñas que le traen clientes y el check de verificado. Para él, la comisión es el precio de conseguir clientes sin buscarlos.'},
+ {m:'m15',q:'¿S/ 13,500 alcanza para desarrollar la app?',a:'Es un desarrollador junior por 3 meses a S/ 4,500, apoyado con IA, que acelera el trabajo. Además usamos servicios que se pagan por uso, como Supabase y Google Maps.'},
+ {m:'m16',q:'¿Cuál es su principal conclusión?',a:'Que el problema central al contratar técnicos es la falta de confianza, información y transparencia. Design Thinking nos ayudó a convertirlo en una solución centrada en el usuario, y Scrum a construirla de forma organizada.'},
+ {m:'m16',q:'¿Qué recomiendan para el futuro?',a:'Fortalecer la verificación de técnicos, seguir probando con clientes reales, mejorar la claridad de precios y la atención, y hacer marketing digital y campañas locales para sumar usuarios y técnicos.'},
+ {m:'m17',q:'¿Por qué dicen "aplicación móvil" si el MVP es web?',a:'Empezamos con una plataforma web adaptable al celular porque es más rápida y barata de validar. La app nativa es el siguiente paso cuando confirmemos la demanda.'},
+ {m:'m17',q:'En el Scope dicen 200 usuarios, pero en el RSI 72,000. ¿Cuál es?',a:'Son cosas distintas. Los 200 usuarios son la meta de validación de los primeros 3 meses. El RSI sigue el método del curso con el SOM completo. Lo realista es mirar el punto de equilibrio: con 1,350 clientes ya recuperamos la inversión.'},
+];
+
+// Plan de estudio hasta la sustentación (23/11)
+const PLAN = [
+ ['2026-11-11',['m1','m2'],'Empieza suave: qué es ServiGo y quién es quién'],
+ ['2026-11-12',['m3','m4'],'El cliente y las entrevistas'],
+ ['2026-11-13',['m5','m6'],'Hipótesis y mercado'],
+ ['2026-11-14',['m7','m8'],'Competencia, FODA y modelo de negocio'],
+ ['2026-11-15',['m9','m10'],'Propuesta de valor y prototipo'],
+ ['2026-11-16',[],'Repaso: 15 preguntas de jurado de los módulos 1 a 10'],
+ ['2026-11-17',['m11'],'El backlog (el módulo más largo)'],
+ ['2026-11-18',['m12','m13'],'Sprints, daily y retros: tu rol'],
+ ['2026-11-19',['m14','m15'],'MVP y RSI'],
+ ['2026-11-20',['m16','m17'],'Cierre y puntos débiles'],
+ ['2026-11-21',[],'Repaso total: modo jurado con todas las preguntas'],
+ ['2026-11-22',[],'Simulacro: escucha todo el proyecto y responde 20 preguntas'],
+ ['2026-11-23',[],'Sustentación 3:35 p.m. Entra 15 min antes, PPT en PDF, ropa formal, máx. 20 min. Solo repasa "Puntos débiles"'],
+];
+
+// Ideas clave por pregunta del jurado (mismo orden que JURY). [texto, palabras que la cuentan, separadas por |]
+const JKEYS = [
+ [['Plataforma que conecta con técnicos','plataforma|app|aplicacion|conecta'],['Lima Norte','lima norte'],['Técnicos verificados','verific'],['Problema de confianza','confia|confianza'],['Precio antes de contratar','precio|tarifa']],
+ [['Zona más poblada','poblad'],['Alta demanda de técnicos','demanda'],['Ahí hicimos las entrevistas','entrevist'],['Enfocarse para verificar bien','enfoc|empezar']],
+ [['Design Thinking','design thinking|design'],['Para entender al usuario','entender|usuario'],['Scrum','scrum'],['Para construir por sprints','sprint|construir']],
+ [['Scrum Master','scrum master'],['Coordiné o facilité al equipo','coordin|facilit|organic|organiz'],['Impedimentos','impediment|obstacul'],['Un ejemplo (actas o canales)','acta|canal|horario']],
+ [['PO decide qué y en qué orden','product owner|po |prioriz'],['Backlog','backlog'],['SM cuida cómo trabaja el equipo','scrum master|facilit|como trabaja'],['Quita bloqueos','impediment|bloque|obstacul']],
+ [['Pedro López','pedro'],['40 años','40'],['Comerciante de Comas','comerciante|comas'],['Disponibilidad antes que precio','disponib|rapid'],['Miedo a desconocidos','desconocid|miedo|segur']],
+ [['24 entrevistas','24'],['23 preguntas','23'],['Protopersona / empatía / Journey','protopersona|empatia|journey'],['Validation Board 65%','validation|65'],['11 entrevistas del prototipo','11|prototipo']],
+ [['Es un problema de confianza','confianza|confia'],['Lo barato sale caro','barato'],['Fotos por WhatsApp','whatsapp|foto'],['Comparan 2 o 3 técnicos','compar'],['Adicionales no pactados','adicional|cobr']],
+ [['Hallazgo → historia de usuario','historia'],['Adicionales → botón de conformidad','conformidad|bloque'],['WhatsApp → chat con fotos','chat'],['DNI → perfil verificado','verific|dni']],
+ [['Cambiar de rumbo','cambi|rumbo'],['Si la hipótesis es falsa','hipotesis|falsa|invalid'],['Validation Board','validation'],['No pivoteamos','no pivot|no tuvimos|ninguna|no hubo'],['Criterio 65%','65']],
+ [['TAM 6 millones','6 millon|6000000|seis millon'],['SAM 1.44 millones','1440000|144|millon 440'],['SOM 72,000','72000|72 mil'],['S/ 150 por persona','150'],['30% y 80%','30|80']],
+ [['INEI (población)','inei'],['IPSOS (Lima Norte)','ipsos'],['Supuestos del equipo','supuesto|entrevist|estimad']],
+ [['Facebook Marketplace','facebook|marketplace'],['Helpers','helpers'],['Boca a boca','boca'],['Ninguno verifica','verific'],['Tarifas y garantía','tarifa|precio|garantia']],
+ [['Comisión','comision'],['10%','10'],['Gratis para el cliente','gratis|gratuito'],['Premium para técnicos','premium|suscrip']],
+ [['Recorrido actual del cliente','recorrido|etapa|actual'],['Buscar y comparar son negativos','negativ|busc|compar'],['Recibir el servicio es positivo','positiv|recib'],['Propuesta en cada etapa','propuest|solucion']],
+ [['Conexión rápida y segura','rapid|segur'],['Técnicos verificados','verific'],['Precios transparentes','precio|transparen'],['Garantía','garantia'],['Dolor → aliviador','dolor|alivi']],
+ [['Soñador','sonador|soñador'],['Realista','realista'],['Crítico / riesgos','critico|riesgo'],['Un ejemplo de cada rol','24|dato|pago']],
+ [['11 entrevistas','11'],['9 preguntas','9'],['Útil para emergencias','emergencia'],['Asistente virtual HU14','asistente|israel|14']],
+ [['200 usuarios','200'],['30 servicios','30'],['80 técnicos','80'],['50 transacciones','50']],
+ [['Must, Should, Could, Won\'t','must|should|could|moscow'],['Primero lo que da confianza','confianza|confia'],['Luego comunicación y garantía','chat|garantia|comunic'],['Al final la rapidez','rapid|emergencia|geoloc|rastreo']],
+ [['Sin confianza nadie contrata','confianza|confia'],['Base en los Sprints 1 y 2','sprint 1|sprint 2|base|primero'],['Rapidez en el Sprint 3','sprint 3|rapid']],
+ [['Listo = antes de empezar','listo|antes'],['Hecho = terminada','hecho|termin'],['Criterios de aceptación medibles','criterio|aceptacion|medible'],['Un ejemplo (DNI 8 dígitos)','8|dni']],
+ [['Sprint 0 de revisión','sprint 0|cero|revision'],['Sprint 1: base y confianza','sprint 1|base'],['Sprint 2: contratar seguro','sprint 2|segur|contrat'],['Sprint 3: rapidez','sprint 3|rapid|emergencia'],['Alpha 8 de noviembre','8 de noviembre|0811|alpha|lanzamiento']],
+ [['Estimar en secreto','secret|estim'],['Fibonacci','fibonacci|1 2 3 5 8'],['Si no coinciden, se conversa','convers|discut|vuelve|coinciden'],['Ejemplo: chat 8 puntos','chat|8']],
+ [['Comunicación y horarios','comunic|horario'],['Canales formales y actas','canal|acta'],['Validación por etapas','etapa|validac|document'],['Mapas: datos simulados','mapa|simulad|geoloc']],
+ [['Stakeholder pidió reducir categorías','categor|stakeholder|reducir'],['No se aprobó','no se aprob|rechaz|no'],['La HU03 tuvo conformidad','conform|valor|hu03|03']],
+ [['Sprint 1: revisar criterios antes','criterio|sprint 1'],['Reuniones a mitad de semana','mitad|reunion'],['Sprint 2: mini revisión de calidad','calidad|prueba|sprint 2'],['Sprint 3: no acumular al final','acumul|final|sprint 3']],
+ [['Emergencia en 2 pasos','emergencia'],['Técnicos envían su precio','precio|cotiz'],['Precio bloqueado','bloque|conformidad'],['Garantía 7 días','garantia|7'],['Verificación DNI y antecedentes','verific|dni|antecedent']],
+ [['Aún no comprobado','no|todavia|aun'],['Señales positivas','señal|senal|positiv'],['Faltan usuarios y contrataciones reales','usuario|contrat|retencion|real']],
+ [['Replicable a otros distritos','replic|distrit|ciudad'],['Escalable por ser digital','escal|digital'],['Sin local en cada zona','local|fisic|infraestruct']],
+ [['LTV S/ 25.50','2550|25 con 50|25.50|ltv'],['CAC S/ 8.32','832|8.32|cac'],['Ingresos S/ 1,236,830','1236830|1236|1.2 millon|ingreso'],['Costos S/ 23,183','23183|23 mil|costo'],['RSI 5,235%','5235|rsi']],
+ [['Captamos todo el SOM','som|todo'],['Inversión baja (digital)','inversion|baja|digital'],['Pesimista: 10% → 433%','433|10%|pesimista'],['Equilibrio 1,350 clientes','1350|equilibrio'],['LTV 3 veces el CAC','3 veces|306|3.06']],
+ [['Baja a propósito','baja|proposito'],['Atraer técnicos informales','informal|atraer'],['Workana cobra 10%','workana'],['Si es alta, arreglan por fuera','fuera|alta']],
+ [['Pierde la garantía','garantia'],['Pierde las reseñas','reseña|resena|calific'],['Pierde el check verificado','verific|check'],['Comisión = precio de conseguir clientes','cliente|comision']],
+ [['1 desarrollador junior','junior|desarrollador|1 dev'],['3 meses a S/ 4,500','4500|3 meses'],['Apoyado con IA','ia|inteligencia artificial'],['Servicios que se pagan por uso','supabase|maps|uso']],
+ [['Falta de confianza, información y transparencia','confianza|transparen|informacion'],['Design Thinking','design'],['Scrum','scrum']],
+ [['Fortalecer verificación','verific'],['Seguir probando con clientes','prueba|probar|cliente'],['Claridad de precios','precio'],['Marketing digital','marketing|redes|campaña|campana']],
+ [['Web adaptable al celular','web|celular|adaptable'],['Más rápida y barata de validar','rapid|barat|validar'],['App nativa después','nativa|siguiente|despues']],
+ [['200 = meta de validación','validacion|200|meta'],['RSI usa el SOM del curso','som|curso|metodo'],['Equilibrio 1,350 clientes','1350|equilibrio']],
+];
+
+// Glosario rápido (respuesta inmediata, sin internet)
+const GLOSS = {
+ 'Retrospectiva':'Reunión al final de cada sprint donde el equipo revisa cómo trabajó: qué salió bien, qué se pudo hacer mejor y qué acciones tomará. En ServiGo, en el Sprint 1 acordaron revisar los criterios de aceptación antes de programar y hacer reuniones a mitad de semana.',
+ 'Sprint':'Un periodo corto de trabajo (en ServiGo, unos 9 días) en el que se termina una parte del producto. Tuvieron 4: Sprint 0 de revisión y Sprints 1, 2 y 3.',
+ 'Sprint Review':'La reunión al final del sprint donde se MUESTRA lo construido y se revisa si cada historia cumple sus criterios (aceptada o no). En ServiGo se mostró el tablero Kanban en "Hecho".',
+ 'Daily Standup':'Reunión diaria corta (unos 15 minutos) donde cada uno dice qué hizo, qué hará y qué lo bloquea. Ahí el Scrum Master detecta impedimentos.',
+ 'Impedimento':'Cualquier obstáculo que frena al equipo. En ServiGo: falta de comunicación, validación de documentos lenta y el retraso del servicio de mapas.',
+ 'Product Backlog':'La lista ordenada de todo lo que el producto necesita, escrita como historias de usuario. En ServiGo: HU01 a HU13 (más la HU14 que no entra en este lanzamiento).',
+ 'Historia de usuario':'Un requisito escrito desde el usuario: COMO (quién), QUIERO (qué), PARA (por qué). Ej.: Como usuario que prioriza su seguridad, quiero ver perfiles verificados, para confiar en el técnico.',
+ 'Product Owner':'La persona que decide QUÉ se construye y en qué orden: dueña de la visión y del backlog. En ServiGo es Dulce.',
+ 'Scrum Master':'El facilitador del equipo: cuida que se siga Scrum y quita impedimentos. No es el jefe. En ServiGo es Andre.',
+ 'Business Owner':'Representa al negocio: identifica necesidades y revisa que las funciones generen valor. En ServiGo es Angel.',
+ 'Scrum':'Marco de trabajo ágil para construir un producto por partes, en sprints cortos, con roles (PO, SM, equipo) y reuniones (planning, daily, review, retro).',
+ 'Design Thinking':'Método para resolver problemas empezando por entender a las personas: empatizar, definir, idear, prototipar y validar. En ServiGo: entrevistas, protopersona, mapa de empatía, Validation Board y prototipo.',
+ 'MVP':'Producto Mínimo Viable: la versión más simple que sirve para probar la idea con usuarios reales. El de ServiGo es un prototipo web navegable.',
+ 'MoSCoW':'Técnica para priorizar: Must (debe tener), Should (debería), Could (podría) y Won\'t (no tendrá por ahora). En ServiGo, la HU14 (asistente virtual) quedó como Won\'t.',
+ 'Planning Poker':'Forma de estimar el esfuerzo de cada historia: todos votan en secreto con la serie de Fibonacci (1, 2, 3, 5, 8…) y, si no coinciden, conversan y vuelven a votar. El chat quedó en 8 puntos.',
+ 'Puntos de historia':'Medida del esfuerzo relativo de una historia, no de horas. ServiGo sumó 67 puntos: 21 en el Sprint 1, 23 en el 2 y 23 en el 3.',
+ 'Definición de Listo':'Lo que debe estar claro ANTES de empezar una historia. Ej. en HU05: documentos definidos (DNI y antecedentes) y diseño del check azul aprobado.',
+ 'Definición de Hecho':'Lo que debe estar construido para dar una historia por TERMINADA. Ej. en HU05: formulario, panel de aprobación y check azul integrados.',
+ 'Criterios de aceptación':'Las pruebas concretas y medibles que debe pasar una historia. Ej. en HU05: el DNI acepta solo 8 dígitos y la revisión se hace en 48 horas como máximo.',
+ 'Kanban':'Tablero visual con columnas (por hacer, en proceso, hecho) para ver el avance del trabajo. ServiGo lo usó en Miro.',
+ 'Pivote':'Cambiar de rumbo (cliente, problema o solución) cuando una hipótesis resulta falsa. ServiGo no pivoteó porque sus hipótesis se validaron.',
+ 'Validation Board':'Herramienta de Lean Startup para escribir hipótesis y probarlas con clientes. ServiGo usó un criterio mínimo de éxito del 65% de los entrevistados.',
+ 'TAM SAM SOM':'Tres niveles del mercado: TAM es el total (6 millones de personas), SAM el que puedes alcanzar (1.44 millones en Lima Norte con smartphone) y SOM el que captas al inicio (72,000).',
+ 'LTV':'Lifetime Value: cuánto dinero deja un cliente en un periodo. En ServiGo: S/ 85 × 10% × 3 servicios al año = S/ 25.50.',
+ 'CAC':'Costo de Adquisición de Cliente: cuánto cuesta conseguir un cliente. En ServiGo, promedio S/ 8.32 (redes gratis, referidos S/ 10, anuncios S/ 43.22).',
+ 'RSI':'Retorno Sobre la Inversión: (Ingresos − Costos) ÷ Costos. En ServiGo, 5,235%: por cada sol invertido se recupera y se ganan S/ 52.35 más.',
+ 'Punto de equilibrio':'La cantidad de clientes necesaria para recuperar toda la inversión. En ServiGo: S/ 23,183 ÷ S/ 17.18 ≈ 1,350 clientes.',
+ 'Lean Canvas':'Un modelo de negocio en una hoja: problema, segmentos, propuesta única, solución, canales, métricas, ventaja, costos e ingresos.',
+ 'Customer Journey Map':'Mapa del recorrido del cliente por etapas, con sus emociones. El de ServiGo (AS-IS) muestra que buscar, comparar y coordinar son experiencias negativas hoy.',
+ 'Value Proposition Canvas':'Herramienta que conecta lo que el cliente necesita (trabajos, dolores, beneficios) con lo que ofreces (productos, aliviadores, generadores de beneficios).',
+ 'Service Blueprint':'Diagrama de cómo funciona el servicio por dentro: lo que ve y hace el cliente, los puntos de contacto, lo que hace la plataforma por detrás y los procesos de soporte.',
+ 'Scope Canvas':'Lienzo que define el alcance: propósito, necesidades del usuario, objetivos de corto y largo plazo, acciones y métricas. ServiGo: 200 usuarios activos en 3 meses.',
+ 'Protopersona':'Un personaje que representa al cliente típico. El de ServiGo es Pedro López, 40 años, comerciante de Comas.',
+ 'Mapa de empatía':'Herramienta para entender qué piensa, siente, ve, oye, le duele y a qué aspira el cliente.',
+ 'FODA':'Análisis de Fortalezas, Oportunidades, Debilidades y Amenazas, con estrategias cruzadas (FO, FA, DO, DA).',
+ 'How Might We':'Pregunta "¿Cómo podríamos…?" que guía el proyecto. La de ServiGo: ¿cómo podríamos ayudar a los usuarios de Lima Norte a identificar prestadores confiables antes de contratarlos?',
+ 'Elevator Pitch':'Presentación del proyecto en menos de un minuto, como si tuvieras un viaje en ascensor. Cierra con: "ServiGo: encuentra, compara y contrata al técnico que necesitas, con rapidez y confianza".',
+ 'Product Market Fit':'Cuando el producto realmente encaja con lo que el mercado quiere y la gente lo usa y lo paga. ServiGo tiene señales positivas, pero aún no está comprobado.',
+ 'Stakeholder':'Cualquier persona interesada o afectada por el proyecto (clientes, técnicos, docentes, socios). En ServiGo, un stakeholder pidió reducir las categorías y no se aprobó.',
+ 'Malla receptora':'Herramienta para ordenar el feedback de las entrevistas del prototipo. De ahí salieron dos ideas: solicitud de emergencia y asistente virtual.',
+ 'Dinámica Walt Disney':'Técnica de ideación con tres roles: soñador (ideas sin límites), realista (cómo hacerlas) y crítico (riesgos).',
+ 'Escalable':'Que puede crecer en usuarios sin crecer igual en costos. ServiGo lo es por ser digital: no necesita un local en cada zona.',
+};
+
+// Rol de cada persona
+const ROLES = {
+ andre:{name:'Andre', role:'Scrum Master', mods:['m2','m12','m13','m15']},
+ angel:{name:'Angel', role:'Business Owner', mods:['m1','m2','m6','m7','m8','m14','m15']},
+};
+// Respuesta alternativa de "¿Cuál fue tu rol?" para Angel
+const JURY_ALT = {39:{angel:{a:'Buenos días, soy Angel Sebastian Mario Astudillo Porroa y mi rol Scrum es Business Owner: identifiqué las necesidades de los usuarios y revisé que las funciones sirvan al negocio.',k:[['Nombre completo','astudillo|angel sebastian'],['Rol Scrum','business owner']]}}, 3:{angel:{a:'Fui el Business Owner. Identifiqué las necesidades de los usuarios relacionadas con la contratación rápida y segura de técnicos, y revisé que las funcionalidades propuestas respondieran a los objetivos del negocio. Por ejemplo, cuidé que el modelo de comisión del 10% fuera atractivo para los técnicos y sostenible para ServiGo.', k:[['Business Owner','business owner|dueño del negocio'],['Necesidades de los usuarios','necesidad|usuario'],['Revisé que sirva al negocio','negocio|objetivo|funcionalidad'],['Un ejemplo','comision|10|ejemplo']]}}};
+
+// ===== Módulo 18: teoría y preguntas del simulacro =====
+MODULES.push({ id:'m18', n:18, title:'Teoría y simulacro', tag:'Preguntas que ya les hicieron', mins:8, cards:[
+  {t:'text', h:'Preséntate así', p:'"Buenos días, soy Andre Sebastian Arce Vargas y mi rol Scrum es Scrum Master." El simulacro pidió que cada uno se presente con nombres y apellidos y su rol.', key:'Nombre completo + rol Scrum', you:true},
+  {t:'text', h:'Early Adopter', p:'Es el primer cliente que adopta una solución nueva, incluso imperfecta, porque su problema le duele mucho y ya busca cómo resolverlo. Se reconoce porque ya gasta tiempo o dinero en soluciones caseras.', key:'Le duele mucho y ya busca solución'},
+  {t:'list', h:'Los Early Adopters de ServiGo', items:[['Quiénes','Dueños de pequeños negocios de Lima Norte (bodegas, restaurantes) y hogares con emergencias frecuentes'],['Cómo los reconocimos','En las entrevistas: ya mandan fotos por WhatsApp, comparan 2 o 3 técnicos y algunos ya usaron Helpers o Sodimac'],['Ejemplos reales','Carlos (bodega, Los Olivos) y María Fernanda (restaurante, SMP) en las entrevistas del prototipo']], say:'Nuestros early adopters son dueños de pequeños negocios de Lima Norte, como bodegas o restaurantes, y hogares con emergencias frecuentes. Los reconocimos en las entrevistas: ya mandan fotos por WhatsApp, comparan dos o tres técnicos y algunos ya usaron Helpers o Sodimac. Por ejemplo, Carlos, que tiene una bodega en Los Olivos, y María Fernanda, que tiene un restaurante en San Martín de Porres.'},
+  {t:'text', h:'¿Por qué una protopersona?', p:'Para ponerle cara al cliente antes de tener datos completos. "Proto" porque es una primera versión basada en lo que el equipo sabe; luego se valida con entrevistas. Así todas las decisiones se toman pensando en Pedro.', key:'Ponerle cara al cliente y luego validarlo'},
+  {t:'text', h:'¿Cómo consolidaron el How Might We?', p:'A partir de los hallazgos de las entrevistas: el dolor que más se repetía era no saber en quién confiar. Lo delimitamos en quiénes (usuarios de Lima Norte), problema (identificar técnicos confiables) y momento (antes de contratar).'},
+  {t:'text', h:'Suposiciones e hipótesis', p:'Sí ayudan: una suposición es una creencia sin probar. La convertimos en hipótesis en el Validation Board y la probamos con entrevistas, con un criterio de éxito del 65%. Si no se cumple, se pivotea.', key:'Suposición → hipótesis → experimento → validar o pivotear'},
+  {t:'text', h:'Métricas vanidosas', p:'Números que se ven bonitos pero no ayudan a decidir: descargas, likes, visitas o seguidores. Las métricas accionables de ServiGo son la tasa de conversión, la retención (40% de usuarios a 60 días), los servicios completados y el NPS.', key:'Vanidosa = se ve bien · Accionable = te ayuda a decidir'},
+  {t:'list', h:'Modelo de negocio', items:[['Principal','Comisión del 10% por cada servicio contratado dentro de la plataforma (intermediación)'],['Freemium','Gratis para clientes; suscripción premium para técnicos que quieran destacar'],['Extra','Cobro por atención prioritaria o emergencias nocturnas']], say:'Nuestro modelo de negocio es de intermediación: ganamos una comisión del 10% por cada servicio contratado en la plataforma. Es freemium: gratis para clientes, con una suscripción premium para los técnicos que quieran destacar. Y como extra, un cobro por atención prioritaria o emergencias nocturnas.'},
+  {t:'list', h:'Respuestas cortas del simulacro', items:[['Stakeholder del problema','Los hogares y pequeños negocios de Lima Norte que necesitan técnicos; también los técnicos independientes'],['Mayor fortaleza (FODA)','Que los usuarios ya comparan precios y opiniones antes de elegir: nuestra plataforma les da justo eso'],['Público del SOM','72,000 personas de Lima Norte con smartphone dispuestas a usar la app (5% del SAM)'],['Análisis de competencia','Salió de las entrevistas (qué usan hoy) y de investigar alternativas: Facebook Marketplace, Helpers y boca a boca']]},
+  {t:'list', h:'Para qué sirvió cada herramienta', items:[['Mapa de empatía','Entender qué piensa, siente y le duele al cliente'],['Customer Journey Map','Ver su recorrido actual y en qué etapas sufre, para proponer mejoras'],['Scope Canvas','Definir el alcance: propósito, metas y métricas'],['Validation Board','Probar hipótesis con clientes reales']]},
+]});
+QUIZ.m18 = [
+ {q:'¿Qué es una métrica vanidosa?',o:['Una que se ve bien pero no ayuda a decidir, como likes o descargas','La tasa de conversión','El RSI'],a:0,w:'Las accionables son conversión, retención y NPS.'},
+ {q:'¿Quién es un Early Adopter?',o:['El último cliente en llegar','El primer cliente que adopta la solución porque su problema le duele mucho','Un inversionista'],a:1,w:'En ServiGo: dueños de pequeños negocios y hogares con emergencias frecuentes.'},
+ {q:'El modelo de negocio de ServiGo es principalmente…',o:['Publicidad','Comisión por servicio (intermediación)','Venta de herramientas'],a:1,w:'10% por servicio, freemium para técnicos.'},
+ {q:'¿Por qué se llama PROTO-persona?',o:['Porque es una primera versión del cliente que luego se valida','Porque es un robot','Porque es el cliente final'],a:0,w:'Se basa en lo que el equipo sabe y se valida con entrevistas.'},
+];
+JURY.push(
+ {m:'m18',q:'Preséntese con su nombre completo y su rol Scrum.',a:'Buenos días, soy Andre Sebastian Arce Vargas y mi rol Scrum es Scrum Master: coordiné al equipo y gestioné los impedimentos.'},
+ {m:'m18',q:'¿Qué es un Early Adopter?',a:'Es el primer cliente que adopta una solución nueva, aunque sea imperfecta, porque su problema le duele mucho y ya está buscando cómo resolverlo.'},
+ {m:'m18',q:'¿Quiénes son sus Early Adopters y cómo los reconocieron?',a:'Dueños de pequeños negocios de Lima Norte, como bodegas y restaurantes, y hogares con emergencias frecuentes. Los reconocimos en las entrevistas: ya mandan fotos por WhatsApp, comparan 2 o 3 técnicos y algunos ya usaron Helpers o Sodimac. Por ejemplo, Carlos con su bodega y María Fernanda con su restaurante.'},
+ {m:'m18',q:'¿Cómo consolidaron su How Might We?',a:'A partir de los hallazgos de las entrevistas: el dolor que más se repetía era no saber en quién confiar. Lo delimitamos en quiénes, los usuarios de Lima Norte; el problema, identificar técnicos confiables; y el momento, antes de contratarlos.'},
+ {m:'m18',q:'¿Por qué realizaron una protopersona?',a:'Para ponerle cara a nuestro cliente y tomar decisiones pensando en él. Es "proto" porque es una primera versión basada en lo que sabíamos, que luego validamos con las entrevistas. Nuestra protopersona es Pedro López.'},
+ {m:'m18',q:'¿Cuál es su mayor fortaleza según el FODA?',a:'Que los usuarios ya comparan precios, tiempos y opiniones antes de elegir a un técnico. Eso encaja con nuestra plataforma, que justamente les permite comparar en un solo lugar.'},
+ {m:'m18',q:'¿Sus suposiciones ayudaron a validar el problema?',a:'Sí. Convertimos las suposiciones en hipótesis en el Validation Board y las probamos con entrevistas, con un criterio mínimo de 65%. Se validaron, por eso no tuvimos que pivotear.'},
+ {m:'m18',q:'¿Cómo identificaron a su competencia?',a:'Con las entrevistas, preguntando qué usan hoy para buscar técnicos, y con investigación propia. Identificamos tres competidores directos: Facebook Marketplace, Helpers y el boca a boca.'},
+ {m:'m18',q:'Describa al público objetivo de su SOM.',a:'Son 72,000 personas de Lima Norte que tienen smartphone y estarían dispuestas a usar la app al inicio, el 5% del SAM. Son hogares y pequeños negocios que necesitan técnicos de forma rápida y segura.'},
+ {m:'m18',q:'¿Cuál fue la finalidad del mapa de empatía?',a:'Entender a fondo al cliente: qué piensa y siente, qué ve, qué oye, qué le duele y a qué aspira. Así descubrimos su estrés ante emergencias y su miedo a dejar entrar a desconocidos.'},
+ {m:'m18',q:'¿Cuál es su modelo de negocio?',a:'Es de intermediación: cobramos una comisión del 10% por cada servicio contratado en la plataforma. Es freemium: gratis para los clientes, con una suscripción premium para técnicos que quieran destacar, y un cobro extra por emergencias nocturnas.'},
+ {m:'m18',q:'¿Quién es el stakeholder que presenta la problemática?',a:'Los hogares y pequeños negocios de Lima Norte que necesitan un técnico y no saben en quién confiar, como nuestra protopersona Pedro López. También los técnicos independientes, que necesitan clientes y reputación.'},
+ {m:'m18',q:'¿Qué es el Customer Journey Map y para qué lo usaron?',a:'Es un mapa del recorrido del cliente por etapas, con sus emociones. Lo usamos para ver dónde sufre hoy: buscar, comparar, coordinar, calificar y recomendar son negativas. En cada etapa propusimos una mejora.'},
+ {m:'m18',q:'¿Qué es el Scope Canvas?',a:'Es un lienzo que define el alcance del proyecto: el propósito, las necesidades del usuario, los objetivos de corto y largo plazo, las acciones y las métricas. Nuestra meta: 200 usuarios activos y 30 servicios en 3 meses.'},
+ {m:'m18',q:'¿Qué son las métricas vanidosas?',a:'Son números que se ven bien pero no ayudan a tomar decisiones, como descargas, likes o visitas. Nosotros usamos métricas accionables: tasa de conversión, retención, servicios completados y NPS.'},
+);
+JKEYS.push(
+ [['Nombre completo','arce vargas|andre sebastian'],['Rol Scrum','scrum master']],
+ [['Primer cliente que adopta','primer|primero|adopt'],['Aunque sea imperfecta','imperfect|nueva|incomplet'],['Su problema le duele mucho','duele|problema|necesidad']],
+ [['Pequeños negocios','negocio|bodega|restaurante'],['Hogares con emergencias','hogar|emergencia'],['Reconocidos en entrevistas','entrevist'],['Ya usan soluciones caseras','whatsapp|compar|helpers|sodimac']],
+ [['Desde los hallazgos','hallazgo|entrevist'],['Dolor: en quién confiar','confia'],['Quiénes: Lima Norte','lima norte'],['Momento: antes de contratar','antes']],
+ [['Ponerle cara al cliente','cara|cliente|humaniz|represent'],['Primera versión que se valida','proto|primera|valid'],['Pedro López','pedro']],
+ [['Los usuarios comparan','compar'],['Precios y opiniones','precio|opinion'],['Encaja con la plataforma','plataforma|app']],
+ [['Sí ayudaron','si'],['Hipótesis en el Validation Board','hipotesis|validation'],['Criterio 65%','65'],['No pivoteamos','pivot']],
+ [['Entrevistas: qué usan hoy','entrevist'],['Investigación propia','investig'],['FB, Helpers, boca a boca','facebook|helpers|boca']],
+ [['72,000 personas','72000|72 mil'],['Lima Norte con smartphone','lima norte|smartphone|celular'],['5% del SAM','5%|5 %|cinco'],['Hogares y negocios','hogar|negocio']],
+ [['Entender al cliente','entender|cliente'],['Piensa, siente, ve, oye','piensa|siente|oye|ve '],['Le duele: miedo a desconocidos','duele|miedo|desconocid|estres']],
+ [['Intermediación / comisión','comision|intermedia'],['10%','10'],['Freemium','freemium|gratis'],['Premium para técnicos','premium|suscrip']],
+ [['Hogares y negocios de Lima Norte','hogar|negocio|lima norte'],['No saben en quién confiar','confia'],['Pedro López','pedro'],['También los técnicos','tecnico']],
+ [['Recorrido por etapas','recorrido|etapa'],['Con emociones','emocion|positiv|negativ'],['Ver dónde sufre','sufre|dolor|negativ'],['Proponer mejoras','propuest|mejora']],
+ [['Define el alcance','alcance'],['Propósito y objetivos','proposito|objetivo|meta'],['Métricas','metrica'],['200 usuarios','200']],
+ [['Se ven bien pero no ayudan','bonit|bien|no ayudan|decision'],['Ej.: descargas, likes','descarga|like|visita|seguidor'],['Usamos accionables','accionable|conversion|retencion|nps']],
+);
+for (const [k,v] of Object.entries({
+ 'Early Adopter':'El primer cliente que adopta una solución nueva, aunque sea imperfecta, porque su problema le duele mucho y ya busca cómo resolverlo. En ServiGo: dueños de pequeños negocios y hogares con emergencias frecuentes en Lima Norte.',
+ 'Métricas vanidosas':'Números que se ven bien pero no ayudan a decidir (descargas, likes, visitas). Lo contrario son las métricas accionables: conversión, retención, NPS.',
+ 'Métricas accionables':'Métricas que te ayudan a tomar decisiones. En ServiGo: tasa de conversión, retención de usuarios (40% a 60 días), servicios completados por mes y NPS.',
+ 'NPS':'Net Promoter Score: mide cuánto recomendarían el servicio los clientes, del 0 al 10. Es una de las métricas del Scope Canvas de ServiGo.',
+ 'Freemium':'Modelo donde lo básico es gratis y se cobra por funciones premium. En ServiGo: gratis para clientes y suscripción premium para técnicos.',
+ 'Modelo de negocio':'Cómo gana dinero la empresa. ServiGo: comisión del 10% por servicio contratado (intermediación), más suscripción premium para técnicos y cobro por emergencias nocturnas.',
+ 'Suposición':'Una creencia que todavía no se ha probado. Se convierte en hipótesis y se valida con clientes reales (Validation Board).',
+ 'Hipótesis':'Una afirmación que se puede probar con un experimento. En ServiGo, la de mayor riesgo era que los usuarios valoran la información verificada del técnico; se validó con más del 65%.',
+ 'Lean Startup':'Método para crear negocios probando ideas rápido con clientes reales: construir, medir, aprender. De ahí vienen el MVP, el Validation Board y el pivote.',
+})) GLOSS[k]=v;
+PLAN.splice(PLAN.findIndex(p=>p[0]==='2026-11-21'),1,['2026-11-21',['m18'],'Teoría y preguntas del simulacro + modo jurado']);
+
+</script>
+<script>
+const I = {
+  logo:'<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" fill="currentColor"/><path d="M12 22.5l5 5 11-12" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+  next:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
+  play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10.4-6.5a1 1 0 0 0 0-1.8L9.5 4.6A1 1 0 0 0 8 5.5z"/></svg>',
+  pause:'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4.5" height="14" rx="1.2"/><rect x="13.5" y="5" width="4.5" height="14" rx="1.2"/></svg>',
+  head:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-6h3zM3 19a2 2 0 0 0 2 2h1v-6H3z"/></svg>',
+  gavel:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 13l-7.5 7.5a2.1 2.1 0 0 1-3-3L11 10"/><path d="M16 16l6-6M8 8l6-6M9 7l8 8M21 11l-8-8"/></svg>',
+  cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
+  arrowR:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  arrowD:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>',
+  bulb:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>',
+  cross:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>',
+  mic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/></svg>',
+  ask:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4.5M12 17.5h.01"/></svg>',
+  user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
+  phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg>',
+  mic2:'',
+  speaker:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>',
+};
+const SUST = new Date(2026,10,23);
+const ALLQ = Object.values(QUIZ).reduce((a,b)=>a+b.length,0);
+// ---------- persistence ----------
+const KEY='servigo-estudio-v1';
+const BLANK=()=>({done:{},quiz:{},jury:{},days:[],rate:1,asks:[],sims:[]});
+let P=BLANK(), WHO=null;
+const CAP={db:null,sample:null,tts:null,dict:null,ready:false};
+const capsReady=(async()=>{ if(!window.claude||!claude.use){CAP.ready=true;return;}
+  const [db,sample,tts,dict]=await Promise.all(['db','sample','tts','dictation'].map(n=>claude.use(n).catch(()=>null)));
+  Object.assign(CAP,{db,sample,tts,dict,ready:true}); setupDict(); if(S.view!=='mod'||!TTS.on) render(); })();
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+async function sha(t){ try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)); return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');}catch(e){let h=0;for(const c of t)h=(h*31+c.charCodeAt(0))|0;return 'x'+h;} }
+const SUPA={url:'https://rvxmmmwrzmoukyxfkeuv.supabase.co',key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2eG1tbXdyem1vdWt5eGZrZXV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM3NTU4ODksImV4cCI6MjEwOTMzMTg4OX0.yNerieH_5OG8yIaaeZGSmUfZEElt_Xqd0__99BRPSo0'};
+const IS_WEB=!(window.claude&&window.claude.use);
+let HASH=null;
+async function rpc(fn,args){ const r=await fetch(SUPA.url+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'apikey':SUPA.key,'Authorization':'Bearer '+SUPA.key,'Content-Type':'application/json'},body:JSON.stringify(args)}); if(!r.ok) throw new Error('http '+r.status); return r.json(); }
+const useSupa=()=>!CAP.db && IS_WEB;
+let saveT=null, saving=Promise.resolve();
+function save(){ if(!WHO) return; P.updated=Date.now(); lsSet(KEY+'-'+WHO,JSON.stringify(P)); clearTimeout(saveT);
+  saveT=setTimeout(()=>{ const snap=JSON.parse(JSON.stringify(P));
+    if(CAP.db){ saving=saving.then(()=>CAP.db.doc('progress/'+WHO).set(snap)).catch(()=>toast('No se pudo guardar en la nube; queda guardado en este dispositivo.')); }
+    else if(useSupa()&&HASH){ saving=saving.then(()=>rpc('se_save',{p_who:WHO,p_hash:HASH,p_data:snap})).then(ok=>{ if(ok===false) toast('No se pudo guardar tu avance en la nube.'); }).catch(()=>{}); } },900); }
+async function loadProgress(){ let remote=null, local=null;
+  if(CAP.db){ try{ const d=await CAP.db.doc('progress/'+WHO).get(); if(d.exists) remote=d.data(); }catch(e){} }
+  else if(useSupa()&&HASH){ try{ remote=await rpc('se_login',{p_who:WHO,p_hash:HASH}); }catch(e){} }
+  const l=lsGet(KEY+'-'+WHO); if(l) try{local=JSON.parse(l);}catch(e){}
+  const pick = (remote&&local)? ((local.updated||0)>(remote.updated||0)? local: remote) : (remote||local);
+  P=Object.assign(BLANK(),pick||{}); if(pick===local && remote) save(); }
+async function getAccount(who){
+  if(CAP.db){ try{const d=await CAP.db.doc('accounts/'+who).get(); return d.exists? d.data(): null;}catch(e){return null;} }
+  if(useSupa()){ try{ const ex=await rpc('se_status',{p_who:who}); return ex? {remote:true}: null; }catch(e){ S.offline=true; } }
+  const l=lsGet(KEY+'-acc-'+who); return l? JSON.parse(l): null; }
+async function setAccount(who,h){ const v={h,created:Date.now()};
+  if(CAP.db){ await CAP.db.doc('accounts/'+who).set(v); }
+  else if(useSupa()){ const ok=await rpc('se_register',{p_who:who,p_hash:h}); if(!ok) throw new Error('exists'); }
+  lsSet(KEY+'-acc-'+who,JSON.stringify(v)); }
+function todayStr(d=new Date()){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function markDay(){const t=todayStr(); if(!P.days.includes(t)){P.days.push(t); save();}}
+function streak(){let n=0; const d=new Date(); for(;;){ if(P.days.includes(todayStr(d))){n++; d.setDate(d.getDate()-1);} else break;} return n;}
+const ROLE=()=>ROLES[WHO]||ROLES.andre;
+function p13n(t){ if(WHO!=='angel') return t; return String(t).replace(/Andre Sebastian Arce Vargas/g,'Angel Sebastian Mario Astudillo Porroa').replace('mi rol Scrum es Scrum Master: coordiné al equipo y gestioné los impedimentos','mi rol Scrum es Business Owner: identifiqué las necesidades de los usuarios y revisé que las funciones sirvan al negocio').replace('mi rol Scrum es Scrum Master.','mi rol Scrum es Business Owner.'); }
+function getJ(qi){ const q=JURY[qi]; const alt=(JURY_ALT[qi]||{})[WHO]; return {m:q.m, q:q.q, a: p13n(alt?alt.a:q.a), k: alt?alt.k:JKEYS[qi]}; }
+// ---------- speech ----------
+const TTS = {ok:'speechSynthesis' in window, voice:null, queue:[], on:false, cb:null, tok:0};
+function pickVoice(){ if(!TTS.ok) return; const vs=speechSynthesis.getVoices(); const es=vs.filter(v=>/^es/i.test(v.lang));
+  const pref=['es-PE','es-US','es-419','es-MX','es-CO','es-AR','es-ES'];
+  TTS.voice = pref.map(p=>es.find(v=>v.lang.replace('_','-')===p && /google|natural|neural|premium|enhanced/i.test(v.name))||es.find(v=>v.lang.replace('_','-')===p)).find(Boolean) || es[0] || null; }
+if(TTS.ok){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
+TTS.tok=0;
+function stopSpeak(){ TTS.tok++; TTS.queue=[]; TTS.on=false; TTS.cb=null; if(TTS.ok) speechSynthesis.cancel(); if(CAP.tts&&CAP.tts.active&&CAP.tts.active()) CAP.tts.stop().catch(()=>{}); }
+function finish(tok){ if(tok!==TTS.tok) return; TTS.on=false; const c=TTS.cb; TTS.cb=null; if(c) c(); }
+function speak(text,cb){ stopSpeak(); const tok=TTS.tok; TTS.on=true; TTS.cb=cb||null; const clean=norm(text).replace(/\s+/g,' ').trim();
+  if(CAP.tts){ const parts=[]; let cur=''; clean.split(/(?<=[.!?;:])\s+/).forEach(x=>{ if((cur+' '+x).length>1500){parts.push(cur);cur=x;} else cur=cur?cur+' '+x:x; }); if(cur) parts.push(cur);
+    let chain=Promise.resolve(); parts.forEach(pt=>{ chain=chain.then(()=>{ if(tok!==TTS.tok) throw {code:'stopped'}; return CAP.tts.speak(pt,{rate:P.rate||1,language:'es'}); }); });
+    chain.then(()=>finish(tok)).catch(e=>{ if(tok!==TTS.tok) return; if(e&&(e.code==='stopped')){ TTS.on=false; render(); return; } browserSpeak(clean,tok); });
+    return; }
+  browserSpeak(clean,tok); }
+function browserSpeak(clean,tok){ if(!TTS.ok){ TTS.on=false; toast('Tu navegador no tiene voz. Prueba con Chrome o Safari.'); return; }
+  TTS.queue=clean.split(/(?<=[.!?;:])\s+/).filter(x=>x.trim()); const step=()=>{ if(tok!==TTS.tok) return; const x=TTS.queue.shift(); if(!x){ finish(tok); return; }
+    const u=new SpeechSynthesisUtterance(x); u.lang=(TTS.voice&&TTS.voice.lang)||'es-PE'; if(TTS.voice) u.voice=TTS.voice; u.rate=P.rate||1; u.onend=step; u.onerror=step; speechSynthesis.speak(u); }; step(); }
+// ---------- dictation ----------
+let DICT={target:null,on:false};
+function setupDict(){ const d=CAP.dict; if(!d) return;
+  d.onFinal(({text})=>{ const el=document.getElementById(DICT.target); if(!el) return; el.value=(el.value?el.value.replace(/\s*$/,' '):'')+text; el.dispatchEvent(new Event('input',{bubbles:true})); });
+  d.onState(({state})=>{ DICT.on=(state==='listening'||state==='starting'); document.querySelectorAll('.mic').forEach(b=>{b.classList.toggle('live',DICT.on); b.setAttribute('aria-label',DICT.on?'Detener dictado':'Dictar con el micrófono');}); }); }
+function micBtn(target){ return CAP.dict? `<button class="mic" data-a="mic" data-t="${target}" aria-label="Dictar con el micrófono">${I.mic}</button>`:''; }
+// ---------- helpers ----------
+const $=s=>document.querySelector(s);
+function toast(t){const el=$('#toast'); el.textContent=t; el.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>el.hidden=true,2600);}
+function shuffle(a){a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a;}
+function plain(s){return String(s).replace(/<[^>]+>/g,'');}
+function modById(id){return MODULES.find(m=>m.id===id);}
+function huSay(){return 'Estas son las 13 historias de usuario. '+HU_LIST.map(h=>h[0].replace('HU0','historia ').replace('HU1','historia 1')+', '+h[1]+', '+({Must:'debe tener',Should:'debería tener',Could:'podría tener'}[h[2]])+', '+h[3]+' puntos').join('. ')+'.';}
+function cardSay(c){ if(c.say) return c.say; if(c.t==='hu') return huSay();
+  let s=[]; if(c.eyebrow) s.push(c.eyebrow+'.'); if(c.h) s.push(c.h+'.'); if(c.n) s.push(c.n+' '+(c.l||'')+'.'); if(c.q) s.push(c.q); if(c.p) s.push(c.p); if(c.by) s.push(c.by);
+  if(c.items) c.items.forEach(it=>{ if(Array.isArray(it)) s.push(/^[0-9a-d]$/.test(String(it[0]))? it[1]+'.' : it[0]+': '+it[1]+'.'); else s.push(it+'.'); });
+  if(c.steps) c.steps.forEach(it=>s.push(it[0]+'. '+it[1]+'.'));
+  if(c.cells) c.cells.forEach(it=>s.push(it[0]+': '+it[1].join(', ')+'.'));
+  if(c.key) s.push('Para recordar: '+c.key+'.');
+  return s.join(' ');
+}
+function norm(t){ return String(t)
+  .replace(/S\/ ?(\d+(?:[.,]\d+)*)/g,'$1 soles').replace(/US\$ ?(\d+(?:[.,]\d+)*)/g,'$1 dólares')
+  .replace(/(\d),(?=\d{3}\b)/g,'$1').replace(/(\d),(?=\d{3}\b)/g,'$1')
+  .replace(/(\d+)\.(\d{2})\b/g,'$1 con $2').replace(/(\d+)\.(\d)\b/g,'$1 coma $2')
+  .replace(/\bHU0?(\d+)/g,'historia $1').replace(/\bTA0?(\d+)/g,'tarea $1').replace(/\bS([0-3])\b/g,'Sprint $1')
+  .replace(/·/g,',').replace(/→/g,', entonces, ').replace(/−/g,' menos ').replace(/×/g,' por ').replace(/÷/g,' entre ').replace(/≈/g,' aproximadamente ').replace(/\//g,' ').replace(/"/g,''); }
+// ---------- state ----------
+let S={view:'home'};
+function go(v){ stopSpeak(); S=v; render(); window.scrollTo(0,0); }
+// ---------- render: home ----------
+function daysLeft(){const t=new Date(); t.setHours(0,0,0,0); return Math.round((SUST-t)/864e5);}
+function todayPlan(){const t=todayStr(); let p=PLAN.find(x=>x[0]===t); if(!p){ p = t<PLAN[0][0]? PLAN[0] : PLAN[PLAN.length-1]; } return p;}
+function nextModule(){return MODULES.find(m=>!P.done[m.id])||MODULES[0];}
+function juryStats(){const v=Object.values(P.jury); return {known:v.filter(x=>x>=2).length, seen:v.length};}
+function renderHome(){
+  const dl=daysLeft(); const tp=todayPlan(); const js=juryStats(); const doneN=Object.keys(P.done).length;
+  const planBtns = tp[1].length? tp[1].map(id=>{const m=modById(id); return `<button class="chipbtn" data-a="open" data-m="${id}">${P.done[id]?'✓ ':''}${m.n}. ${m.title}</button>`;}).join('') : `<button class="chipbtn" data-a="jury" data-f="all">Abrir modo jurado</button>`;
+  return `
+  <div class="top"><div class="logo">${I.logo}<span>Estudia ServiGo</span></div>
+   <button class="who" data-a="logout" aria-label="Cerrar sesión de ${ROLE().name}">${I.user}<span>${ROLE().name}</span></button></div>
+  <div class="dday"><b>${dl>0? 'Faltan '+dl+' días' : dl===0? 'Hoy sustentas' : 'Sustentado'}</b><span>Lunes 23/11 · 3:35 p.m. · virtual · máx. 20 min</span></div>
+  <div class="hero"><div class="eyebrow">Hoy · ${tp[0].split('-').reverse().slice(0,2).join('/')}</div><h2>${tp[2]}</h2><div class="chips">${planBtns}</div></div>
+  ${installCard()}
+  <button class="simbtn" data-a="sim">${I.gavel}<span><b>Simulacro de sustentación</b><small>8 preguntas del jurado · nota de 0 a 20 · recomendaciones${(P.sims&&P.sims.length)?' · Última nota: '+P.sims[0].nota+'/20':''}</small></span>${I.next}</button>
+  <div class="actions">
+    <button class="act" data-a="listen" data-m="${nextModule().id}">${I.head}<span>Escuchar como podcast</span></button>
+    <button class="act" data-a="jury" data-f="all">${I.gavel}<span>Modo jurado</span></button>
+    <button class="act" data-a="plan">${I.cal}<span>Mi plan</span></button>
+  </div>
+  <div class="stats">
+    <div class="stat"><b>${doneN}/${MODULES.length}</b><span>módulos</span></div>
+    <div class="stat"><b>${js.known}/${JURY.length}</b><span>preguntas dominadas</span></div>
+    <div class="stat"><b>${streak()}</b><span>días seguidos</span></div>
+  </div>
+  <div class="sec">Todo el proyecto, paso a paso</div>
+  <div class="mods">${MODULES.map(m=>`<button class="mod ${P.done[m.id]?'done':''}" data-a="open" data-m="${m.id}">
+     <span class="num">${P.done[m.id]?I.check.replace('<svg','<svg width="20" height="20"'):m.n}</span>
+     <span><h3>${m.title}${ROLE().mods.includes(m.id)?'<span class="you">Tu rol</span>':''}</h3><small>${m.tag} · ${m.cards.length} tarjetas · ${m.mins} min</small></span>
+     <span class="right">${P.quiz[m.id]!=null? P.quiz[m.id]+'/'+(QUIZ[m.id]||[]).length+'<br>preguntas':''}</span></button>`).join('')}</div>
+  <p class="note">${CAP.db? 'Tu avance se guarda en tu cuenta: lo ves desde cualquier dispositivo.' : (useSupa()&&HASH? 'Tu avance se guarda en tu cuenta: entra con tu contraseña desde cualquier celular o computadora.' : 'Tu avance se guarda en este dispositivo.')}</p>`;
+}
+// ---------- render: cards ----------
+function cardHTML(c){
+  const you = (c.you && WHO!=='angel')? '<span class="youtag">Te toca como Scrum Master</span>':'';
+  const key = c.key? `<div class="key">${I.bulb}<span>${c.key}</span></div>`:'';
+  switch(c.t){
+  case 'title': return `<div class="eyebrow">${c.eyebrow}</div><h2 style="font-size:32px">${c.h}</h2><p>${c.p}</p>`;
+  case 'text': return `${you}<h2>${c.h}</h2><p>${c.p}</p>${key}`;
+  case 'big': return `${you}<div class="bign">${c.n}</div><div class="bigl">${c.l}</div><p>${c.p}</p>`;
+  case 'quote': return `<div class="eyebrow">${c.h}</div><div class="quote">${c.q}</div>${c.by?`<p class="muted" style="font-size:15px">${c.by}</p>`:''}`;
+  case 'list': return `${you}<h2>${c.h}</h2><ul class="list">${c.items.map(i=>`<li><span class="tagk">${i[0]}</span><span>${i[1]}</span></li>`).join('')}</ul>${key}`;
+  case 'grid': return `<h2>${c.h}</h2><div class="grid2">${c.cells.map(x=>`<div class="cell"><b>${x[0]}</b><ul>${x[1].map(y=>`<li>${y}</li>`).join('')}</ul></div>`).join('')}</div>`;
+  case 'pairs': return `<h2>${c.h}</h2><div class="pairs"><div class="phead"><span>${c.lh}</span><span></span><span>${c.rh}</span></div>${c.items.map(p=>`<div class="pair"><div>${p[0]}</div>${I.arrowR}<div>${p[1]}</div></div>`).join('')}</div>`;
+  case 'flow': return `<h2>${c.h}</h2><div class="flow">${c.steps.map((s,i)=>`${i?`<div class="farrow">${I.arrowD}</div>`:''}<div class="fstep"><b>${s[0]}</b><span>${s[1]}</span></div>`).join('')}</div>`;
+  case 'timeline': return `<h2>${c.h}</h2><div class="tl">${c.items.map(x=>`<div class="tli"><span class="dot">${x[0]}</span><span><b>${x[1]}</b><span>${x[2]}</span></span></div>`).join('')}</div>`;
+  case 'bars': {const mx=Math.max(...c.items.map(x=>x[1])); return `<h2>${c.h}</h2><div class="bars">${c.items.map(x=>`<div class="bar"><span>${x[0]}</span><i style="width:${x[1]/mx*100}%"></i><em>${x[1]}</em></div>`).join('')}</div><div class="key">${I.bulb}<span>Total 67 puntos: Sprint 1 = 21 · Sprint 2 = 23 · Sprint 3 = 23</span></div>`;}
+  case 'persona': return `<div class="persona"><div class="ava">PL</div><div><div class="eyebrow">Protopersona</div><h2>${c.h}</h2></div></div><div class="facts">${c.facts.map(f=>`<div><small>${f[0]}</small>${f[1]}</div>`).join('')}</div>`;
+  case 'remember': return `<div class="eyebrow">Para recordar</div><h2>Quédate con esto</h2><div class="remember">${c.items.map(x=>`<div>${I.check}<span>${x}</span></div>`).join('')}</div>`;
+  case 'warn': return `<div class="eyebrow" style="color:var(--warn-fg)">Ojo con esto</div><h2>${c.h}</h2><div class="warn">${c.p}</div>`;
+  case 'curve': {const W=320,H=150,n=c.stages.length,dx=(W-40)/(n-1); const pts=c.stages.map((s,i)=>[20+i*dx, s[1]>0?35:110]);
+    return `<h2>${c.h}</h2><div class="curve"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Curva de emociones del cliente">
+      <text x="2" y="16" font-size="11" fill="var(--ok)" font-weight="700">Positiva</text><text x="2" y="${H-6}" font-size="11" fill="var(--bad)" font-weight="700">Negativa</text>
+      <line x1="10" y1="${H/2+2}" x2="${W-10}" y2="${H/2+2}" stroke="var(--line)" stroke-dasharray="4 4"/>
+      <polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="var(--brand)" stroke-width="3" stroke-linejoin="round"/>
+      ${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="12" fill="${c.stages[i][1]>0?'var(--ok)':'var(--bad)'}"/><text x="${p[0]}" y="${p[1]+4}" font-size="12" text-anchor="middle" fill="#fff" font-weight="800">${i+1}</text>`).join('')}
+    </svg><div class="clist">${c.stages.map((s,i)=>`<span><b>${i+1}</b> ${s[0]}</span>`).join('')}</div></div>`;}
+  case 'hu': return `<h2>Las 13 historias de usuario</h2><div class="tbl"><table><thead><tr><th>HU</th><th>Nombre</th><th>MoSCoW</th><th>Pts</th><th>Valor</th><th>Sprint</th></tr></thead><tbody>${HU_LIST.map(h=>`<tr><td><b>${h[0]}</b></td><td>${h[1]}</td><td><span class="pill ${h[2]}">${h[2]}</span></td><td class="num">${h[3]}</td><td class="num">${h[4]}/10</td><td class="num">${h[5]}</td></tr>`).join('')}</tbody></table></div><div class="key">${I.bulb}<span>Más la HU14 Asistente virtual: "No tendrá" en este lanzamiento</span></div>`;
+  }
+  return '';
+}
+function renderModule(){
+  const m=modById(S.m); const c=m.cards[S.i]; const last=S.i===m.cards.length-1;
+  return `<div class="vtop"><button class="iconbtn" data-a="home" aria-label="Volver al inicio">${I.back}</button>
+    <div class="vtitle">${S.listen?'Escuchando · ':''}Módulo ${m.n} · ${m.title}</div>
+    <button class="iconbtn" data-a="say" aria-label="${TTS.on?'Pausar':'Escuchar esta tarjeta'}">${TTS.on?I.pause:I.speaker}</button></div>
+  <div class="segs">${m.cards.map((_,i)=>`<i class="${i<=S.i?'on':''}"></i>`).join('')}</div>
+  <article class="card ${c.t==='warn'?'warncard':''}">${p13n(cardHTML(c))}</article>
+  <div class="ctrl"><button class="navb" data-a="prev" ${S.i===0?'disabled':''} aria-label="Anterior">${I.back}</button>
+    ${last? `<button class="btn" data-a="quiz" data-m="${m.id}">Hacer las preguntas ${I.next}</button>` : `<button class="btn" data-a="next">Siguiente ${I.next}</button>`}
+    <button class="navb" data-a="${S.listen?'stoplisten':'startlisten'}" aria-label="${S.listen?'Detener podcast':'Escuchar todo el módulo'}">${S.listen?I.pause:I.head}</button></div>
+  <div class="speed" role="group" aria-label="Velocidad de la voz">${[0.85,1,1.15,1.3].map(r=>`<button class="${P.rate==r?'on':''}" data-a="rate" data-r="${r}">${r}x</button>`).join('')}</div>
+  <p class="note">${S.listen? 'Modo podcast: avanza solo y sigue con el siguiente módulo.' : 'Toca los audífonos para escuchar todo el módulo sin tocar nada.'}</p>`;
+}
+// ---------- quiz ----------
+function renderQuiz(){
+  const qs=QUIZ[S.m]||[]; const m=modById(S.m);
+  if(S.qi>=qs.length){ const sc=S.score; return `<div class="vtop"><button class="iconbtn" data-a="home" aria-label="Volver">${I.back}</button><div class="vtitle">Módulo ${m.n} · Resultado</div><span></span></div>
+    <article class="card" style="align-items:center;text-align:center;justify-content:center"><div class="score">${sc}/${qs.length}</div><h2>${sc===qs.length?'¡Perfecto!':sc>=qs.length/2?'Bien, vas avanzando':'Repasa este módulo otra vez'}</h2><p class="muted">${sc===qs.length?'Este módulo ya es tuyo.':'Vuelve a ver las tarjetas y repite las preguntas.'}</p></article>
+    <div class="ctrl" style="grid-template-columns:1fr 1fr"><button class="btn ghost" data-a="open" data-m="${m.id}">Repasar</button>${(()=>{const nx=MODULES[MODULES.indexOf(m)+1]; return nx?`<button class="btn" data-a="open" data-m="${nx.id}">Módulo ${nx.n} ${I.next}</button>`:`<button class="btn" data-a="jury" data-f="all">Modo jurado</button>`;})()}</div>`; }
+  const q=qs[S.qi]; const ans=S.pick!=null;
+  return `<div class="vtop"><button class="iconbtn" data-a="home" aria-label="Volver">${I.back}</button><div class="vtitle">Módulo ${m.n} · Pregunta ${S.qi+1} de ${qs.length}</div><button class="iconbtn" data-a="sayq" aria-label="Escuchar pregunta">${I.speaker}</button></div>
+  <div class="segs">${qs.map((_,i)=>`<i class="${i<=S.qi?'on':''}"></i>`).join('')}</div>
+  <article class="card"><h2>${q.q}</h2><div class="opts">${q.o.map((o,i)=>`<button class="opt ${ans? (i===q.a?'right': i===S.pick?'wrong':''):''}" data-a="pick" data-i="${i}" ${ans?'disabled':''}>${o}</button>`).join('')}</div>
+  ${ans? `<div class="fb ${S.pick===q.a?'ok':'no'}"><b>${S.pick===q.a?'¡Correcto!':'Casi. La respuesta es la marcada en verde.'}</b>${q.w}</div>`:''}</article>
+  ${ans? `<div class="ctrl" style="grid-template-columns:1fr"><button class="btn" data-a="qnext">${S.qi+1<qs.length?'Siguiente pregunta':'Ver resultado'} ${I.next}</button></div>`:''}`;
+}
+// ---------- jury ----------
+function juryDeck(f){ let d=JURY.map((q,i)=>i);
+  if(f==='weak') d=d.filter(i=>(P.jury[i]??-1)<2);
+  else if(f && f.startsWith('m')) d=d.filter(i=>JURY[i].m===f);
+  else if(f==='done') d=d.filter(i=>P.done[JURY[i].m]);
+  // las que no sabes salen primero
+  return shuffle(d).sort((a,b)=>(P.jury[a]??-1)-(P.jury[b]??-1)); }
+function renderJury(){
+  const tabs=[['all','Todas'],['weak','Las que fallo'],['done','De lo que ya estudié']];
+  const head=`<div class="vtop"><button class="iconbtn" data-a="home" aria-label="Volver">${I.back}</button><div class="vtitle">Modo jurado</div><button class="iconbtn" data-a="sayj" aria-label="Escuchar">${TTS.on?I.pause:I.speaker}</button></div>
+  <div class="tabs">${tabs.map(t=>`<button class="${S.f===t[0]?'on':''}" data-a="jury" data-f="${t[0]}">${t[1]}</button>`).join('')}</div>`;
+  if(!S.deck.length) return head+`<article class="card" style="justify-content:center;text-align:center"><h2>${S.f==='weak'?'¡No tienes preguntas falladas!':'Aún no hay preguntas aquí'}</h2><p class="muted">${S.f==='done'?'Termina algún módulo y vuelve.':'Prueba con "Todas".'}</p></article>`;
+  if(S.j>=S.deck.length){ return head+`<article class="card" style="justify-content:center;text-align:center"><div class="score">${S.deck.length}</div><h2>Preguntas practicadas</h2><p class="muted">Dominas ${juryStats().known} de ${JURY.length}. Las que fallaste volverán a salir primero.</p></article><div class="ctrl" style="grid-template-columns:1fr"><button class="btn" data-a="jury" data-f="${S.f}">Otra ronda</button></div>`; }
+  const qi=S.deck[S.j]; const q=getJ(qi); const m=modById(q.m); const ck=S.check;
+  const sug = ck? (ck.pct>=75?2:ck.pct>=40?1:0) : null;
+  const checkHTML = ck? `<div class="res"><div class="resh"><b>${ck.hits} de ${ck.keys.length} ideas clave</b><span class="pct">${ck.pct}%</span></div>
+     <ul class="kl">${ck.keys.map(k=>`<li class="${k.ok?'kok':'kno'}">${k.ok?I.check:I.cross}<span>${k.t}</span></li>`).join('')}</ul></div>`:'';
+  const rateHTML = `<p class="muted" style="font-size:14px;margin:0">${ck? 'Te sugiero: <b>'+['No la sabía','Más o menos','La sabía'][sug]+'</b>. Tú decides.' : '¿Cómo te fue? Sé honesto: las que falles se repiten.'}</p>
+     <div class="rate"><button class="r0 ${sug===0?'sug':''}" data-a="rate-j" data-v="0">No la sabía</button><button class="r1 ${sug===1?'sug':''}" data-a="rate-j" data-v="1">Más o menos</button><button class="r2 ${sug===2?'sug':''}" data-a="rate-j" data-v="2">La sabía</button></div>`;
+  return head+`<div class="segs"><i class="on" style="flex:${S.j+1}"></i><i style="flex:${S.deck.length-S.j-1}"></i></div>
+  <article class="card"><div class="eyebrow">Pregunta ${S.j+1} de ${S.deck.length} · ${m.title}</div><div class="jq">"${q.q}"</div>
+  ${S.rev? `${S.txt?`<div class="mine"><small>Tu respuesta</small>${esc(S.txt)}</div>`:''}${checkHTML}<div class="ans"><b>Respuesta modelo</b><br>${q.a}</div>${rateHTML}`
+  : `<label for="jans" class="muted" style="font-size:14px">Escribe tu respuesta o díctala: en el celular, toca el <b>micrófono del teclado</b> y habla.</label>
+     <div class="tawrap"><textarea id="jans" rows="6" placeholder="Escribe aquí tu respuesta...">${esc(S.txt||'')}</textarea>${micBtn('jans')}</div>`}</article>
+  ${S.rev?'':`<div class="ctrl" style="grid-template-columns:1fr"><button class="btn" data-a="checkj">Revisar mi respuesta</button></div><button class="linkbtn" data-a="reveal">Solo ver la respuesta modelo</button>`}`;
+}
+function esc(t){return String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function nrm(t){return String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/(\d)[.,](?=\d)/g,'$1');}
+function checkAnswer(qi,txt){ const T=' '+nrm(txt).replace(/[^a-z0-9%]+/g,' ')+' ';
+  const keys=getJ(qi).k.map(([t,alts])=>({t, ok: alts.split('|').some(a=>{ a=nrm(a).trim(); if(!a) return false;
+     return (a.length<=3||/^\d+%?$/.test(a)) ? T.includes(' '+a+' ') : T.includes(a.replace(/[^a-z0-9% ]+/g,' ')); })}));
+  const hits=keys.filter(k=>k.ok).length; return {keys,hits,pct:Math.round(hits/keys.length*100)}; }
+// ---------- plan ----------
+function renderPlan(){ const t=todayStr();
+  return `<div class="vtop"><button class="iconbtn" data-a="home" aria-label="Volver">${I.back}</button><div class="vtitle">Mi plan hasta el 23 de noviembre</div><span></span></div>
+  <p class="muted" style="margin:0 0 12px">20 a 30 minutos al día. Si un día no puedes, escucha el módulo en modo podcast mientras trabajas o viajas.</p>
+  <div class="plan">${PLAN.map(p=>{const d=new Date(p[0]+'T12:00:00'); const cls=p[0]===t?'today':p[0]<t?'past':'';
+    return `<div class="day ${cls}"><div class="d">${d.getDate()}<small>${d.toLocaleDateString('es-PE',{weekday:'short'})}</small></div><div><div class="t">${p[2]}</div>${p[1].length?`<div class="m">${p[1].map(id=>`<button class="${P.done[id]?'dn':''}" data-a="open" data-m="${id}">${modById(id).n}. ${modById(id).title}</button>`).join('')}</div>`:''}</div></div>`;}).join('')}</div>`;
+}
+// ---------- main ----------
+function render(){
+  if(!WHO && S.view!=='login') S={view:'login'};
+  const v=S.view; let h='';
+  if(v==='login') h=renderLogin(); else if(v==='sim') h=renderSim(); else if(v==='ask') h=renderAsk(); else if(v==='home') h=renderHome(); else if(v==='mod') h=renderModule(); else if(v==='quiz') h=renderQuiz(); else if(v==='jury') h=renderJury(); else if(v==='plan') h=renderPlan();
+  $('#app').innerHTML=h + ((v!=='login'&&v!=='ask'&&!(v==='sim'&&S.phase==='q'))? `<button class="fab" data-a="ask">${I.ask}<span>¿Qué significa…?</span></button>`:'');
+  const f=document.getElementById(S.focus); if(f){ f.focus(); S.focus=null; }
+}
+// ---------- login ----------
+function renderLogin(){
+  if(!S.who) return `<div class="login"><div class="logo big">${I.logo}<span>Estudia ServiGo</span></div>${installCard()}<h2>¿Quién va a estudiar?</h2>
+   <div class="people">${Object.entries(ROLES).map(([k,r])=>`<button class="person" data-a="pickwho" data-w="${k}"><span class="ava sm">${r.name[0]}</span><span><b>${r.name}</b><small>${r.role}</small></span>${I.next}</button>`).join('')}</div>
+   <p class="note">Cada uno entra con su usuario y su contraseña, y ve su propio avance.</p></div>`;
+  const r=ROLES[S.who]; const nuevo=S.acc===null; const loading=S.acc===undefined;
+  return `<div class="login"><button class="iconbtn" data-a="unpick" aria-label="Volver">${I.back}</button>
+   <div class="persona"><div class="ava">${r.name[0]}</div><div><div class="eyebrow">${r.role}</div><h2>Hola, ${r.name}</h2></div></div>
+   ${loading? '<p class="muted">Cargando…</p>' : `<form id="lf" class="lform">
+     <label for="pw">${nuevo?'Crea tu contraseña (mínimo 4 caracteres)':'Tu contraseña'}</label>
+     <input id="pw" type="password" autocomplete="${nuevo?'new-password':'current-password'}" required minlength="4">
+     ${nuevo?'<label for="pw2">Repítela</label><input id="pw2" type="password" autocomplete="new-password" required minlength="4">':''}
+     ${S.err?`<p class="err">${S.err}</p>`:''}
+     <button class="btn" type="submit">${nuevo?'Crear y entrar':'Entrar'}</button></form>
+     <p class="note">${nuevo?'Es la primera vez que entras: elige una contraseña que recuerdes. No uses la de tu banco ni tu correo.':''}</p>`}</div>`;
+}
+async function pickWho(w){ S={view:'login',who:w,acc:undefined}; render(); await capsReady; const a=await getAccount(w); if(S.who!==w) return; S.acc=a; S.focus='pw'; render(); }
+async function doLogin(){ const pw=(document.getElementById('pw')||{}).value||''; const pw2=(document.getElementById('pw2')||{}).value;
+  if(pw.length<4){ S.err='La contraseña debe tener al menos 4 caracteres.'; render(); return; }
+  const h=await sha('servigo:'+S.who+':'+pw);
+  if(S.acc===null){ if(pw!==pw2){ S.err='Las contraseñas no coinciden.'; render(); return; } try{ await setAccount(S.who,h); }catch(e){ S.err='No se pudo crear la cuenta. Revisa tu conexión.'; render(); return; } }
+  else if(S.acc.remote){ let d; try{ d=await rpc('se_login',{p_who:S.who,p_hash:h}); }catch(e){ S.err='Sin conexión. Revisa tu internet e inténtalo de nuevo.'; render(); return; } if(d===null){ S.err='Contraseña incorrecta.'; render(); return; } }
+  else if(S.acc.h!==h){ S.err='Contraseña incorrecta.'; render(); return; }
+  HASH=h; lsSet(KEY+'-h-'+S.who,h);
+  WHO=S.who; lsSet(KEY+'-who',WHO); await loadProgress(); markDay(); go({view:'home'}); }
+// ---------- instalar como app ----------
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); deferredPrompt=e; if(S.view==='login'||S.view==='home') render(); });
+window.addEventListener('appinstalled',()=>{ lsSet(KEY+'-inst-x','1'); toast('¡Listo! Ya está en tu pantalla de inicio.'); render(); });
+const isStandalone=()=>{ try{ return matchMedia('(display-mode: standalone)').matches || navigator.standalone===true; }catch(e){ return false; } };
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+function installCard(){ if(!IS_WEB||isStandalone()||lsGet(KEY+'-inst-x')) return '';
+  return `<div class="inst">${I.phone}<div><b>Instálala en tu celular</b><span>${deferredPrompt?'Queda como una app con su ícono en tu pantalla, lista para estudiar en cualquier momento.': isIOS? 'En Safari toca <b>Compartir</b> (el cuadrito con la flecha ↑) y luego <b>"Agregar a inicio"</b>.' : 'En Chrome toca el menú <b>⋮</b> (arriba a la derecha) y luego <b>"Instalar app"</b> o <b>"Agregar a pantalla principal"</b>.'}</span>
+   <div class="row">${deferredPrompt?'<button class="btn sm" data-a="install">Instalar app</button>':''}<button class="linkbtn" data-a="instx">Ahora no</button></div></div></div>`; }
+// ---------- simulacro ----------
+function simPick(){ const idx=JURY.map((_,i)=>i); const by=(...ms)=>idx.filter(i=>ms.includes(JURY[i].m)); const pick=[39];
+  const add=(arr,n)=>shuffle(arr.filter(i=>!pick.includes(i))).slice(0,n).forEach(i=>pick.push(i));
+  add(by('m18'),2); add(by('m15'),1); add(WHO==='angel'? by('m6','m7','m8') : by('m12','m13'),1); add(by('m4','m5','m3'),1); add(idx,8-pick.length);
+  return [pick[0]].concat(shuffle(pick.slice(1))); }
+let simTimer=null;
+function simTick(){ clearInterval(simTimer); simTimer=setInterval(()=>{ const el=document.getElementById('simt'); if(!el||S.view!=='sim'||S.phase!=='q'){ clearInterval(simTimer); return; } const t=Math.floor((Date.now()-S.t0)/1000); el.textContent=Math.floor(t/60)+':'+String(t%60).padStart(2,'0'); el.classList.toggle('late',t>120); },1000); }
+function simShowQ(){ S.t0=Date.now(); S.txt=S.ans[S.i]||''; render(); window.scrollTo(0,0); simTick(); speak(getJ(S.qs[S.i]).q,()=>render()); }
+function nivel(n){ return n>=17?['Excelente','ok']: n>=14?['Bueno','ok']: n>=11?['Aprobado justo','mid']:['Todavía no','bad']; }
+function localGrade(it){ const words=(it.ans.trim().match(/\S+/g)||[]).length; const falt=it.ck.keys.filter(k=>!k.ok).map(k=>k.t);
+  if(!it.ans.trim()) return {nota:0,com:'No respondiste. Lee la respuesta modelo y vuelve a intentarlo.',falt};
+  let nota=Math.round(5+it.ck.pct*0.15); if(words<12) nota=Math.min(nota,10);
+  const com = it.ck.pct>=75? 'Muy bien: mencionaste las ideas clave.'+(words<25?' Desarróllala un poco más con un dato o un ejemplo de ServiGo.':'')
+   : it.ck.pct>=40? 'Vas bien, pero te faltó mencionar: '+falt.join('; ')+'.' : 'Te faltaron ideas importantes: '+falt.join('; ')+'. Repasa la respuesta modelo.';
+  return {nota,com,falt}; }
+function localGeneral(items,nota){ const weak=[...new Set(items.filter(x=>x.nota<14).map(x=>modById(JURY[x.qi].m).title))];
+  const short=items.filter(x=>x.ans.trim() && (x.ans.match(/\S+/g)||[]).length<20).length;
+  const mejorar=[]; if(weak.length) mejorar.push('Repasa: '+weak.slice(0,3).join(', ')+'.');
+  if(short>=3) mejorar.push('Tus respuestas son muy cortas. Usa la estructura: idea principal + un dato de ServiGo + un ejemplo.');
+  if(items.some(x=>x.ans.trim()==='')) mejorar.push('No dejes preguntas sin responder: aunque dudes, di lo que sí sabes.');
+  const fort=items.filter(x=>x.nota>=16).map(x=>'Dominas: "'+x.q+'"').slice(0,2);
+  const rec = nota>=17? '¡Estás listo para sustentar! Mantén el ritmo con un simulacro diario y repasa los puntos débiles.' : nota>=14? 'Vas bien. Refuerza los temas marcados y haz otro simulacro mañana.' : nota>=11? 'Aprobarías, pero con dudas. Dedica hoy 30 minutos a los módulos marcados y repite el simulacro.' : 'Todavía te falta. Empieza por los módulos marcados en modo podcast y luego practica en modo jurado.';
+  return {fortalezas:fort, mejorar, recomendacion:rec}; }
+async function gradeSim(){ clearInterval(simTimer); stopSpeak(); S.phase='grading'; render();
+  const items=S.qs.map((qi,k)=>{ const j=getJ(qi); const ans=S.ans[k]||''; return {qi,q:j.q,model:j.a,ans,secs:S.secs[k]||0,ck:checkAnswer(qi,ans)}; });
+  items.forEach(it=>Object.assign(it,localGrade(it)));
+  let general=null, ai=false;
+  if(CAP.sample){ try{
+    const prompt=`Eres jurado de sustentación del Trabajo de Aplicación Profesional (CERTUS, Perú) del proyecto ServiGo. Califica las respuestas de ${ROLE().name} (rol Scrum: ${ROLE().role}) en escala vigesimal de 0 a 20, comparándolas con la respuesta modelo. Criterios: dominio del contenido (que diga las ideas y datos correctos), claridad y seguridad, y uso de datos concretos de ServiGo. Si una respuesta está vacía, nota 0. No castigues la ortografía (puede estar dictada).
+Devuelve SOLO JSON con esta forma: {"items":[{"nota":número 0-20,"comentario":"máx. 35 palabras, en tú, qué estuvo bien y qué mejorar"}],"general":{"fortalezas":["máx. 2 frases cortas"],"mejorar":["2 o 3 frases cortas y concretas"],"recomendacion":"máx. 60 palabras, motivadora y concreta"}} con un item por pregunta y en el mismo orden.
+
+${items.map((it,k)=>`PREGUNTA ${k+1}: ${it.q}\nRESPUESTA MODELO: ${it.model}\nRESPUESTA DE ${ROLE().name.toUpperCase()}: ${it.ans.trim()||'(sin respuesta)'}`).join('\n\n')}`;
+    const out=await CAP.sample.json(prompt,{modelTier:'default'});
+    if(out&&Array.isArray(out.items)&&out.items.length===items.length){ out.items.forEach((g,k)=>{ const n=Math.max(0,Math.min(20,Math.round(+g.nota))); if(!isNaN(n)){ items[k].nota=n; items[k].com=String(g.comentario||items[k].com); } }); general=out.general; ai=true; }
+  }catch(e){} }
+  const nota=Math.round(items.reduce((a,x)=>a+x.nota,0)/items.length);
+  if(!general||!general.recomendacion) general=localGeneral(items,nota);
+  S.res={items,nota,general,ai}; S.phase='done';
+  P.sims=[{d:Date.now(),nota,n:items.length}].concat(P.sims||[]).slice(0,30); save(); render(); window.scrollTo(0,0); }
+function renderSim(){ const head=`<div class="vtop"><button class="iconbtn" data-a="simexit" aria-label="Salir del simulacro">${I.back}</button><div class="vtitle">Simulacro de sustentación</div>${S.phase==='q'?`<button class="iconbtn" data-a="simsay" aria-label="Escuchar la pregunta">${TTS.on?I.pause:I.speaker}</button>`:'<span></span>'}</div>`;
+  if(S.phase==='intro'){ const hist=(P.sims||[]).slice(0,6);
+    return head+`<article class="card"><div class="eyebrow">Como el día 23</div><h2>8 preguntas del jurado</h2>
+     <ul class="list"><li><span class="tagk">1</span><span>La primera siempre es presentarte con tu nombre completo y tu rol.</span></li><li><span class="tagk">2</span><span>Te leo cada pregunta en voz alta. Responde escribiendo o dictando con el micrófono del teclado.</span></li><li><span class="tagk">3</span><span>Intenta no pasar de 2 minutos por pregunta.</span></li><li><span class="tagk">4</span><span>Al final recibes tu nota de 0 a 20, la nota de cada respuesta y qué mejorar.</span></li></ul>
+     ${hist.length?`<div class="sec" style="margin:6px 0 0">Tus notas anteriores</div><div class="hnotes">${hist.map(h=>`<span><b>${h.nota}</b>/20<small>${new Date(h.d).toLocaleDateString('es-PE',{day:'numeric',month:'short'})}</small></span>`).join('')}</div>`:''}</article>
+     <div class="ctrl" style="grid-template-columns:1fr"><button class="btn" data-a="simstart">Empezar simulacro ${I.next}</button></div>`; }
+  if(S.phase==='q'){ const j=getJ(S.qs[S.i]); const last=S.i===S.qs.length-1;
+    return head+`<div class="segs">${S.qs.map((_,k)=>`<i class="${k<=S.i?'on':''}"></i>`).join('')}</div>
+     <article class="card"><div class="row" style="justify-content:space-between"><div class="eyebrow">Pregunta ${S.i+1} de ${S.qs.length}</div><span class="timer" id="simt">0:00</span></div>
+     <div class="jq">"${j.q}"</div>
+     <div class="tawrap"><textarea id="sans" rows="7" placeholder="Responde como si estuvieras frente al jurado…">${esc(S.txt||'')}</textarea>${micBtn('sans')}</div>
+     <p class="muted" style="font-size:13px;margin:0">En el celular puedes dictar con el micrófono del teclado.</p></article>
+     <div class="ctrl" style="grid-template-columns:1fr 2fr"><button class="btn ghost" data-a="simskip">Saltar</button><button class="btn" data-a="simnext">${last?'Terminar y calificar':'Siguiente'} ${I.next}</button></div>`; }
+  if(S.phase==='grading') return head+`<article class="card" style="justify-content:center;align-items:center;text-align:center"><div class="spin"></div><h2>Calificando tus respuestas…</h2><p class="muted">${CAP.sample?'El jurado virtual está revisando cada respuesta.':'Revisando las ideas clave de cada respuesta.'}</p></article>`;
+  const r=S.res; const nv=nivel(r.nota);
+  return head+`<article class="card" style="text-align:center;align-items:center"><div class="eyebrow">Tu nota</div><div class="score">${r.nota}<small>/20</small></div><span class="lvl ${nv[1]}">${nv[0]}</span>
+    <p style="font-size:16px">${esc(r.general.recomendacion)}</p></article>
+   ${(r.general.fortalezas||[]).length?`<div class="sec">Lo que hiciste bien</div><div class="remember">${r.general.fortalezas.map(x=>`<div>${I.check}<span>${esc(x)}</span></div>`).join('')}</div>`:''}
+   ${(r.general.mejorar||[]).length?`<div class="sec">Qué mejorar</div><div class="remember warnl">${r.general.mejorar.map(x=>`<div>${I.bulb}<span>${esc(x)}</span></div>`).join('')}</div>`:''}
+   <div class="sec">Pregunta por pregunta</div><div class="simres">${r.items.map((it,k)=>{const n2=nivel(it.nota); return `<details class="sq"><summary><span class="sn ${n2[1]}">${it.nota}</span><span>${k+1}. ${esc(it.q)}</span></summary>
+     <div class="sqb"><div class="mine"><small>Tu respuesta</small>${it.ans.trim()?esc(it.ans):'<i class="muted">Sin respuesta</i>'}</div><p><b>Comentario:</b> ${esc(it.com)}</p>
+     <div class="ans"><b>Respuesta modelo</b><br>${it.model}</div></div></details>`;}).join('')}</div>
+   <div class="ctrl" style="grid-template-columns:1fr 1fr"><button class="btn ghost" data-a="home">Inicio</button><button class="btn" data-a="simstart">Otro simulacro</button></div>
+   ${r.ai?'':'<p class="note">Nota calculada según las ideas clave mencionadas.</p>'}`; }
+// ---------- ask ----------
+const GL_KEYS=Object.keys(GLOSS);
+function findGloss(q){ const n=nrm(q).replace(/[¿?¡!".,]/g,' ').replace(/\s+/g,' ').trim(); let best=null;
+  for(const k of GL_KEYS){ const kn=nrm(k); if(n.includes(kn)) { if(!best||kn.length>nrm(best).length) best=k; } }
+  if(!best){ for(const k of GL_KEYS){ const w=nrm(k).split(' ')[0]; if(w.length>4 && n.split(' ').some(x=>x.startsWith(w.slice(0,6)))) { best=k; break; } } }
+  return best; }
+let PROJECT_CTX=null;
+function projectCtx(){ if(PROJECT_CTX) return PROJECT_CTX; PROJECT_CTX=MODULES.map(m=>'## '+m.n+'. '+m.title+'\n'+m.cards.map(c=>c.t==='hu'?HU_LIST.map(h=>h.join(' | ')).join('\n'):cardSay(c)).join('\n')).join('\n\n'); return PROJECT_CTX; }
+function fmtAns(t){ return esc(t).replace(/^(Qué significa|En ServiGo|Cómo decirlo al jurado):/gm,'<b>$1:</b>').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>'); }
+function renderAsk(){ const chips=['Retrospectiva','Early Adopter','Métricas vanidosas','MVP','Sprint Review','Definición de Hecho','Pivote','Stakeholder','Freemium','LTV','CAC','Product Market Fit'];
+  const g=S.gloss; const hist=(P.asks||[]).slice(0,8);
+  return `<div class="vtop"><button class="iconbtn" data-a="home" aria-label="Volver">${I.back}</button><div class="vtitle">Pregunta lo que no entiendas</div><span></span></div>
+  <form id="af" class="askf"><div class="tawrap"><input id="aq" type="text" placeholder="Ej.: ¿Qué es una retrospectiva?" value="${esc(S.q||'')}" autocomplete="off">${micBtn('aq')}</div><button class="btn" type="submit">Preguntar</button></form>
+  <div class="chips2">${chips.map(c=>`<button data-a="askchip" data-t="${c}">${c}</button>`).join('')}</div>
+  ${g? `<article class="card ansc"><div class="eyebrow">Glosario · ${g}</div><p>${p13n(GLOSS[g])}</p>
+       ${S.ai==null && CAP.sample? `<button class="btn ghost sm" data-a="askmore">Explícamelo mejor y dime cómo decirlo al jurado</button>`:''}</article>`:''}
+  ${S.ai!=null? `<article class="card ansc"><div class="eyebrow">Tu tutor</div><div class="aitext">${S.ai? fmtAns(S.ai): '<span class="muted">Pensando…</span>'}</div>
+       ${S.aiDone? `<div class="row"><button class="btn ghost sm" data-a="sayans">${I.speaker} Escuchar</button></div>`:''}</article>`:''}
+  ${(!g && S.ai==null && S.q && !CAP.sample)? `<article class="card ansc"><p>No encontré ese término en el glosario. Prueba con otra palabra o elige uno de la lista.</p></article>`:''}
+  ${hist.length? `<div class="sec">Lo que ya preguntaste</div><div class="hist">${hist.map((h,i)=>`<button data-a="histq" data-i="${i}">${esc(h.q)}</button>`).join('')}</div>`:''}
+  <div class="sec">Glosario completo (${GL_KEYS.length} términos)</div><div class="chips2 all">${GL_KEYS.slice().sort((a,b)=>a.localeCompare(b,'es')).map(c=>`<button data-a="askchip" data-t="${c}">${c}</button>`).join('')}</div>`; }
+let aiCtl=null;
+async function askAI(q){ if(!CAP.sample) return; if(aiCtl) aiCtl.abort(); aiCtl=new AbortController(); S.ai=''; S.aiDone=false; render();
+  const prompt=`Eres un tutor paciente que prepara a ${ROLE().name}, estudiante de Administración de Empresas en CERTUS (Perú), para sustentar ante un jurado su proyecto ServiGo. Su rol Scrum es ${ROLE().role}. Le cuesta concentrarse, así que explica muy simple, como a un amigo, sin palabras rebuscadas.
+Responde en español, en máximo 140 palabras, con EXACTAMENTE estas tres partes y estos títulos:
+Qué significa: (explicación sencilla, con una comparación de la vida diaria si ayuda)
+En ServiGo: (cómo aparece en su proyecto, usando SOLO datos del contexto; si no aparece, dilo)
+Cómo decirlo al jurado: "(1 o 2 frases listas para decir, en primera persona plural)"
+No uses markdown ni viñetas. No inventes cifras que no estén en el contexto.
+
+CONTEXTO DEL PROYECTO SERVIGO:
+${projectCtx()}
+
+PREGUNTA DE ${ROLE().name.toUpperCase()}: ${q}`;
+  try{ const r=await CAP.sample(prompt,{signal:aiCtl.signal,cache:true,onText:({text})=>{ S.ai=text; const el=document.querySelector('.aitext'); if(el&&S.view==='ask') el.innerHTML=fmtAns(text); }});
+    S.ai=r.text; S.aiDone=true; P.asks=[{q,a:r.text,t:Date.now()}].concat((P.asks||[]).filter(x=>x.q!==q)).slice(0,20); save(); if(S.view==='ask') render(); }
+  catch(e){ if(e&&e.code==='cancelled') return; S.ai = e&&e.code==='rate_limited'? 'Hiciste muchas preguntas seguidas. Espera un minuto e inténtalo otra vez.' : 'No pude responder ahora. Revisa el glosario o inténtalo de nuevo.'; S.aiDone=false; if(S.view==='ask') render(); } }
+function submitAsk(q){ q=(q||'').trim(); if(!q) return; S.q=q; S.gloss=findGloss(q); S.ai=null; S.aiDone=false; render();
+  const exact = S.gloss && nrm(q).replace(/[¿?]/g,'').trim().length <= nrm(S.gloss).length+22;
+  if(!S.gloss || !exact) askAI(q); }
+function playCard(){ const m=modById(S.m); const c=m.cards[S.i];
+  speak(p13n(cardSay(c)), ()=>{ if(S.view==='mod' && S.listen){ setTimeout(()=>{ if(!S.listen||S.view!=='mod') return; advance(true); },700);} else render(); }); render(); }
+function advance(auto){ const m=modById(S.m);
+  if(S.i<m.cards.length-1){ S.i++; render(); window.scrollTo(0,0); if(auto) playCard(); }
+  else if(auto){ const nx=MODULES[MODULES.indexOf(m)+1]; if(nx){ S.m=nx.id; S.i=0; render(); speak('Módulo '+nx.n+'. '+nx.title+'.',()=>playCard()); } else { S.listen=false; render(); toast('Terminaste todo el proyecto. ¡Bien!'); } }
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-a]'); if(!b) return; const a=b.dataset.a; if(WHO) markDay();
+  if(a==='home') go({view:'home'});
+  else if(a==='pickwho') pickWho(b.dataset.w);
+  else if(a==='install'){ if(deferredPrompt){ deferredPrompt.prompt(); deferredPrompt.userChoice.then(()=>{ deferredPrompt=null; render(); }); } }
+  else if(a==='instx'){ lsSet(KEY+'-inst-x','1'); render(); }
+  else if(a==='sim') go({view:'sim',phase:'intro'});
+  else if(a==='simstart'){ stopSpeak(); S={view:'sim',phase:'q',qs:simPick(),i:0,ans:[],secs:[],txt:''}; simShowQ(); }
+  else if(a==='simsay'){ if(TTS.on){stopSpeak();render();} else { speak(getJ(S.qs[S.i]).q,()=>render()); render(); } }
+  else if(a==='simnext'||a==='simskip'){ const el=document.getElementById('sans'); S.ans[S.i]= a==='simskip'? '' : (el?el.value:''); S.secs[S.i]=Math.round((Date.now()-S.t0)/1000); stopSpeak();
+     if(S.i<S.qs.length-1){ S.i++; simShowQ(); } else gradeSim(); }
+  else if(a==='simexit'){ if(S.phase==='q' && !S.exitOk){ S.exitOk=true; toast('Toca otra vez para salir: perderás este simulacro.'); setTimeout(()=>{S.exitOk=false;},3000); return; } clearInterval(simTimer); go({view:'home'}); }
+  else if(a==='unpick') go({view:'login'});
+  else if(a==='logout'){ if(WHO) lsSet(KEY+'-h-'+WHO,''); WHO=null; HASH=null; lsSet(KEY+'-who',''); P=BLANK(); go({view:'login'}); }
+  else if(a==='ask') go({view:'ask',q:'',gloss:null,ai:null,focus:'aq'});
+  else if(a==='askchip'){ document.getElementById('aq')&&(document.getElementById('aq').value=b.dataset.t); submitAsk(b.dataset.t); window.scrollTo(0,0); }
+  else if(a==='askmore') askAI(S.q);
+  else if(a==='sayans'){ if(TTS.on){stopSpeak();render();} else speak(S.ai.replace(/\n/g,' '),()=>{}); }
+  else if(a==='histq'){ const h=P.asks[+b.dataset.i]; S.q=h.q; S.gloss=findGloss(h.q); S.ai=h.a; S.aiDone=true; render(); window.scrollTo(0,0); }
+  else if(a==='mic'){ const d=CAP.dict; if(!d) return; if(d.active()){ d.stop().catch(()=>{}); } else { DICT.target=b.dataset.t; d.start({language:'es'}).catch(err=>{ if(err&&err.code==='not_granted') toast('Sin permiso de micrófono: escribe tu respuesta.'); }); } }
+  else if(a==='open') go({view:'mod',m:b.dataset.m,i:0,listen:false});
+  else if(a==='listen'){ S={view:'mod',m:b.dataset.m,i:0,listen:true}; render(); playCard(); }
+  else if(a==='startlisten'){ S.listen=true; playCard(); }
+  else if(a==='stoplisten'){ S.listen=false; stopSpeak(); render(); }
+  else if(a==='next'){ stopSpeak(); S.listen=false; advance(false); }
+  else if(a==='prev'){ stopSpeak(); S.listen=false; if(S.i>0){S.i--; render();} }
+  else if(a==='say'){ if(TTS.on){ stopSpeak(); S.listen=false; render(); } else { const c=modById(S.m).cards[S.i]; speak(cardSay(c),()=>render()); render(); } }
+  else if(a==='rate'){ P.rate=parseFloat(b.dataset.r); save(); render(); toast('Velocidad '+P.rate+'x'); }
+  else if(a==='quiz') go({view:'quiz',m:b.dataset.m,qi:0,pick:null,score:0});
+  else if(a==='sayq'){ const q=QUIZ[S.m][S.qi]; if(q) speak(q.q+' Opciones: '+q.o.map((o,i)=>(i+1)+', '+o).join('. ')); }
+  else if(a==='pick'){ const q=QUIZ[S.m][S.qi]; S.pick=+b.dataset.i; if(S.pick===q.a) S.score++; render(); }
+  else if(a==='qnext'){ S.qi++; S.pick=null; if(S.qi>=QUIZ[S.m].length){ P.done[S.m]=true; P.quiz[S.m]=S.score; save(); } render(); window.scrollTo(0,0); }
+  else if(a==='jury') go({view:'jury',f:b.dataset.f||'all',deck:juryDeck(b.dataset.f||'all'),j:0,rev:false,check:null,txt:''});
+  else if(a==='reveal'){ S.rev=true; S.check=null; render(); }
+  else if(a==='checkj'){ const t=(document.getElementById('jans')||{}).value||''; S.txt=t; if(t.trim().length<8){ toast('Escribe o dicta tu respuesta primero'); return; } S.check=checkAnswer(S.deck[S.j],t); S.rev=true; render(); }
+  else if(a==='sayj'){ if(TTS.on){stopSpeak(); render(); return;} if(S.deck[S.j]==null) return; const q=getJ(S.deck[S.j]); speak(S.rev? 'Respuesta modelo. '+q.a : q.q, ()=>render()); render(); }
+  else if(a==='rate-j'){ const qi=S.deck[S.j]; P.jury[qi]=+b.dataset.v; save(); stopSpeak(); S.j++; S.rev=false; S.check=null; S.txt=''; render(); window.scrollTo(0,0); }
+  else if(a==='plan') go({view:'plan'});
+});
+document.addEventListener('input',e=>{ if(e.target.id==='jans'||e.target.id==='sans') S.txt=e.target.value; if(e.target.id==='aq') S.q=e.target.value; });
+document.addEventListener('submit',e=>{ e.preventDefault(); if(e.target.id==='lf') doLogin(); if(e.target.id==='af') submitAsk((document.getElementById('aq')||{}).value); });
+document.addEventListener('keydown',e=>{ if(S.view!=='mod') return; if(e.key==='ArrowRight'){stopSpeak();S.listen=false;advance(false);} if(e.key==='ArrowLeft'&&S.i>0){stopSpeak();S.listen=false;S.i--;render();} });
+(async()=>{ const w=lsGet(KEY+'-who'); if(w && ROLES[w]){ WHO=w; HASH=lsGet(KEY+'-h-'+w)||null; const l=lsGet(KEY+'-'+w); if(l) try{P=Object.assign(BLANK(),JSON.parse(l));}catch(e){} S={view:'home'}; render(); await capsReady; await loadProgress(); if(S.view==='home') render(); } else { S={view:'login'}; render(); } })();
+</script>
+
+<script>if('serviceWorker' in navigator){ window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{})); }</script>
+</body>
+</html>
