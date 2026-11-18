@@ -584,11 +584,18 @@ const GLOSS = {
 
 // Rol de cada persona
 const ROLES = {
- andre:{name:'Andre', role:'Scrum Master', mods:['m2','m12','m13','m15']},
- angel:{name:'Angel', role:'Business Owner', mods:['m1','m2','m6','m7','m8','m14','m15']},
+ andre:{name:'Andre', full:'Andre Sebastian Arce Vargas', role:'Scrum Master', mods:['m2','m12','m13','m14','m16']},
+ angel:{name:'Angel', full:'Angel Sebastian Mario Astudillo Porroa', role:'Business Owner', mods:['m2','m7','m8','m10','m15']},
+ dulce:{name:'Dulce', full:'Dulce Cielo Figueroa Gómez', role:'Product Owner', mods:['m1','m2','m3','m6','m11']},
+ nayeli:{name:'Nayeli', full:'Nayeli Hilary Mendoza Jaimes', role:'Equipo Scrum', mods:['m9','m10','m11','m12']},
 };
 // Respuesta alternativa de "¿Cuál fue tu rol?" para Angel
-const JURY_ALT = {39:{angel:{a:'Buenos días, soy Angel Sebastian Mario Astudillo Porroa y mi rol Scrum es Business Owner: identifiqué las necesidades de los usuarios y revisé que las funciones sirvan al negocio.',k:[['Nombre completo','astudillo|angel sebastian'],['Rol Scrum','business owner']]}}, 3:{angel:{a:'Fui el Business Owner. Identifiqué las necesidades de los usuarios relacionadas con la contratación rápida y segura de técnicos, y revisé que las funcionalidades propuestas respondieran a los objetivos del negocio. Por ejemplo, cuidé que el modelo de comisión del 10% fuera atractivo para los técnicos y sostenible para ServiGo.', k:[['Business Owner','business owner|dueño del negocio'],['Necesidades de los usuarios','necesidad|usuario'],['Revisé que sirva al negocio','negocio|objetivo|funcionalidad'],['Un ejemplo','comision|10|ejemplo']]}}};
+const JURY_ALT = {39:{
+ dulce:{a:'Buenas tardes, soy Dulce Cielo Figueroa Gómez y mi rol Scrum es Product Owner: definí la visión del producto y prioricé el backlog.',k:[['Nombre completo','figueroa|dulce cielo'],['Rol Scrum','product owner']]},
+ nayeli:{a:'Buenas tardes, soy Nayeli Hilary Mendoza Jaimes y mi rol es Equipo Scrum: diseñé las funciones de búsqueda rápida y segura y propuse mejoras de experiencia.',k:[['Nombre completo','mendoza jaimes|nayeli hilary'],['Rol Scrum','equipo scrum|equipo de desarrollo']]},
+ angel:{a:'Buenos días, soy Angel Sebastian Mario Astudillo Porroa y mi rol Scrum es Business Owner: identifiqué las necesidades de los usuarios y revisé que las funciones sirvan al negocio.',k:[['Nombre completo','astudillo|angel sebastian'],['Rol Scrum','business owner']]}}, 3:{dulce:{a:'Fui la Product Owner. Definí la visión del producto y la propuesta de valor, y prioricé el backlog con MoSCoW según el valor para el usuario. Por ejemplo, pusimos primero lo que da confianza: plataforma, perfil verificado y tarifas.', k:[['Product Owner','product owner'],['Visión y propuesta de valor','vision|propuesta de valor'],['Prioricé el backlog','prioric|backlog|moscow'],['Un ejemplo','confianza|verificado|tarifa|ejemplo']]},
+ nayeli:{a:'Fui parte del Equipo Scrum. Diseñé funcionalidades enfocadas en una búsqueda rápida y segura de técnicos y propuse mejoras de experiencia de usuario. Por ejemplo, el filtro por distrito y la búsqueda con autocompletado.', k:[['Equipo Scrum','equipo scrum|equipo de desarrollo'],['Búsqueda rápida y segura','busqueda|rapid|segur'],['Mejoras de experiencia','experiencia|usuario|mejora'],['Un ejemplo','distrito|autocomplet|ejemplo']]},
+ angel:{a:'Fui el Business Owner. Identifiqué las necesidades de los usuarios relacionadas con la contratación rápida y segura de técnicos, y revisé que las funcionalidades propuestas respondieran a los objetivos del negocio. Por ejemplo, cuidé que el modelo de comisión del 10% fuera atractivo para los técnicos y sostenible para ServiGo.', k:[['Business Owner','business owner|dueño del negocio'],['Necesidades de los usuarios','necesidad|usuario'],['Revisé que sirva al negocio','negocio|objetivo|funcionalidad'],['Un ejemplo','comision|10|ejemplo']]}}};
 
 // ===== Módulo 18: teoría y preguntas del simulacro =====
 MODULES.push({ id:'m18', n:18, title:'Teoría y simulacro', tag:'Preguntas que ya les hicieron', mins:8, cards:[
@@ -720,7 +727,7 @@ function todayStr(d=new Date()){return d.getFullYear()+'-'+String(d.getMonth()+1
 function markDay(){const t=todayStr(); if(!P.days.includes(t)){P.days.push(t); save();}}
 function streak(){let n=0; const d=new Date(); for(;;){ if(P.days.includes(todayStr(d))){n++; d.setDate(d.getDate()-1);} else break;} return n;}
 const ROLE=()=>ROLES[WHO]||ROLES.andre;
-function p13n(t){ if(WHO!=='angel') return t; return String(t).replace(/Andre Sebastian Arce Vargas/g,'Angel Sebastian Mario Astudillo Porroa').replace('mi rol Scrum es Scrum Master: coordiné al equipo y gestioné los impedimentos','mi rol Scrum es Business Owner: identifiqué las necesidades de los usuarios y revisé que las funciones sirvan al negocio').replace('mi rol Scrum es Scrum Master.','mi rol Scrum es Business Owner.'); }
+function p13n(t){ if(!WHO||WHO==='andre') return t; const r=ROLES[WHO]; return String(t).replace(/Andre Sebastian Arce Vargas/g,r.full).replace('mi rol Scrum es Scrum Master: coordiné al equipo y gestioné los impedimentos','mi rol Scrum es '+r.role).replace('mi rol Scrum es Scrum Master.','mi rol Scrum es '+r.role+'.'); }
 function getJ(qi){ const q=JURY[qi]; const alt=(JURY_ALT[qi]||{})[WHO]; return {m:q.m, q:q.q, a: p13n(alt?alt.a:q.a), k: alt?alt.k:JKEYS[qi]}; }
 // ---------- speech ----------
 const TTS = {ok:'speechSynthesis' in window, voice:null, queue:[], on:false, cb:null, tok:0};
@@ -785,7 +792,7 @@ function renderHome(){
   <div class="hero"><div class="eyebrow">Hoy · ${tp[0].split('-').reverse().slice(0,2).join('/')}</div><h2>${tp[2]}</h2><div class="chips">${planBtns}</div></div>
   ${installCard()}
   <button class="simbtn" data-a="sim">${I.gavel}<span><b>Simulacro de sustentación</b><small>8 preguntas del jurado · nota de 0 a 20 · recomendaciones${(P.sims&&P.sims.length)?' · Última nota: '+P.sims[0].nota+'/20':''}</small></span>${I.next}</button>
-  <a class="simbtn" href="juego/" style="background:#14213D;color:#fff;text-decoration:none"><span style="font-size:26px">🎮</span><span><b>ServiGo Quest</b><small style="opacity:.8">Juego de tu parte · diapositivas 20 a 27</small></span><span>›</span></a>
+  <a class="simbtn" href="juego/" style="background:#14213D;color:#fff;text-decoration:none"><span style="font-size:26px">🎮</span><span><b>ServiGo Quest</b><small style="opacity:.8">Juego: tu parte y toda la tesis</small></span><span>›</span></a>
   <div class="actions">
     <button class="act" data-a="listen" data-m="${nextModule().id}">${I.head}<span>Escuchar como podcast</span></button>
     <button class="act" data-a="jury" data-f="all">${I.gavel}<span>Modo jurado</span></button>
@@ -805,7 +812,7 @@ function renderHome(){
 }
 // ---------- render: cards ----------
 function cardHTML(c){
-  const you = (c.you && WHO!=='angel')? '<span class="youtag">Te toca como Scrum Master</span>':'';
+  const you = (c.you && WHO==='andre')? '<span class="youtag">Te toca como Scrum Master</span>':'';
   const key = c.key? `<div class="key">${I.bulb}<span>${c.key}</span></div>`:'';
   switch(c.t){
   case 'title': return `<div class="eyebrow">${c.eyebrow}</div><h2 style="font-size:32px">${c.h}</h2><p>${c.p}</p>`;
