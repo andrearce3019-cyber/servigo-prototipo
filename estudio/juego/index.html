@@ -5,9 +5,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#14213D">
 <title>ServiGo Quest</title>
-<link rel="manifest" href="../manifest.webmanifest">
-<link rel="icon" href="../icon-192.png">
-<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ServiGo Quest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;700;800&display=swap">
 <style>
@@ -42,6 +45,9 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-rad
 .lvl small{color:var(--muted);font-weight:700;font-size:13px}
 .stars{font-size:18px;letter-spacing:1px;white-space:nowrap}
 .lvl.lock{opacity:.5;filter:grayscale(.8)}
+.dl{display:grid;grid-template-columns:40px 1fr;gap:10px;align-items:start;background:var(--bg2);border:2px dashed var(--gold);border-radius:18px;padding:12px 14px;margin-bottom:14px}
+.dl .e{font-size:30px;line-height:1}.dl>div>b{font-family:var(--f-game);font-size:18px;display:block}.dl p{margin:2px 0 8px;font-size:14px;color:#CFDAF5}
+.dl .row{display:flex;gap:8px;align-items:center}.ib{background:var(--gold);color:#3B2600;font-weight:800;border-radius:12px;padding:9px 14px}.ix{color:#AFC0E8;font-weight:700;text-decoration:underline;padding:6px}
 .tip{margin-top:16px;background:var(--bg2);border-radius:16px;padding:12px 14px;font-size:14px;color:#CFDAF5}
 .tip a{color:var(--gold);font-weight:800}
 /* play */
@@ -103,72 +109,130 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-rad
 <div class="toast" id="toast" hidden></div>
 <script>
 // ===================== CONTENIDO (PPT de sustentación, diapositivas 20 a 27) =====================
-const SL = {20:'Impedimentos',21:'Solicitud de cambios',22:'Sprint validado',23:'Producto Mínimo Viable',24:'Retrospectiva',25:'Conclusiones',26:'Recomendaciones',27:'Gracias'};
-const SAY = {
- 20:'Como Scrum Master registré los impedimentos. Tuvimos tres: comunicación, porque no coincidíamos en horarios, y formalizamos los canales y las actas; documentos, porque la validación de los técnicos era lenta, y la hicimos por etapas; y mapas, porque el servicio se retrasó, y probamos con datos simulados.',
- 21:'Un stakeholder pidió reducir las categorías del inicio. No se aprobó, porque los usuarios ya estaban conformes y el cambio no agregaba valor.',
- 22:'Estos son los tableros Kanban de cada sprint: todo terminó en Hecho. Sprint 1, la confianza. Sprint 2, contratar seguro. Sprint 3, la rapidez.',
- 23:'Este es nuestro prototipo: te registras, buscas técnicos verificados en tu distrito, ves precios, chateas y puedes pedir una emergencia.',
- 24:'En la retrospectiva: hicimos bien la organización; debemos mejorar la revisión de los criterios antes de programar; y mantendremos las reuniones a mitad de semana.',
- 25:'El problema es la falta de confianza. Design Thinking nos ayudó a entenderlo y Scrum a construir la solución.',
- 26:'Fortalecer la verificación de técnicos, seguir probando con clientes y hacer marketing digital local.',
- 27:'Muchas gracias, quedamos atentos a sus preguntas.'
-};
 const LEVELS = [
- {id:'L1', icon:'🧩', color:'#4F8CFF', title:'Ordena tus diapositivas', sub:'Toca tus 8 diapositivas en orden', type:'order',
-  learn:'Tu orden: problemas → cambios → sprints → producto → aprendizaje → conclusión → consejo → gracias.'},
- {id:'L2', icon:'🔗', color:'#9B6BFF', title:'Une problema y solución', sub:'Impedimentos, sprints y retrospectiva', type:'match',
-  learn:'Impedimentos: Comunicación → actas · Documentos → por etapas · Mapas → datos simulados.'},
- {id:'L3', icon:'🖼️', color:'#FF8A3D', title:'¿Qué digo aquí?', sub:'Ves la diapositiva y eliges qué decir', type:'slide',
-  learn:'Cada diapositiva te "sopla" la idea: mírala y explícala con tus palabras.'},
- {id:'L4', icon:'⚡', color:'#2BB673', title:'Relámpago', sub:'Verdadero o falso en 7 segundos', type:'tf',
-  learn:'Datos clave: 3 impedimentos, 1 cambio rechazado, 3 sprints, 45 tareas, 67 puntos.'},
- {id:'L5', icon:'✍️', color:'#F2545B', title:'Completa la frase', sub:'Las frases que dirás', type:'fill',
-  learn:'Empiezas: "Soy Andre Sebastian Arce Vargas, Scrum Master".'},
- {id:'L6', icon:'👨‍⚖️', color:'#FFC93C', title:'Jefe final: el jurado', sub:'6 preguntas · 15 s · 3 vidas', type:'boss',
-  learn:'Si dudas: idea principal + un dato de ServiGo. Respira y responde corto.'},
+ {id:'L1', icon:'🧩', color:'#4F8CFF', title:'Ordena tus diapositivas', sub:'', type:'order'},
+ {id:'L2', icon:'🔗', color:'#9B6BFF', title:'Une las parejas', sub:'Lo que debes relacionar sí o sí', type:'match'},
+ {id:'L3', icon:'🖼️', color:'#FF8A3D', title:'¿Qué digo aquí?', sub:'Ves la diapositiva y eliges qué decir', type:'slide'},
+ {id:'L4', icon:'⚡', color:'#2BB673', title:'Relámpago', sub:'Verdadero o falso en 7 segundos', type:'tf'},
+ {id:'L5', icon:'✍️', color:'#F2545B', title:'Completa la frase', sub:'Las frases que dirás', type:'fill'},
+ {id:'L6', icon:'👨‍⚖️', color:'#FFC93C', title:'Jefe final: el jurado', sub:'6 preguntas · 15 s · 3 vidas', type:'boss'},
 ];
-const MATCH = [
- [['Falta de comunicación y horarios','Canales formales y actas de reunión'],['Validación lenta de documentos','Flujo por etapas'],['Retraso del servicio de mapas','Pruebas con datos simulados']],
- [['Sprint 1','La base: encontrar técnicos confiables'],['Sprint 2','Contratar seguro: cotización y conformidad'],['Sprint 3','Rapidez: horarios, rastreo y emergencia']],
- [['¿Qué hicimos bien?','Organización y comunicación fluida'],['¿Qué podemos mejorar?','Revisar criterios antes de programar'],['¿Qué debemos mantener?','Reuniones a mitad de semana']],
-];
-const TF = [
- ['Tuvimos 3 impedimentos.',true],['El impedimento externo fue el retraso del servicio de mapas.',true],['La solicitud de reducir categorías SÍ se aprobó.',false],
- ['Para los documentos lentos, se reorganizó la validación por etapas.',true],['En los tableros Kanban todo terminó en "Por hacer".',false],['El MVP es un prototipo web navegable.',true],
- ['La retrospectiva sirve para mostrar el producto al cliente.',false],['El Scrum Master es el jefe que da órdenes.',false],['La conclusión principal: el problema es la falta de confianza.',true],
- ['Una recomendación es fortalecer la verificación de técnicos.',true],['Tu bloque es de la diapositiva 20 a la 27.',true],['El cambio lo pidió un stakeholder.',true],
- ['Fueron 45 tareas y 67 puntos de historia.',true],['La retrospectiva se hace al inicio del proyecto.',false],
-];
-const FILL = [
- {q:'"Buenas tardes, soy Andre Sebastian Arce Vargas, ____."',o:['Scrum Master','Product Owner','Business Owner'],a:0},
- {q:'"Tuvimos ____ impedimentos: comunicación, documentos y mapas."',o:['tres','dos','cinco'],a:0},
- {q:'"Para no detenernos con los mapas, probamos con ____."',o:['datos simulados','otro proveedor','más reuniones'],a:0},
- {q:'"El cambio no se aprobó porque los usuarios ya estaban ____."',o:['conformes','molestos','registrados'],a:0},
- {q:'"En los tableros Kanban, todas las historias terminaron en ____."',o:['Hecho','En proceso','Por hacer'],a:0},
- {q:'"Debemos mejorar la revisión de los ____ antes de programar."',o:['criterios de aceptación','precios','colores'],a:0},
- {q:'"El problema central es la falta de ____."',o:['confianza','técnicos','dinero'],a:0},
- {q:'"Design Thinking nos ayudó a ____ el problema y Scrum a construir la solución."',o:['entender','vender','ignorar'],a:0},
-];
-const BOSS = [
- {q:'¿Qué es la retrospectiva?',o:['Reunión al final del sprint para ver qué salió bien, qué mejorar y qué acción tomar','Reunión para mostrar el producto al cliente','El plan de los sprints'],a:0},
- {q:'¿Qué hace un Scrum Master?',o:['Facilita al equipo y quita impedimentos','Decide qué se construye','Programa toda la app'],a:0},
- {q:'¿Cuál fue su impedimento externo y cómo lo resolvieron?',o:['El retraso del servicio de mapas; probamos con datos simulados','Falta de dinero; pedimos un préstamo','Un integrante se retiró'],a:0},
- {q:'¿Por qué rechazaron la solicitud de cambio?',o:['La validación de la HU03 mostró conformidad y no agregaba valor','Porque era muy caro','Porque no hubo tiempo'],a:0},
- {q:'¿Qué es un MVP?',o:['La versión más simple que permite probar la idea con usuarios reales','La versión final del producto','Un tipo de anuncio'],a:0},
- {q:'¿Diferencia entre Sprint Review y retrospectiva?',o:['Review muestra el producto; la retro mejora la forma de trabajar','Son lo mismo','La review es al inicio y la retro al final del proyecto'],a:0},
- {q:'¿Cuánto es el RSI del proyecto?',o:['5,235%','433%','10%'],a:0},
- {q:'¿Con cuántos clientes recuperan la inversión?',o:['1,350 clientes','72,000 clientes','200 clientes'],a:0},
- {q:'¿Qué es el tablero Kanban?',o:['Un tablero con columnas por hacer, en proceso y hecho','Un tipo de contrato','Una métrica de ventas'],a:0},
- {q:'¿Cuál es su principal recomendación?',o:['Fortalecer la verificación de los técnicos','Subir la comisión al 30%','Cerrar la plataforma'],a:0},
-];
-const SLIDEQ = [20,21,22,23,24,25,26].map(n=>({n, o: shuffleKeep([20,21,22,23,24,25,26].filter(x=>x!==n)).slice(0,2).concat([n])}));
+const PACKS = {
+ andre:{name:'Andre', full:'Andre Sebastian Arce Vargas', role:'Scrum Master', from:20, to:27,
+  SL:{20:'Impedimentos',21:'Solicitud de cambios',22:'Sprint validado',23:'Producto Mínimo Viable',24:'Retrospectiva',25:'Conclusiones',26:'Recomendaciones',27:'Gracias'},
+  SAY:{
+   20:'Como Scrum Master registré los impedimentos. Tuvimos tres: comunicación, porque no coincidíamos en horarios, y formalizamos los canales y las actas; documentos, porque la validación de los técnicos era lenta, y la hicimos por etapas; y mapas, porque el servicio se retrasó, y probamos con datos simulados.',
+   21:'Un stakeholder pidió reducir las categorías del inicio. No se aprobó, porque los usuarios ya estaban conformes y el cambio no agregaba valor.',
+   22:'Estos son los tableros Kanban de cada sprint: todo terminó en Hecho. Sprint 1, la confianza. Sprint 2, contratar seguro. Sprint 3, la rapidez.',
+   23:'Este es nuestro prototipo: te registras, buscas técnicos verificados en tu distrito, ves precios, chateas y puedes pedir una emergencia.',
+   24:'En la retrospectiva: hicimos bien la organización; debemos mejorar la revisión de los criterios antes de programar; y mantendremos las reuniones a mitad de semana.',
+   25:'El problema es la falta de confianza. Design Thinking nos ayudó a entenderlo y Scrum a construir la solución.',
+   26:'Fortalecer la verificación de técnicos, seguir probando con clientes y hacer marketing digital local.',
+   27:'Muchas gracias, quedamos atentos a sus preguntas.'},
+  learn:['Tu orden: problemas → cambios → sprints → producto → aprendizaje → conclusión → consejo → gracias.',
+   'Impedimentos: Comunicación → actas · Documentos → por etapas · Mapas → datos simulados.',
+   'Cada diapositiva te "sopla" la idea: mírala y explícala con tus palabras.',
+   'Datos clave: 3 impedimentos, 1 cambio rechazado, 3 sprints, 45 tareas, 67 puntos.',
+   'Empiezas: "Soy Andre Sebastian Arce Vargas, Scrum Master".',
+   'Si dudas: idea principal + un dato de ServiGo. Respira y responde corto.'],
+  MATCH:[
+   [['Falta de comunicación y horarios','Canales formales y actas de reunión'],['Validación lenta de documentos','Flujo por etapas'],['Retraso del servicio de mapas','Pruebas con datos simulados']],
+   [['Sprint 1','La base: encontrar técnicos confiables'],['Sprint 2','Contratar seguro: cotización y conformidad'],['Sprint 3','Rapidez: horarios, rastreo y emergencia']],
+   [['¿Qué hicimos bien?','Organización y comunicación fluida'],['¿Qué podemos mejorar?','Revisar criterios antes de programar'],['¿Qué debemos mantener?','Reuniones a mitad de semana']]],
+  TF:[
+   ['Tuvimos 3 impedimentos.',true],['El impedimento externo fue el retraso del servicio de mapas.',true],['La solicitud de reducir categorías SÍ se aprobó.',false],
+   ['Para los documentos lentos, se reorganizó la validación por etapas.',true],['En los tableros Kanban todo terminó en "Por hacer".',false],['El MVP es un prototipo web navegable.',true],
+   ['La retrospectiva sirve para mostrar el producto al cliente.',false],['El Scrum Master es el jefe que da órdenes.',false],['La conclusión principal: el problema es la falta de confianza.',true],
+   ['Una recomendación es fortalecer la verificación de técnicos.',true],['Tu bloque es de la diapositiva 20 a la 27.',true],['El cambio lo pidió un stakeholder.',true],
+   ['Fueron 45 tareas y 67 puntos de historia.',true],['La retrospectiva se hace al inicio del proyecto.',false]],
+  FILL:[
+   {q:'"Buenas tardes, soy Andre Sebastian Arce Vargas, ____."',o:['Scrum Master','Product Owner','Business Owner'],a:0},
+   {q:'"Tuvimos ____ impedimentos: comunicación, documentos y mapas."',o:['tres','dos','cinco'],a:0},
+   {q:'"Para no detenernos con los mapas, probamos con ____."',o:['datos simulados','otro proveedor','más reuniones'],a:0},
+   {q:'"El cambio no se aprobó porque los usuarios ya estaban ____."',o:['conformes','molestos','registrados'],a:0},
+   {q:'"En los tableros Kanban, todas las historias terminaron en ____."',o:['Hecho','En proceso','Por hacer'],a:0},
+   {q:'"Debemos mejorar la revisión de los ____ antes de programar."',o:['criterios de aceptación','precios','colores'],a:0},
+   {q:'"El problema central es la falta de ____."',o:['confianza','técnicos','dinero'],a:0},
+   {q:'"Design Thinking nos ayudó a ____ el problema y Scrum a construir la solución."',o:['entender','vender','ignorar'],a:0}],
+  BOSS:[
+   {q:'¿Qué es la retrospectiva?',o:['Reunión al final del sprint para ver qué salió bien, qué mejorar y qué acción tomar','Reunión para mostrar el producto al cliente','El plan de los sprints'],a:0},
+   {q:'¿Qué hace un Scrum Master?',o:['Facilita al equipo y quita impedimentos','Decide qué se construye','Programa toda la app'],a:0},
+   {q:'¿Cuál fue su impedimento externo y cómo lo resolvieron?',o:['El retraso del servicio de mapas; probamos con datos simulados','Falta de dinero; pedimos un préstamo','Un integrante se retiró'],a:0},
+   {q:'¿Por qué rechazaron la solicitud de cambio?',o:['La validación de la HU03 mostró conformidad y no agregaba valor','Porque era muy caro','Porque no hubo tiempo'],a:0},
+   {q:'¿Qué es un MVP?',o:['La versión más simple que permite probar la idea con usuarios reales','La versión final del producto','Un tipo de anuncio'],a:0},
+   {q:'¿Diferencia entre Sprint Review y retrospectiva?',o:['Review muestra el producto; la retro mejora la forma de trabajar','Son lo mismo','La review es al inicio y la retro al final del proyecto'],a:0},
+   {q:'¿Cuánto es el RSI del proyecto?',o:['5,235%','433%','10%'],a:0},
+   {q:'¿Con cuántos clientes recuperan la inversión?',o:['1,350 clientes','72,000 clientes','200 clientes'],a:0},
+   {q:'¿Qué es el tablero Kanban?',o:['Un tablero con columnas por hacer, en proceso y hecho','Un tipo de contrato','Una métrica de ventas'],a:0},
+   {q:'¿Cuál es su principal recomendación?',o:['Fortalecer la verificación de los técnicos','Subir la comisión al 30%','Cerrar la plataforma'],a:0}]},
+ angel:{name:'Angel', full:'Angel Sebastian Mario Astudillo Porroa', role:'Business Owner', from:7, to:12,
+  SL:{7:'Competencia',8:'Análisis FODA',9:'Lean Canvas',10:'Customer Journey Map',11:'Construcción del producto',12:'Scope Canvas'},
+  SAY:{
+   7:'Tenemos tres competidores directos: Facebook Marketplace, Helpers y el boca a boca. Ninguno verifica al técnico, muestra precios antes y da garantía a la vez: esa es nuestra diferencia.',
+   8:'En el FODA, la fortaleza es que los usuarios ya comparan precios y opiniones; la oportunidad, el crecimiento de apps y pagos digitales; la debilidad, la baja confianza al contratar por internet; y la amenaza, los fraudes de prestadores informales.',
+   9:'En el Lean Canvas: invertimos 23,183 soles en el primer año; cobramos 10% de comisión sobre un ticket de 85 soles; con 72,000 clientes los ingresos son 1,236,830 soles, la ganancia neta 1,213,647 soles y el RSI 5,235%.',
+   10:'El Customer Journey muestra el recorrido de hoy: buscar, comparar y coordinar son etapas negativas. En cada una proponemos una mejora: técnicos por zona, precios cotizados y calificaciones.',
+   11:'Aquí empieza la construcción del producto: pasamos del problema a la solución, organizados con Scrum.',
+   12:'En el Scope Canvas definimos el alcance: 200 usuarios activos y 30 servicios en 3 meses, 80 técnicos verificados y 50 transacciones pagadas en 4 meses.'},
+  learn:['Tu orden: competencia → FODA → Lean Canvas → Customer Journey → construcción → Scope Canvas.',
+   'Competencia: Marketplace no verifica · Helpers poca cobertura · boca a boca lento en emergencias.',
+   'Cada diapositiva te "sopla" la idea: mírala y explícala con tus palabras.',
+   'Números clave: S/ 85 · 10% · S/ 23,183 · S/ 1,236,830 · RSI 5,235% · 200 usuarios.',
+   'Empiezas: "Soy Angel Sebastian Mario Astudillo Porroa, Business Owner".',
+   'Si dudas: idea principal + un dato de ServiGo. Respira y responde corto.'],
+  MATCH:[
+   [['Facebook Marketplace','No verifica a nadie'],['Helpers','Poca cobertura en algunos distritos'],['Boca a boca','Difícil en emergencias y sin comparar precios']],
+   [['Fortaleza','Los usuarios comparan precios y opiniones'],['Oportunidad','Crecen las apps y los pagos digitales'],['Amenaza','Fraudes de prestadores informales']],
+   [['Inversión del año 1','S/ 23,183'],['Ingresos del proyecto','S/ 1,236,830'],['RSI','5,235%']]],
+  TF:[
+   ['Facebook Marketplace verifica a los técnicos.',false],['Helpers tiene poca cobertura en algunos distritos.',true],['La comisión de ServiGo es 10%.',true],
+   ['El ticket promedio es S/ 85.',true],['La inversión del primer año es S/ 1,236,830.',false],['La ganancia neta es S/ 1,213,647.',true],
+   ['En el Customer Journey, recibir el servicio es una etapa positiva.',true],['Buscar al técnico hoy es una etapa positiva.',false],['La meta es 200 usuarios activos en 3 meses.',true],
+   ['Queremos 80 técnicos verificados en el primer trimestre.',true],['El LTV es S/ 25.50.',true],['El CAC promedio es S/ 43.',false],
+   ['Tu bloque es de la diapositiva 7 a la 12.',true],['Una amenaza es la información engañosa en internet.',true]],
+  FILL:[
+   {q:'"Buenas tardes, soy Angel Sebastian Mario Astudillo Porroa, ____."',o:['Business Owner','Scrum Master','Product Owner'],a:0},
+   {q:'"Nuestros competidores directos son Facebook Marketplace, Helpers y ____."',o:['el boca a boca','Rappi','Mercado Libre'],a:0},
+   {q:'"Cobramos una comisión del ____ por cada servicio."',o:['10%','20%','5%'],a:0},
+   {q:'"Invertimos ____ en el primer año."',o:['S/ 23,183','S/ 13,500','S/ 1,236,830'],a:0},
+   {q:'"El retorno sobre la inversión es de ____."',o:['5,235%','433%','72%'],a:0},
+   {q:'"En el Customer Journey, buscar, comparar y coordinar son etapas ____."',o:['negativas','positivas','opcionales'],a:0},
+   {q:'"Nuestra meta: ____ usuarios activos en 3 meses."',o:['200','72,000','50'],a:0},
+   {q:'"Nuestra ventaja: validación de seguridad y cobertura ____."',o:['local hiperenfocada','nacional','internacional'],a:0}],
+  BOSS:[
+   {q:'¿Quiénes son su competencia?',o:['Facebook Marketplace, Helpers y el boca a boca','Rappi, Uber y Glovo','Sodimac y Promart solamente'],a:0},
+   {q:'¿Cómo gana dinero ServiGo?',o:['Comisión del 10% por cada servicio contratado','Vendiendo herramientas','Con publicidad'],a:0},
+   {q:'¿Cuál es su mayor fortaleza según el FODA?',o:['Los usuarios ya comparan precios y opiniones antes de elegir','Tenemos muchos empleados','Somos los más baratos'],a:0},
+   {q:'¿Cuánto invierten y cuánto ganan en el año 1?',o:['Invertimos S/ 23,183 y la ganancia neta es S/ 1,213,647','Invertimos S/ 1,236,830 y ganamos S/ 23,183','Invertimos S/ 13,500 y ganamos S/ 72,000'],a:0},
+   {q:'¿Cuánto es el RSI?',o:['5,235%','433%','100%'],a:0},
+   {q:'¿Con cuántos clientes recuperan la inversión?',o:['1,350 clientes','72,000 clientes','200 clientes'],a:0},
+   {q:'¿Qué es el Customer Journey Map?',o:['El recorrido del cliente por etapas, con sus emociones','Un mapa de Lima Norte','La lista de técnicos'],a:0},
+   {q:'¿Qué es el Scope Canvas?',o:['El alcance del proyecto: propósito, metas y métricas','El presupuesto del proyecto','El tablero de tareas'],a:0},
+   {q:'¿Qué es el LTV?',o:['Lo que deja un cliente en un año: S/ 25.50','El costo de conseguir un cliente','El total de clientes'],a:0},
+   {q:'¿Qué es el CAC?',o:['Lo que cuesta conseguir un cliente: S/ 8.32','La comisión por servicio','El ticket promedio'],a:0}]},
+};
+let WHO=null, PK=null, SL={}, SAY={}, MATCH=[], TF=[], FILL=[], BOSS=[], SLIDEQ=[], FROM=20, TO=27;
+function usePack(w){ PK=PACKS[w]; ({SL,SAY,MATCH,TF,FILL,BOSS}=PK); FROM=PK.from; TO=PK.to;
+  const ks=Object.keys(SAY).map(Number).filter(n=>SL[n]!=='Gracias'); SLIDEQ=ks.map(n=>({n,o:shuffle(ks.filter(x=>x!==n)).slice(0,2).concat([n])}));
+  LEVELS.forEach((l,i)=>l.learn=PK.learn[i]); LEVELS[0].sub='Toca tus '+(TO-FROM+1)+' diapositivas en orden'; }
 // ===================== ESTADO =====================
 const KEY='servigo-quest-v1';
-let G={stars:{},xp:0,best:0,streak:0,days:[]};
-try{const s=localStorage.getItem(KEY); if(s) G=Object.assign(G,JSON.parse(s));}catch(e){}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(G));}catch(e){}}
-let V={view:'map'};
+const SUPA={url:'https://rvxmmmwrzmoukyxfkeuv.supabase.co',key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2eG1tbXdyem1vdWt5eGZrZXV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM3NTU4ODksImV4cCI6MjEwOTMzMTg4OX0.yNerieH_5OG8yIaaeZGSmUfZEElt_Xqd0__99BRPSo0'};
+const BLANK=()=>({stars:{},xp:0,updated:0});
+let G=BLANK(), HASH=null;
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+async function rpc(fn,args){ const r=await fetch(SUPA.url+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'apikey':SUPA.key,'Authorization':'Bearer '+SUPA.key,'Content-Type':'application/json'},body:JSON.stringify(args)}); if(!r.ok) throw new Error('http '+r.status); return r.json(); }
+async function sha(t){ try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)); return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');}catch(e){let h=0;for(const c of t)h=(h*31+c.charCodeAt(0))|0;return 'x'+h;} }
+let saveT=null;
+function save(){ if(!WHO) return; G.updated=Date.now(); lsSet(KEY+'-'+WHO,JSON.stringify(G)); clearTimeout(saveT);
+  saveT=setTimeout(()=>{ if(HASH) rpc('se_quest_save',{p_who:WHO,p_hash:HASH,p_data:G}).catch(()=>{}); },800); }
+async function loadG(){ let local=null, remote=null; const l=lsGet(KEY+'-'+WHO); if(l) try{local=JSON.parse(l);}catch(e){}
+  if(HASH){ try{ remote=await rpc('se_quest_load',{p_who:WHO,p_hash:HASH}); }catch(e){} }
+  if(remote && !Object.keys(remote).length) remote=null;
+  const pick=(remote&&local)? ((local.updated||0)>(remote.updated||0)?local:remote) : (remote||local);
+  G=Object.assign(BLANK(),pick||{}); if(pick===local&&local&&HASH) save(); }
+let V={view:'login'};
 const $=s=>document.querySelector(s);
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function shuffleKeep(a){return shuffle(a);}
@@ -187,17 +251,28 @@ function totalStars(){return Object.values(G.stars).reduce((a,b)=>a+b,0);}
 function unlocked(i){ return i===0 || (G.stars[LEVELS[i-1].id]||0)>0; }
 function renderMap(){
   const ts=totalStars(), max=LEVELS.length*3;
-  return `<div class="hud"><div class="brand">ServiGo Quest<small>Tu parte · diapositivas 20 a 27</small></div><div class="row" style="display:flex;gap:8px"><span class="pill gold">⭐ ${ts}/${max}</span><span class="pill">⚡ ${G.xp} XP</span></div></div>
+  return `<div class="hud"><div class="brand">ServiGo Quest<small>Hola, ${PK.name} · diapositivas ${FROM} a ${TO}</small></div><div class="row" style="display:flex;gap:8px"><span class="pill gold">⭐ ${ts}/${max}</span><span class="pill">⚡ ${G.xp} XP</span></div></div>
+  ${installCard()}
   <div class="hero"><h1>${ts===max?'¡Eres el jefe de tu bloque!':'Domina tu bloque antes del lunes 23'}</h1><p>${ts===max?'Repite el jefe final para mantenerte afilado.':'Gana 3 estrellas en cada nivel. Se desbloquean en orden.'}</p><div class="bar"><i style="width:${ts/max*100}%"></i></div></div>
   <div class="map">${LEVELS.map((l,i)=>{const st=G.stars[l.id]||0, lk=!unlocked(i);
     return `<button class="lvl ${lk?'lock':''}" data-a="${lk?'locked':'play'}" data-i="${i}"><span class="ic" style="background:${l.color}">${lk?'🔒':l.icon}</span><span><h3>Nivel ${i+1} · ${l.title}</h3><small>${l.sub}</small></span><span class="stars">${'★'.repeat(st)}<span style="opacity:.25">${'★'.repeat(3-st)}</span></span></button>`;}).join('')}</div>
   <button class="btn" data-a="rapid">🔁 Repaso rápido (2 min, todo mezclado)</button>
+  <button class="btn alt" data-a="logout">Cerrar sesión (${PK.name})</button>
   <div class="tip">💡 Juega 10 minutos al día. Cuando termines un nivel, dilo en voz alta mirando la diapositiva. <br>¿Quieres repasar toda la tesis? <a href="../">Abrir la app de estudio</a>.</div>`;
 }
+// ===================== INSTALAR =====================
+let DP=null;
+window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); DP=e; if(V.view==='map') render(); });
+window.addEventListener('appinstalled',()=>{ try{localStorage.setItem(KEY+'-inst','1');}catch(e){} toast('¡Instalado! Búscalo en tu pantalla de inicio 🎮'); render(); });
+function installCard(){ let x=null; try{x=localStorage.getItem(KEY+'-inst');}catch(e){}
+  const standalone = (window.matchMedia&&matchMedia('(display-mode: standalone)').matches) || navigator.standalone===true;
+  if(standalone||x) return ''; const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  return `<div class="dl"><span class="e">📲</span><div><b>Descárgalo en tu celular</b><p>${DP?'Queda como un juego con su ícono en tu pantalla y funciona hasta sin internet.': ios?'En Safari toca <b>Compartir</b> (cuadrito con flecha ↑) y luego <b>"Agregar a inicio"</b>.':'En Chrome toca el menú <b>⋮</b> (arriba a la derecha) y luego <b>"Instalar app"</b> o <b>"Agregar a pantalla principal"</b>.'}</p>
+   <div class="row">${DP?'<button class="ib" data-a="install">Instalar juego</button>':''}<button class="ix" data-a="instx">Ahora no</button></div></div></div>`; }
 // ===================== NIVELES =====================
 function startLevel(i,rapid){ beep('tap'); const L=rapid? {id:'R',icon:'🔁',title:'Repaso rápido',type:'mix',learn:'¡Bien! Repite esto cada día para que no se te olvide.'} : LEVELS[i];
   V={view:'play',L,li:i,lives:3,miss:0,step:0,combo:0,score:0};
-  if(L.type==='order'){ V.items=shuffle([20,21,22,23,24,25,26,27]); V.next=20; V.total=8; }
+  if(L.type==='order'){ V.items=shuffle(Array.from({length:TO-FROM+1},(_,k)=>FROM+k)); V.next=FROM; V.total=TO-FROM+1; }
   if(L.type==='match'){ V.rounds=MATCH.map(r=>r); V.round=0; setupMatch(); V.total=MATCH.length; }
   if(L.type==='slide'){ V.qs=shuffle(SLIDEQ).map(s=>({n:s.n,o:shuffle(s.o)})); V.total=V.qs.length; }
   if(L.type==='tf'){ V.qs=shuffle(TF).slice(0,10); V.total=10; V.tsec=7; }
@@ -227,16 +302,16 @@ function qBlock(q, label){ const a=V.answered;
   return `<div class="card"><p class="inst">${label}</p><h2>${q.q}</h2><div class="opts">${q.o.map((o,k)=>`<button class="opt ${a?(k===q.a?'ok':k===a.k?'no':'dim'):''}" data-a="ans" data-k="${k}" ${a?'disabled':''}>${o}</button>`).join('')}</div>
    ${a?`<div class="fb ${a.ok?'ok':'no'}">${a.ok?'¡Correcto! 🎉':a.k===-1?'⏰ ¡Se acabó el tiempo! La correcta está en verde.':'Casi. La correcta está en verde.'}</div>`:''}</div>${a?'<button class="btn" data-a="next">Continuar →</button>':''}`; }
 function renderPlay(){ const L=V.L; let h=hudPlay();
-  if(L.type==='order'){ V.step=V.next-20;
+  if(L.type==='order'){ V.step=V.next-FROM;
     h+=`<div class="card"><p class="inst">Toca las diapositivas en el orden en que las vas a exponer.</p><h2>Siguiente: ¿cuál va ahora?</h2>
-      <div class="order">${Array.from({length:V.next-20},(_,k)=>`<b>${20+k} ${SL[20+k]}</b>`).join('')}</div>
-      <div class="slides">${V.items.map(n=>`<button class="sl ${n<V.next?'done':''} ${V.wrong===n?'no':''}" data-a="ord" data-n="${n}" ${n<V.next?'disabled':''} aria-label="Diapositiva ${SL[n]}"><img src="img/d-${n}.jpg" alt="${SL[n]}"><span>?</span></button>`).join('')}</div></div>`; }
+      <div class="order">${Array.from({length:V.next-FROM},(_,k)=>`<b>${FROM+k} ${SL[FROM+k]}</b>`).join('')}</div>
+      <div class="slides">${V.items.map(n=>`<button class="sl ${n<V.next?'done':''} ${V.wrong===n?'no':''}" data-a="ord" data-n="${n}" ${n<V.next?'disabled':''} aria-label="Diapositiva ${SL[n]}"><img src="img/d-${String(n).padStart(2,'0')}.jpg" alt="${SL[n]}"><span>?</span></button>`).join('')}</div></div>`; }
   else if(L.type==='match'){ const r=MATCH[V.round]; V.step=V.round;
     h+=`<div class="card"><p class="inst">Ronda ${V.round+1} de ${MATCH.length} · toca una tarjeta de la izquierda y luego su pareja.</p>
       <div class="match"><div class="col">${V.left.map(x=>`<button class="mi ${V.done.includes(x.k)?'ok':''} ${V.sel===x.k?'sel':''}" data-a="ml" data-k="${x.k}" ${V.done.includes(x.k)?'disabled':''}>${x.t}</button>`).join('')}</div>
       <div class="col">${V.right.map(x=>`<button class="mi ${V.done.includes(x.k)?'ok':''} ${V.wr===x.k?'no':''}" data-a="mr" data-k="${x.k}" ${V.done.includes(x.k)?'disabled':''}>${x.t}</button>`).join('')}</div></div></div>`; }
   else if(L.type==='slide'){ const q=V.qs[V.step], a=V.answered; const opts=q.o;
-    h+=`<div class="card"><p class="inst">Esta es tu diapositiva ${q.n}. ¿Qué dices aquí?</p><img class="big" src="img/d-${q.n}.jpg" alt="Diapositiva ${q.n}: ${SL[q.n]}">
+    h+=`<div class="card"><p class="inst">Esta es tu diapositiva ${q.n}. ¿Qué dices aquí?</p><img class="big" src="img/d-${String(q.n).padStart(2,'0')}.jpg" alt="Diapositiva ${q.n}: ${SL[q.n]}">
       <div class="opts">${opts.map(n=>`<button class="opt ${a?(n===q.n?'ok':n===a.k?'no':'dim'):''}" data-a="sl" data-k="${n}" ${a?'disabled':''}>${SAY[n]}</button>`).join('')}</div>
       ${a?`<div class="fb ${a.ok?'ok':'no'}">${a.ok?'¡Exacto! Esa es la idea de la diapositiva '+q.n+'.':'Esa idea es de otra diapositiva. La correcta está en verde.'}</div><button class="say" data-a="speak" data-n="${q.n}">🔊 Escuchar cómo decirlo</button>`:''}</div>${a?'<button class="btn" data-a="next">Continuar →</button>':''}`; }
   else if(L.type==='tf'){ const q=V.qs[V.step], a=V.answered;
@@ -251,14 +326,40 @@ function renderEnd(){ const e=V; const idx=LEVELS.indexOf(e.L); const nx=LEVELS[
    ${e.lost||e.st<3?`<button class="btn" data-a="retry" data-i="${e.li}">${e.lost?'Intentar de nuevo':'Ir por las 3 estrellas'}</button>`:''}
    ${!e.lost&&nx&&e.L.id!=='R'?`<button class="btn ${e.st<3?'alt':''}" data-a="play" data-i="${idx+1}">Siguiente nivel →</button>`:''}
    <button class="btn alt" data-a="map">Volver al mapa</button>`; }
-function render(){ $('#app').innerHTML = V.view==='map'? renderMap() : V.view==='play'? renderPlay() : renderEnd(); }
+function renderLogin(){
+  if(!V.who) return `<div class="hud"><div class="brand">ServiGo Quest<small>Juego para la sustentación</small></div></div>${installCard()}
+   <div class="hero"><h1>¿Quién va a jugar?</h1><p>Entra con la misma contraseña de la app de estudio.</p></div>
+   <div class="map">${Object.entries(PACKS).map(([k,p])=>`<button class="lvl" data-a="who" data-w="${k}"><span class="ic" style="background:${k==='andre'?'#FF8A3D':'#4F8CFF'}">${p.name[0]}</span><span><h3>${p.name}</h3><small>${p.role} · diapositivas ${p.from} a ${p.to}</small></span><span class="stars">›</span></button>`).join('')}</div>`;
+  const p=PACKS[V.who]; const nuevo=V.acc===false; const loading=V.acc===undefined;
+  return `<div class="top"><button class="back" data-a="unwho" aria-label="Volver">←</button><div class="ttl">Hola, ${p.name}<small>${p.role}</small></div><span></span></div>
+   <div class="card">${loading?'<p class="inst">Cargando…</p>':`<form id="lf" style="display:grid;gap:10px">
+    <label for="pw" class="inst">${nuevo?'Crea tu contraseña (mínimo 4 caracteres)':'Tu contraseña (la misma de la app de estudio)'}</label>
+    <input id="pw" type="password" autocomplete="${nuevo?'new-password':'current-password'}" minlength="4" required style="font:inherit;font-size:18px;padding:14px;border-radius:14px;border:2px solid #CAD6F2">
+    ${nuevo?'<label for="pw2" class="inst">Repítela</label><input id="pw2" type="password" autocomplete="new-password" minlength="4" required style="font:inherit;font-size:18px;padding:14px;border-radius:14px;border:2px solid #CAD6F2">':''}
+    ${V.err?`<div class="fb no">${V.err}</div>`:''}
+    <button class="btn" type="submit" style="margin-top:4px">${nuevo?'Crear y jugar':'Entrar a jugar'} 🎮</button></form>`}</div>`; }
+async function pickWho(w){ V={view:'login',who:w,acc:undefined}; render(); let ex=null; try{ ex=await rpc('se_status',{p_who:w}); }catch(e){ ex=null; }
+  if(V.who!==w) return; V.acc = ex===null? 'offline' : ex; render(); const el=document.getElementById('pw'); if(el) el.focus(); }
+async function doLogin(){ const pw=(document.getElementById('pw')||{}).value||'', pw2=(document.getElementById('pw2')||{}).value;
+  if(pw.length<4){ V.err='La contraseña debe tener al menos 4 caracteres.'; render(); return; }
+  const h=await sha('servigo:'+V.who+':'+pw);
+  if(V.acc===false){ if(pw!==pw2){ V.err='Las contraseñas no coinciden.'; render(); return; } try{ const ok=await rpc('se_register',{p_who:V.who,p_hash:h}); if(!ok){ V.err='Esa cuenta ya existe. Vuelve atrás e inténtalo de nuevo.'; render(); return; } }catch(e){ V.err='Sin internet. Conéctate para crear tu cuenta.'; render(); return; } }
+  else if(V.acc===true){ let d; try{ d=await rpc('se_quest_load',{p_who:V.who,p_hash:h}); }catch(e){ V.err='Sin internet. Revisa tu conexión.'; render(); return; } if(d===null){ V.err='Contraseña incorrecta.'; render(); return; } }
+  else { const saved=lsGet(KEY+'-h-'+V.who); if(saved && saved!==h){ V.err='Contraseña incorrecta.'; render(); return; } }
+  WHO=V.who; HASH=h; lsSet(KEY+'-who',WHO); lsSet(KEY+'-h-'+WHO,h); usePack(WHO); await loadG(); V={view:'map'}; render(); beep('win'); }
+function render(){ $('#app').innerHTML = V.view==='login'? renderLogin() : V.view==='map'? renderMap() : V.view==='play'? renderPlay() : renderEnd(); }
 // ===================== EVENTOS =====================
 document.addEventListener('click',e=>{ const b=e.target.closest('[data-a]'); if(!b) return; const a=b.dataset.a;
+  if(a==='who'){ pickWho(b.dataset.w); return; }
+  if(a==='unwho'){ V={view:'login'}; render(); return; }
+  if(a==='logout'){ lsSet(KEY+'-who',''); WHO=null; HASH=null; G=BLANK(); V={view:'login'}; render(); window.scrollTo(0,0); return; }
+  if(a==='install'){ if(DP){ DP.prompt(); DP.userChoice.then(()=>{ DP=null; render(); }); } return; }
+  if(a==='instx'){ try{localStorage.setItem(KEY+'-inst','1');}catch(e){} render(); return; }
   if(a==='map'){ clearInterval(TM); V={view:'map'}; render(); window.scrollTo(0,0); }
   else if(a==='locked'){ beep('no'); toast('🔒 Gana al menos 1 estrella en el nivel anterior'); }
   else if(a==='play'||a==='retry'){ startLevel(+b.dataset.i); window.scrollTo(0,0); }
   else if(a==='rapid'){ startLevel(0,true); window.scrollTo(0,0); }
-  else if(a==='ord'){ const n=+b.dataset.n; if(n===V.next){ good(); V.wrong=null; V.next++; if(V.next>27){ finish(); return; } } else { lifeLost(); V.wrong=n; if(V.lives<=0){ finish(); return; } setTimeout(()=>{V.wrong=null; if(V.view==='play') render();},400); } render(); }
+  else if(a==='ord'){ const n=+b.dataset.n; if(n===V.next){ good(); V.wrong=null; V.next++; if(V.next>TO){ finish(); return; } } else { lifeLost(); V.wrong=n; if(V.lives<=0){ finish(); return; } setTimeout(()=>{V.wrong=null; if(V.view==='play') render();},400); } render(); }
   else if(a==='ml'){ V.sel=+b.dataset.k; V.wr=null; beep('tap'); render(); }
   else if(a==='mr'){ if(V.sel==null){ toast('Primero toca una tarjeta de la izquierda'); return; } const k=+b.dataset.k;
      if(k===V.sel){ good(); V.done.push(k); V.sel=null; if(V.done.length===3){ V.round++; if(V.round>=MATCH.length){ render(); setTimeout(finish,350); return; } setupMatch(); } }
@@ -269,8 +370,9 @@ document.addEventListener('click',e=>{ const b=e.target.closest('[data-a]'); if(
   else if(a==='speak'){ speak(SAY[+b.dataset.n]); }
   else if(a==='next'){ nextQ(); window.scrollTo(0,0); }
 });
-render();
-if('serviceWorker' in navigator){ navigator.serviceWorker.register('../sw.js').catch(()=>{}); }
+document.addEventListener('submit',e=>{ e.preventDefault(); if(e.target.id==='lf') doLogin(); });
+(async()=>{ const w=lsGet(KEY+'-who'); if(w&&PACKS[w]){ WHO=w; HASH=lsGet(KEY+'-h-'+w)||null; usePack(w); const l=lsGet(KEY+'-'+w); if(l) try{G=Object.assign(BLANK(),JSON.parse(l));}catch(e){} V={view:'map'}; render(); await loadG(); if(V.view==='map') render(); } else { V={view:'login'}; render(); } })();
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
 </script>
 </body>
 </html>
