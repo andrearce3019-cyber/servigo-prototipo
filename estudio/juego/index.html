@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14213D">
+<title>ServiGo Quest</title>
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" href="../icon-192.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;700;800&display=swap">
+<style>
+/* Juego tipo mapa de niveles: fondo azul noche, tarjetas brillantes, una mano */
+:root{
+  --bg:#14213D; --bg2:#1C2C52; --card:#FFFFFF; --ink:#14213D; --muted:#5C6B8A;
+  --gold:#FFC93C; --green:#2BB673; --red:#F2545B; --blue:#4F8CFF; --violet:#9B6BFF; --orange:#FF8A3D;
+  --f-game:'Baloo 2','Nunito',system-ui,sans-serif; --f-body:'Nunito',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:#fff;font-family:var(--f-body);-webkit-tap-highlight-color:transparent}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:12px}
+[hidden]{display:none!important}
+.wrap{max-width:520px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px))}
+.hud{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.brand{font-family:var(--f-game);font-weight:800;font-size:24px;line-height:1}
+.brand small{display:block;font-family:var(--f-body);font-size:12px;font-weight:700;color:#AFC0E8}
+.pill{background:var(--bg2);border-radius:99px;padding:7px 12px;font-weight:800;display:flex;gap:6px;align-items:center;font-variant-numeric:tabular-nums}
+.pill.gold{color:var(--gold)}
+.back{background:var(--bg2);width:42px;height:42px;border-radius:14px;display:grid;place-items:center;font-size:20px}
+.hero{background:linear-gradient(135deg,#2BB673,#1E6B45);border-radius:22px;padding:18px;display:grid;gap:6px;margin-bottom:16px;box-shadow:0 8px 0 #154F33}
+.hero h1{font-family:var(--f-game);margin:0;font-size:28px;line-height:1.05}
+.hero p{margin:0;font-weight:700;opacity:.95}
+.bar{height:12px;border-radius:9px;background:rgba(255,255,255,.25);overflow:hidden}.bar i{display:block;height:100%;background:var(--gold);border-radius:9px;transition:width .4s}
+.map{display:grid;gap:14px;position:relative}
+.lvl{display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:center;background:var(--card);color:var(--ink);border-radius:20px;padding:12px;text-align:left;box-shadow:0 6px 0 rgba(0,0,0,.25);transition:transform .1s}
+.lvl:active{transform:translateY(3px);box-shadow:0 3px 0 rgba(0,0,0,.25)}
+.lvl .ic{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;font-size:32px;color:#fff;font-family:var(--f-game);font-weight:800}
+.lvl h3{margin:0;font-family:var(--f-game);font-size:20px;line-height:1.1}
+.lvl small{color:var(--muted);font-weight:700;font-size:13px}
+.stars{font-size:18px;letter-spacing:1px;white-space:nowrap}
+.lvl.lock{opacity:.5;filter:grayscale(.8)}
+.tip{margin-top:16px;background:var(--bg2);border-radius:16px;padding:12px 14px;font-size:14px;color:#CFDAF5}
+.tip a{color:var(--gold);font-weight:800}
+/* play */
+.top{display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:center;margin-bottom:10px}
+.ttl{font-family:var(--f-game);font-size:20px;font-weight:800;line-height:1.1;min-width:0}
+.ttl small{display:block;font-family:var(--f-body);font-size:12px;color:#AFC0E8}
+.lives{font-size:20px;letter-spacing:2px}
+.prog{height:10px;border-radius:9px;background:var(--bg2);overflow:hidden;margin-bottom:14px}.prog i{display:block;height:100%;background:var(--green);transition:width .3s}
+.timer{height:8px;border-radius:9px;background:var(--bg2);overflow:hidden;margin:-6px 0 12px}.timer i{display:block;height:100%;background:var(--gold)}
+.card{background:var(--card);color:var(--ink);border-radius:22px;padding:18px;box-shadow:0 6px 0 rgba(0,0,0,.25);display:grid;gap:14px}
+.card h2{margin:0;font-family:var(--f-game);font-size:22px;line-height:1.2}
+.inst{font-weight:800;color:var(--muted);font-size:14px;margin:0}
+.opts{display:grid;gap:10px}
+.opt{background:#EEF3FF;border-radius:16px;padding:14px;text-align:left;font-weight:800;font-size:16px;color:var(--ink);box-shadow:0 4px 0 #CAD6F2;transition:transform .08s}
+.opt:active{transform:translateY(2px);box-shadow:0 2px 0 #CAD6F2}
+.opt.ok{background:#D9F7E8;box-shadow:0 4px 0 var(--green)}
+.opt.no{background:#FFE1E2;box-shadow:0 4px 0 var(--red);animation:shake .35s}
+.opt.dim{opacity:.45}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.tf{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tf button{padding:18px;border-radius:18px;font-family:var(--f-game);font-size:22px;font-weight:800;color:#fff;box-shadow:0 6px 0 rgba(0,0,0,.2)}
+.tf .v{background:var(--green)}.tf .f{background:var(--red)}
+.slides{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sl{position:relative;border-radius:12px;overflow:hidden;box-shadow:0 4px 0 #CAD6F2;background:#EEF3FF;padding:0}
+.sl img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+.sl span{position:absolute;left:6px;top:6px;background:var(--ink);color:#fff;font-weight:800;font-size:13px;border-radius:8px;padding:2px 8px}
+.sl.done{outline:4px solid var(--green)}.sl.done::after{content:'✓';position:absolute;inset:0;display:grid;place-items:center;font-size:44px;color:#fff;background:rgba(43,182,115,.55);font-weight:800}
+.sl.no{animation:shake .35s;outline:4px solid var(--red)}
+.order{display:flex;flex-wrap:wrap;gap:6px}
+.order b{background:var(--green);color:#fff;border-radius:9px;padding:3px 9px;font-size:13px}
+.big{width:100%;border-radius:14px;display:block;box-shadow:0 4px 0 #CAD6F2}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.match .col{display:grid;gap:8px;align-content:start}
+.mi{background:#EEF3FF;border-radius:14px;padding:11px;font-weight:800;font-size:14px;text-align:left;color:var(--ink);box-shadow:0 3px 0 #CAD6F2;min-height:56px}
+.mi.sel{background:#FFF1C2;box-shadow:0 3px 0 var(--gold)}
+.mi.ok{background:#D9F7E8;box-shadow:0 3px 0 var(--green);opacity:.7}
+.mi.no{background:#FFE1E2;animation:shake .35s}
+.fb{border-radius:14px;padding:12px;font-weight:700;font-size:15px}
+.fb.ok{background:#D9F7E8;color:#11663F}.fb.no{background:#FFE1E2;color:#9C1F27}
+.btn{width:100%;background:var(--gold);color:#3B2600;border-radius:18px;padding:15px;font-family:var(--f-game);font-size:20px;font-weight:800;box-shadow:0 6px 0 #C9951B;margin-top:14px}
+.btn:active{transform:translateY(3px);box-shadow:0 3px 0 #C9951B}
+.btn.alt{background:var(--bg2);color:#fff;box-shadow:0 6px 0 #0B1428}
+.say{display:inline-flex;align-items:center;gap:6px;background:#EEF3FF;color:var(--ink);font-weight:800;border-radius:99px;padding:6px 12px;font-size:14px;justify-self:start}
+.end{text-align:center;display:grid;gap:8px;justify-items:center}
+.end .s{font-size:46px;letter-spacing:4px}
+.end h2{font-size:30px}
+.xp{font-family:var(--f-game);font-size:22px;color:var(--green);font-weight:800}
+.learn{background:#EEF3FF;border-radius:14px;padding:12px;text-align:left;font-size:15px;width:100%}
+.learn b{display:block;font-family:var(--f-game);font-size:16px}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#fff;color:var(--ink);font-weight:800;padding:10px 16px;border-radius:14px;z-index:40;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.combo{color:var(--orange);font-family:var(--f-game);font-weight:800}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<canvas class="confetti" id="cf"></canvas>
+<div class="toast" id="toast" hidden></div>
+<script>
+// ===================== CONTENIDO (PPT de sustentación, diapositivas 20 a 27) =====================
+const SL = {20:'Impedimentos',21:'Solicitud de cambios',22:'Sprint validado',23:'Producto Mínimo Viable',24:'Retrospectiva',25:'Conclusiones',26:'Recomendaciones',27:'Gracias'};
+const SAY = {
+ 20:'Como Scrum Master registré los impedimentos. Tuvimos tres: comunicación, porque no coincidíamos en horarios, y formalizamos los canales y las actas; documentos, porque la validación de los técnicos era lenta, y la hicimos por etapas; y mapas, porque el servicio se retrasó, y probamos con datos simulados.',
+ 21:'Un stakeholder pidió reducir las categorías del inicio. No se aprobó, porque los usuarios ya estaban conformes y el cambio no agregaba valor.',
+ 22:'Estos son los tableros Kanban de cada sprint: todo terminó en Hecho. Sprint 1, la confianza. Sprint 2, contratar seguro. Sprint 3, la rapidez.',
+ 23:'Este es nuestro prototipo: te registras, buscas técnicos verificados en tu distrito, ves precios, chateas y puedes pedir una emergencia.',
+ 24:'En la retrospectiva: hicimos bien la organización; debemos mejorar la revisión de los criterios antes de programar; y mantendremos las reuniones a mitad de semana.',
+ 25:'El problema es la falta de confianza. Design Thinking nos ayudó a entenderlo y Scrum a construir la solución.',
+ 26:'Fortalecer la verificación de técnicos, seguir probando con clientes y hacer marketing digital local.',
+ 27:'Muchas gracias, quedamos atentos a sus preguntas.'
+};
+const LEVELS = [
+ {id:'L1', icon:'🧩', color:'#4F8CFF', title:'Ordena tus diapositivas', sub:'Toca tus 8 diapositivas en orden', type:'order',
+  learn:'Tu orden: problemas → cambios → sprints → producto → aprendizaje → conclusión → consejo → gracias.'},
+ {id:'L2', icon:'🔗', color:'#9B6BFF', title:'Une problema y solución', sub:'Impedimentos, sprints y retrospectiva', type:'match',
+  learn:'Impedimentos: Comunicación → actas · Documentos → por etapas · Mapas → datos simulados.'},
+ {id:'L3', icon:'🖼️', color:'#FF8A3D', title:'¿Qué digo aquí?', sub:'Ves la diapositiva y eliges qué decir', type:'slide',
+  learn:'Cada diapositiva te "sopla" la idea: mírala y explícala con tus palabras.'},
+ {id:'L4', icon:'⚡', color:'#2BB673', title:'Relámpago', sub:'Verdadero o falso en 7 segundos', type:'tf',
+  learn:'Datos clave: 3 impedimentos, 1 cambio rechazado, 3 sprints, 45 tareas, 67 puntos.'},
+ {id:'L5', icon:'✍️', color:'#F2545B', title:'Completa la frase', sub:'Las frases que dirás', type:'fill',
+  learn:'Empiezas: "Soy Andre Sebastian Arce Vargas, Scrum Master".'},
+ {id:'L6', icon:'👨‍⚖️', color:'#FFC93C', title:'Jefe final: el jurado', sub:'6 preguntas · 15 s · 3 vidas', type:'boss',
+  learn:'Si dudas: idea principal + un dato de ServiGo. Respira y responde corto.'},
+];
+const MATCH = [
+ [['Falta de comunicación y horarios','Canales formales y actas de reunión'],['Validación lenta de documentos','Flujo por etapas'],['Retraso del servicio de mapas','Pruebas con datos simulados']],
+ [['Sprint 1','La base: encontrar técnicos confiables'],['Sprint 2','Contratar seguro: cotización y conformidad'],['Sprint 3','Rapidez: horarios, rastreo y emergencia']],
+ [['¿Qué hicimos bien?','Organización y comunicación fluida'],['¿Qué podemos mejorar?','Revisar criterios antes de programar'],['¿Qué debemos mantener?','Reuniones a mitad de semana']],
+];
+const TF = [
+ ['Tuvimos 3 impedimentos.',true],['El impedimento externo fue el retraso del servicio de mapas.',true],['La solicitud de reducir categorías SÍ se aprobó.',false],
+ ['Para los documentos lentos, se reorganizó la validación por etapas.',true],['En los tableros Kanban todo terminó en "Por hacer".',false],['El MVP es un prototipo web navegable.',true],
+ ['La retrospectiva sirve para mostrar el producto al cliente.',false],['El Scrum Master es el jefe que da órdenes.',false],['La conclusión principal: el problema es la falta de confianza.',true],
+ ['Una recomendación es fortalecer la verificación de técnicos.',true],['Tu bloque es de la diapositiva 20 a la 27.',true],['El cambio lo pidió un stakeholder.',true],
+ ['Fueron 45 tareas y 67 puntos de historia.',true],['La retrospectiva se hace al inicio del proyecto.',false],
+];
+const FILL = [
+ {q:'"Buenas tardes, soy Andre Sebastian Arce Vargas, ____."',o:['Scrum Master','Product Owner','Business Owner'],a:0},
+ {q:'"Tuvimos ____ impedimentos: comunicación, documentos y mapas."',o:['tres','dos','cinco'],a:0},
+ {q:'"Para no detenernos con los mapas, probamos con ____."',o:['datos simulados','otro proveedor','más reuniones'],a:0},
+ {q:'"El cambio no se aprobó porque los usuarios ya estaban ____."',o:['conformes','molestos','registrados'],a:0},
+ {q:'"En los tableros Kanban, todas las historias terminaron en ____."',o:['Hecho','En proceso','Por hacer'],a:0},
+ {q:'"Debemos mejorar la revisión de los ____ antes de programar."',o:['criterios de aceptación','precios','colores'],a:0},
+ {q:'"El problema central es la falta de ____."',o:['confianza','técnicos','dinero'],a:0},
+ {q:'"Design Thinking nos ayudó a ____ el problema y Scrum a construir la solución."',o:['entender','vender','ignorar'],a:0},
+];
+const BOSS = [
+ {q:'¿Qué es la retrospectiva?',o:['Reunión al final del sprint para ver qué salió bien, qué mejorar y qué acción tomar','Reunión para mostrar el producto al cliente','El plan de los sprints'],a:0},
+ {q:'¿Qué hace un Scrum Master?',o:['Facilita al equipo y quita impedimentos','Decide qué se construye','Programa toda la app'],a:0},
+ {q:'¿Cuál fue su impedimento externo y cómo lo resolvieron?',o:['El retraso del servicio de mapas; probamos con datos simulados','Falta de dinero; pedimos un préstamo','Un integrante se retiró'],a:0},
+ {q:'¿Por qué rechazaron la solicitud de cambio?',o:['La validación de la HU03 mostró conformidad y no agregaba valor','Porque era muy caro','Porque no hubo tiempo'],a:0},
+ {q:'¿Qué es un MVP?',o:['La versión más simple que permite probar la idea con usuarios reales','La versión final del producto','Un tipo de anuncio'],a:0},
+ {q:'¿Diferencia entre Sprint Review y retrospectiva?',o:['Review muestra el producto; la retro mejora la forma de trabajar','Son lo mismo','La review es al inicio y la retro al final del proyecto'],a:0},
+ {q:'¿Cuánto es el RSI del proyecto?',o:['5,235%','433%','10%'],a:0},
+ {q:'¿Con cuántos clientes recuperan la inversión?',o:['1,350 clientes','72,000 clientes','200 clientes'],a:0},
+ {q:'¿Qué es el tablero Kanban?',o:['Un tablero con columnas por hacer, en proceso y hecho','Un tipo de contrato','Una métrica de ventas'],a:0},
+ {q:'¿Cuál es su principal recomendación?',o:['Fortalecer la verificación de los técnicos','Subir la comisión al 30%','Cerrar la plataforma'],a:0},
+];
+const SLIDEQ = [20,21,22,23,24,25,26].map(n=>({n, o: shuffleKeep([20,21,22,23,24,25,26].filter(x=>x!==n)).slice(0,2).concat([n])}));
+// ===================== ESTADO =====================
+const KEY='servigo-quest-v1';
+let G={stars:{},xp:0,best:0,streak:0,days:[]};
+try{const s=localStorage.getItem(KEY); if(s) G=Object.assign(G,JSON.parse(s));}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(G));}catch(e){}}
+let V={view:'map'};
+const $=s=>document.querySelector(s);
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function shuffleKeep(a){return shuffle(a);}
+function toast(t){const el=$('#toast');el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,1800);}
+// ===================== SONIDO Y VOZ =====================
+let AC=null;
+function beep(type){ try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); const seq = type==='ok'?[[660,.08],[880,.12]]: type==='no'?[[220,.18]]: type==='win'?[[523,.1],[659,.1],[784,.1],[1047,.25]]:[[440,.05]];
+  let t=AC.currentTime; seq.forEach(([f,d])=>{ const o=AC.createOscillator(), g=AC.createGain(); o.type=type==='no'?'sawtooth':'triangle'; o.frequency.value=f; g.gain.setValueAtTime(.12,t); g.gain.exponentialRampToValueAtTime(.001,t+d); o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t+d+.02); t+=d; }); }catch(e){} }
+function speak(t){ try{ if(!('speechSynthesis' in window)) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); const v=speechSynthesis.getVoices().find(x=>/^es/i.test(x.lang)); if(v) u.voice=v; u.lang=v?v.lang:'es-PE'; speechSynthesis.speak(u);}catch(e){} }
+// ===================== CONFETI =====================
+function confetti(){ const c=$('#cf'), x=c.getContext('2d'); c.width=innerWidth; c.height=innerHeight; const cols=['#FFC93C','#2BB673','#4F8CFF','#F2545B','#9B6BFF'];
+  const P=Array.from({length:120},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,r:4+Math.random()*5,c:cols[Math.random()*5|0],vy:2+Math.random()*3,vx:-1.5+Math.random()*3,a:Math.random()*6}));
+  let f=0; (function loop(){ x.clearRect(0,0,c.width,c.height); P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.a+=.1;x.fillStyle=p.c;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillRect(-p.r,-p.r/2,p.r*2,p.r);x.restore();}); if(++f<160) requestAnimationFrame(loop); else x.clearRect(0,0,c.width,c.height); })(); }
+// ===================== MAPA =====================
+function totalStars(){return Object.values(G.stars).reduce((a,b)=>a+b,0);}
+function unlocked(i){ return i===0 || (G.stars[LEVELS[i-1].id]||0)>0; }
+function renderMap(){
+  const ts=totalStars(), max=LEVELS.length*3;
+  return `<div class="hud"><div class="brand">ServiGo Quest<small>Tu parte · diapositivas 20 a 27</small></div><div class="row" style="display:flex;gap:8px"><span class="pill gold">⭐ ${ts}/${max}</span><span class="pill">⚡ ${G.xp} XP</span></div></div>
+  <div class="hero"><h1>${ts===max?'¡Eres el jefe de tu bloque!':'Domina tu bloque antes del lunes 23'}</h1><p>${ts===max?'Repite el jefe final para mantenerte afilado.':'Gana 3 estrellas en cada nivel. Se desbloquean en orden.'}</p><div class="bar"><i style="width:${ts/max*100}%"></i></div></div>
+  <div class="map">${LEVELS.map((l,i)=>{const st=G.stars[l.id]||0, lk=!unlocked(i);
+    return `<button class="lvl ${lk?'lock':''}" data-a="${lk?'locked':'play'}" data-i="${i}"><span class="ic" style="background:${l.color}">${lk?'🔒':l.icon}</span><span><h3>Nivel ${i+1} · ${l.title}</h3><small>${l.sub}</small></span><span class="stars">${'★'.repeat(st)}<span style="opacity:.25">${'★'.repeat(3-st)}</span></span></button>`;}).join('')}</div>
+  <button class="btn" data-a="rapid">🔁 Repaso rápido (2 min, todo mezclado)</button>
+  <div class="tip">💡 Juega 10 minutos al día. Cuando termines un nivel, dilo en voz alta mirando la diapositiva. <br>¿Quieres repasar toda la tesis? <a href="../">Abrir la app de estudio</a>.</div>`;
+}
+// ===================== NIVELES =====================
+function startLevel(i,rapid){ beep('tap'); const L=rapid? {id:'R',icon:'🔁',title:'Repaso rápido',type:'mix',learn:'¡Bien! Repite esto cada día para que no se te olvide.'} : LEVELS[i];
+  V={view:'play',L,li:i,lives:3,miss:0,step:0,combo:0,score:0};
+  if(L.type==='order'){ V.items=shuffle([20,21,22,23,24,25,26,27]); V.next=20; V.total=8; }
+  if(L.type==='match'){ V.rounds=MATCH.map(r=>r); V.round=0; setupMatch(); V.total=MATCH.length; }
+  if(L.type==='slide'){ V.qs=shuffle(SLIDEQ).map(s=>({n:s.n,o:shuffle(s.o)})); V.total=V.qs.length; }
+  if(L.type==='tf'){ V.qs=shuffle(TF).slice(0,10); V.total=10; V.tsec=7; }
+  if(L.type==='fill'){ V.qs=shuffle(FILL).map(q=>shufQ(q)); V.total=V.qs.length; }
+  if(L.type==='boss'){ V.qs=shuffle(BOSS).slice(0,6).map(q=>shufQ(q)); V.total=6; V.tsec=15; }
+  if(L.type==='mix'){ V.qs=shuffle([...shuffle(TF).slice(0,4).map(t=>({tf:t})),...shuffle(FILL).slice(0,3).map(q=>shufQ(q)),...shuffle(BOSS).slice(0,3).map(q=>shufQ(q))]); V.total=V.qs.length; V.tsec=12; }
+  render(); startTimer(); }
+function shufQ(q){ const idx=shuffle(q.o.map((_,k)=>k)); return {q:q.q,o:idx.map(k=>q.o[k]),a:idx.indexOf(q.a)}; }
+function setupMatch(){ const r=MATCH[V.round]; V.left=shuffle(r.map((p,k)=>({t:p[0],k}))); V.right=shuffle(r.map((p,k)=>({t:p[1],k}))); V.done=[]; V.sel=null; }
+let TM=null;
+function startTimer(){ clearInterval(TM); if(!V.tsec||V.view!=='play'||V.answered) return; V.t=V.tsec; const tick=()=>{ const el=$('#tm'); if(el) el.style.width=(V.t/V.tsec*100)+'%'; };
+  TM=setInterval(()=>{ V.t-=.1; tick(); if(V.t<=0){ clearInterval(TM); answer(-1); } },100); }
+function lifeLost(){ V.lives--; V.miss++; V.combo=0; beep('no'); if(navigator.vibrate) navigator.vibrate(120); }
+function good(){ V.combo++; V.score+=10+(V.combo>2?5:0); beep('ok'); if(V.combo===3) toast('🔥 ¡Combo x3!'); }
+function finish(){ clearInterval(TM); const L=V.L; const lost=V.lives<=0;
+  const st= lost?0 : V.miss===0?3 : V.miss<=2?2 : 1; const xp=st*50+V.score;
+  if(L.id!=='R'){ G.stars[L.id]=Math.max(G.stars[L.id]||0,st); } G.xp+=lost?Math.round(V.score/2):xp; save();
+  V={view:'end',L,li:V.li,st,lost,xp:lost?Math.round(V.score/2):xp}; render(); if(st>=2){ beep('win'); confetti(); } }
+function answer(k){ if(V.answered) return; clearInterval(TM); const q=V.qs[V.step]; let ok;
+  if(q.tf){ ok = (k===-1)? false : (k===1)===q.tf[1]; } else if(V.L.type==='tf'){ ok = (k===-1)? false : (k===1)===q[1]; } else ok = k===q.a;
+  V.answered={k,ok}; if(ok) good(); else lifeLost(); render(); }
+function nextQ(){ V.answered=null; V.step++; if(V.lives<=0||V.step>=V.total){ finish(); return; } render(); startTimer(); }
+// ===================== RENDER PLAY =====================
+function hudPlay(){ return `<div class="top"><button class="back" data-a="map" aria-label="Volver al mapa">←</button><div class="ttl">${V.L.icon} ${V.L.title}<small>Puntos: ${V.score}${V.combo>2?' · <span class="combo">🔥 x'+V.combo+'</span>':''}</small></div><div class="lives" aria-label="${V.lives} vidas">${'❤️'.repeat(Math.max(0,V.lives))}${'🤍'.repeat(3-Math.max(0,V.lives))}</div></div>
+  <div class="prog"><i style="width:${Math.min(100,V.step/V.total*100)}%"></i></div>${V.tsec&&!V.answered?'<div class="timer"><i id="tm" style="width:100%"></i></div>':''}`; }
+function qBlock(q, label){ const a=V.answered;
+  return `<div class="card"><p class="inst">${label}</p><h2>${q.q}</h2><div class="opts">${q.o.map((o,k)=>`<button class="opt ${a?(k===q.a?'ok':k===a.k?'no':'dim'):''}" data-a="ans" data-k="${k}" ${a?'disabled':''}>${o}</button>`).join('')}</div>
+   ${a?`<div class="fb ${a.ok?'ok':'no'}">${a.ok?'¡Correcto! 🎉':a.k===-1?'⏰ ¡Se acabó el tiempo! La correcta está en verde.':'Casi. La correcta está en verde.'}</div>`:''}</div>${a?'<button class="btn" data-a="next">Continuar →</button>':''}`; }
+function renderPlay(){ const L=V.L; let h=hudPlay();
+  if(L.type==='order'){ V.step=V.next-20;
+    h+=`<div class="card"><p class="inst">Toca las diapositivas en el orden en que las vas a exponer.</p><h2>Siguiente: ¿cuál va ahora?</h2>
+      <div class="order">${Array.from({length:V.next-20},(_,k)=>`<b>${20+k} ${SL[20+k]}</b>`).join('')}</div>
+      <div class="slides">${V.items.map(n=>`<button class="sl ${n<V.next?'done':''} ${V.wrong===n?'no':''}" data-a="ord" data-n="${n}" ${n<V.next?'disabled':''} aria-label="Diapositiva ${SL[n]}"><img src="img/d-${n}.jpg" alt="${SL[n]}"><span>?</span></button>`).join('')}</div></div>`; }
+  else if(L.type==='match'){ const r=MATCH[V.round]; V.step=V.round;
+    h+=`<div class="card"><p class="inst">Ronda ${V.round+1} de ${MATCH.length} · toca una tarjeta de la izquierda y luego su pareja.</p>
+      <div class="match"><div class="col">${V.left.map(x=>`<button class="mi ${V.done.includes(x.k)?'ok':''} ${V.sel===x.k?'sel':''}" data-a="ml" data-k="${x.k}" ${V.done.includes(x.k)?'disabled':''}>${x.t}</button>`).join('')}</div>
+      <div class="col">${V.right.map(x=>`<button class="mi ${V.done.includes(x.k)?'ok':''} ${V.wr===x.k?'no':''}" data-a="mr" data-k="${x.k}" ${V.done.includes(x.k)?'disabled':''}>${x.t}</button>`).join('')}</div></div></div>`; }
+  else if(L.type==='slide'){ const q=V.qs[V.step], a=V.answered; const opts=q.o;
+    h+=`<div class="card"><p class="inst">Esta es tu diapositiva ${q.n}. ¿Qué dices aquí?</p><img class="big" src="img/d-${q.n}.jpg" alt="Diapositiva ${q.n}: ${SL[q.n]}">
+      <div class="opts">${opts.map(n=>`<button class="opt ${a?(n===q.n?'ok':n===a.k?'no':'dim'):''}" data-a="sl" data-k="${n}" ${a?'disabled':''}>${SAY[n]}</button>`).join('')}</div>
+      ${a?`<div class="fb ${a.ok?'ok':'no'}">${a.ok?'¡Exacto! Esa es la idea de la diapositiva '+q.n+'.':'Esa idea es de otra diapositiva. La correcta está en verde.'}</div><button class="say" data-a="speak" data-n="${q.n}">🔊 Escuchar cómo decirlo</button>`:''}</div>${a?'<button class="btn" data-a="next">Continuar →</button>':''}`; }
+  else if(L.type==='tf'){ const q=V.qs[V.step], a=V.answered;
+    h+=`<div class="card"><p class="inst">¿Verdadero o falso?</p><h2>${q[0]}</h2>${a?`<div class="fb ${a.ok?'ok':'no'}">${a.ok?'¡Correcto! 🎉':a.k===-1?'⏰ Tiempo. ':'Uy. '}${a.ok?'':'Es '+(q[1]?'VERDADERO':'FALSO')+'.'}</div>`:`<div class="tf"><button class="v" data-a="tf" data-k="1">✔ V</button><button class="f" data-a="tf" data-k="0">✘ F</button></div>`}</div>${a?'<button class="btn" data-a="next">Continuar →</button>':''}`; }
+  else if(L.type==='fill') h+=qBlock(V.qs[V.step],'Completa la frase que dirás');
+  else if(L.type==='boss') h+=qBlock(V.qs[V.step],'👨‍⚖️ El jurado pregunta…');
+  else if(L.type==='mix'){ const q=V.qs[V.step]; if(q.tf){ const a=V.answered; h+=`<div class="card"><p class="inst">¿Verdadero o falso?</p><h2>${q.tf[0]}</h2>${a?`<div class="fb ${a.ok?'ok':'no'}">${a.ok?'¡Correcto! 🎉':'Es '+(q.tf[1]?'VERDADERO':'FALSO')+'.'}</div>`:`<div class="tf"><button class="v" data-a="tf" data-k="1">✔ V</button><button class="f" data-a="tf" data-k="0">✘ F</button></div>`}</div>${a?'<button class="btn" data-a="next">Continuar →</button>':''}`; } else h+=qBlock(q,'Repaso rápido'); }
+  return h; }
+function renderEnd(){ const e=V; const idx=LEVELS.indexOf(e.L); const nx=LEVELS[idx+1];
+  return `<div class="card end" style="margin-top:30px"><div class="s">${'⭐'.repeat(e.st)}${'☆'.repeat(3-e.st)}</div><h2>${e.lost?'¡Te quedaste sin vidas!':e.st===3?'¡Perfecto!':e.st===2?'¡Muy bien!':'¡Pasaste!'}</h2>
+   <div class="xp">+${e.xp} XP</div><div class="learn"><b>🧠 Llévate esto</b>${e.L.learn}</div></div>
+   ${e.lost||e.st<3?`<button class="btn" data-a="retry" data-i="${e.li}">${e.lost?'Intentar de nuevo':'Ir por las 3 estrellas'}</button>`:''}
+   ${!e.lost&&nx&&e.L.id!=='R'?`<button class="btn ${e.st<3?'alt':''}" data-a="play" data-i="${idx+1}">Siguiente nivel →</button>`:''}
+   <button class="btn alt" data-a="map">Volver al mapa</button>`; }
+function render(){ $('#app').innerHTML = V.view==='map'? renderMap() : V.view==='play'? renderPlay() : renderEnd(); }
+// ===================== EVENTOS =====================
+document.addEventListener('click',e=>{ const b=e.target.closest('[data-a]'); if(!b) return; const a=b.dataset.a;
+  if(a==='map'){ clearInterval(TM); V={view:'map'}; render(); window.scrollTo(0,0); }
+  else if(a==='locked'){ beep('no'); toast('🔒 Gana al menos 1 estrella en el nivel anterior'); }
+  else if(a==='play'||a==='retry'){ startLevel(+b.dataset.i); window.scrollTo(0,0); }
+  else if(a==='rapid'){ startLevel(0,true); window.scrollTo(0,0); }
+  else if(a==='ord'){ const n=+b.dataset.n; if(n===V.next){ good(); V.wrong=null; V.next++; if(V.next>27){ finish(); return; } } else { lifeLost(); V.wrong=n; if(V.lives<=0){ finish(); return; } setTimeout(()=>{V.wrong=null; if(V.view==='play') render();},400); } render(); }
+  else if(a==='ml'){ V.sel=+b.dataset.k; V.wr=null; beep('tap'); render(); }
+  else if(a==='mr'){ if(V.sel==null){ toast('Primero toca una tarjeta de la izquierda'); return; } const k=+b.dataset.k;
+     if(k===V.sel){ good(); V.done.push(k); V.sel=null; if(V.done.length===3){ V.round++; if(V.round>=MATCH.length){ render(); setTimeout(finish,350); return; } setupMatch(); } }
+     else { lifeLost(); V.wr=k; if(V.lives<=0){ finish(); return; } setTimeout(()=>{V.wr=null; if(V.view==='play') render();},400); } render(); }
+  else if(a==='ans'){ answer(+b.dataset.k); }
+  else if(a==='tf'){ answer(+b.dataset.k); }
+  else if(a==='sl'){ const q=V.qs[V.step]; const k=+b.dataset.k; V.answered={k,ok:k===q.n}; if(k===q.n) good(); else lifeLost(); render(); }
+  else if(a==='speak'){ speak(SAY[+b.dataset.n]); }
+  else if(a==='next'){ nextQ(); window.scrollTo(0,0); }
+});
+render();
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('../sw.js').catch(()=>{}); }
+</script>
+</body>
+</html>

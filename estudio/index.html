@@ -785,6 +785,7 @@ function renderHome(){
   <div class="hero"><div class="eyebrow">Hoy · ${tp[0].split('-').reverse().slice(0,2).join('/')}</div><h2>${tp[2]}</h2><div class="chips">${planBtns}</div></div>
   ${installCard()}
   <button class="simbtn" data-a="sim">${I.gavel}<span><b>Simulacro de sustentación</b><small>8 preguntas del jurado · nota de 0 a 20 · recomendaciones${(P.sims&&P.sims.length)?' · Última nota: '+P.sims[0].nota+'/20':''}</small></span>${I.next}</button>
+  <a class="simbtn" href="juego/" style="background:#14213D;color:#fff;text-decoration:none"><span style="font-size:26px">🎮</span><span><b>ServiGo Quest</b><small style="opacity:.8">Juego de tu parte · diapositivas 20 a 27</small></span><span>›</span></a>
   <div class="actions">
     <button class="act" data-a="listen" data-m="${nextModule().id}">${I.head}<span>Escuchar como podcast</span></button>
     <button class="act" data-a="jury" data-f="all">${I.gavel}<span>Modo jurado</span></button>
