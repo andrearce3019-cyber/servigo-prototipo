@@ -58,6 +58,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-rad
 .mt{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}.mt b{font-family:var(--f-game);font-size:17px}.mt span{font-weight:800;color:#fff;background:var(--orange);border-radius:99px;padding:2px 10px;font-size:13px;font-variant-numeric:tabular-nums}
 .mc p{margin:4px 0 8px;font-size:16.5px;line-height:1.55}
 .rp{margin-top:10px;background:#F4F7FF;border-radius:14px;padding:4px 12px}.rp summary{cursor:pointer;font-weight:800;padding:8px 0;color:#2747A8}
+.fs{margin:0 0 12px;color:#1B2440}.ft{width:100%;border-collapse:collapse;font-size:13px;margin:4px 0 8px}.ft th,.ft td{border-top:1px solid #DCE4F7;padding:6px 4px;text-align:left;vertical-align:top}.ft th{color:#2747A8;font-size:12px}.fn{font-size:13.5px;line-height:1.55;margin:0 0 8px}
 .rq{border-top:1px solid #DCE4F7;padding:10px 0}.rq b{display:block;font-family:var(--f-game);font-size:16px}.rq p{margin:4px 0;font-size:15px;line-height:1.5}
 .cf{display:inline-block;background:#FFF1C2;color:#7A5200;font-weight:700;font-size:12.5px;border-radius:8px;padding:3px 8px}
 .tip{margin-top:16px;background:var(--bg2);border-radius:16px;padding:12px 14px;font-size:14px;color:#CFDAF5}
@@ -150,13 +151,17 @@ const PACKS = {
   MATCH:[
    [['Falta de comunicación y horarios','Canales formales y actas de reunión'],['Validación lenta de documentos','Flujo por etapas'],['Retraso del servicio de mapas','Pruebas con datos simulados']],
    [['Sprint 1','La base: encontrar técnicos confiables'],['Sprint 2','Contratar seguro: cotización y conformidad'],['Sprint 3','Rapidez: horarios, rastreo y emergencia']],
-   [['¿Qué hicimos bien?','Organización y comunicación fluida'],['¿Qué podemos mejorar?','Revisar criterios antes de programar'],['¿Qué debemos mantener?','Reuniones a mitad de semana']]],
+   [['¿Qué hicimos bien?','Organización y comunicación fluida'],['¿Qué podemos mejorar?','Revisar criterios antes de programar'],['¿Qué debemos mantener?','Reuniones a mitad de semana']],
+   [['Sprint 1','12/10 – 20/10'],['Sprint 2','21/10 – 29/10'],['Sprint 3','30/10 – 07/11']],
+   [['Sprint 1','Plataforma, perfil, distrito, tarifas y verificado'],['Sprint 2','Garantía, reclamos, chat y conformidad'],['Sprint 3','Horarios, ubicación, rastreo y emergencia']]],
   TF:[
    ['Tuvimos 3 impedimentos.',true],['El impedimento externo fue el retraso del servicio de mapas.',true],['La solicitud de reducir categorías SÍ se aprobó.',false],
    ['Para los documentos lentos, se reorganizó la validación por etapas.',true],['En los tableros Kanban todo terminó en "Por hacer".',false],['El MVP es un prototipo web navegable.',true],
    ['La retrospectiva sirve para mostrar el producto al cliente.',false],['El Scrum Master es el jefe que da órdenes.',false],['La conclusión principal: el problema es la falta de confianza.',true],
    ['Una recomendación es fortalecer la verificación de técnicos.',true],['Tu bloque es de la diapositiva 20 a la 27.',true],['El cambio lo pidió un stakeholder.',true],
-   ['Fueron 45 tareas y 67 puntos de historia.',true],['La retrospectiva se hace al inicio del proyecto.',false]],
+   ['Fueron 45 tareas y 67 puntos de historia.',true],['La retrospectiva se hace al inicio del proyecto.',false],
+   ['El Sprint 1 fue del 12 al 20 de octubre.',true],['El Sprint 1 sumó 21 puntos.',true],['El Sprint 2 fue del 30 de octubre al 7 de noviembre.',false],
+   ['Cada sprint tuvo 15 tareas.',true],['El MVP se lanzó el 8 de noviembre.',true],['El Sprint 0 fue para programar el chat.',false]],
   FILL:[
    {q:'"Buenas tardes, soy Andre Sebastian Arce Vargas, ____."',o:['Scrum Master','Product Owner','Business Owner'],a:0},
    {q:'"Tuvimos ____ impedimentos: comunicación, documentos y mapas."',o:['tres','dos','cinco'],a:0},
@@ -311,7 +316,10 @@ const REPREG = { andre: {
   {q:'¿Cómo quedó el flujo por etapas?',a:'Primero se validan los datos básicos, como el DNI de 8 dígitos. Luego los antecedentes penales. Al final, un administrador aprueba o rechaza en el panel. La revisión se hace en máximo 48 horas, y el técnico no aparece en las búsquedas hasta tener sus 2 documentos aprobados.'},
   {q:'¿Cómo hicieron los datos simulados?',a:'Como el servicio de mapas aún no estaba habilitado, cargamos técnicos de ejemplo con su distrito y una ubicación aproximada, y simulamos el mapa: la distancia de 5 km, el tiempo de llegada y el movimiento del técnico, con el aviso a 500 metros. Así probamos la geolocalización y el rastreo sin depender del proveedor. En el prototipo hay 32 técnicos de ejemplo.'},
   {q:'¿Qué son las pruebas de integración?',a:'Probar que las partes funcionan juntas: que la búsqueda, el mapa y el perfil del técnico se conecten bien entre sí, aunque los datos sean de prueba.'},
-  {q:'¿Por qué ese impedimento fue externo?',a:'Porque no dependía del equipo, sino del proveedor del servicio de mapas. Lo que sí controlábamos era no detenernos, y por eso usamos datos simulados.'}],
+  {q:'¿Por qué ese impedimento fue externo?',a:'Porque no dependía del equipo, sino del proveedor del servicio de mapas. Lo que sí controlábamos era no detenernos, y por eso usamos datos simulados.'},
+  {q:'¿Cómo validan los documentos en el MVP? ¿Qué herramientas usaron?',a:'En el MVP el flujo es simulado: el técnico sube su DNI y su certificado de antecedentes, el sistema revisa automáticamente que el DNI tenga 8 dígitos, y un administrador lo aprueba en el panel. Recién ahí aparece el check azul de Verificado. Todo está en el prototipo web.'},
+  {q:'¿Y en la versión real cómo lo harían?',a:'Con un servicio de consulta de DNI en línea, que ya está incluido en los costos para 80 técnicos, y pidiendo el Certificado Único Laboral, que es gratuito, junta los antecedentes penales, judiciales y policiales y dura 3 meses.',c:true,n:'Confirma con tu equipo si en la tesis dicen Certificado Único Laboral o el certificado del Poder Judicial.'},
+  {q:'¿Por qué demora 48 horas?',a:'Porque es una revisión manual: una persona revisa cada documento. 48 horas es el máximo que pusimos como criterio de aceptación de la HU05, para que el técnico sepa cuándo tendrá respuesta. Con la consulta automática de DNI, la mayoría saldría antes.',c:true,n:'El 48 h sí está en la tesis; la razón (revisión manual) confírmala con tu equipo.'}],
  21:[
   {q:'¿Quién pidió el cambio?',a:'Un stakeholder, es decir, una persona interesada en el proyecto, durante la revisión del prototipo.',c:true,n:'Confirma con tu equipo quién fue exactamente (un usuario entrevistado, un docente, etc.).'},
   {q:'¿Cómo decidieron si se aprobaba?',a:'Lo registramos en el formato de solicitud de cambio: la descripción, quién lo pide y si se aprueba o no. La Product Owner lo evaluó con datos: la validación de la HU03 mostró que los usuarios estaban conformes con las categorías.'},
@@ -320,10 +328,17 @@ const REPREG = { andre: {
  22:[
   {q:'¿Qué es el tablero Kanban y dónde lo usaron?',a:'Es un tablero con columnas: Por hacer, En progreso y Finalizado. Cada tarjeta es una historia de usuario que se va moviendo. Lo usamos en Miro.'},
   {q:'¿Cómo sabían que una historia estaba terminada?',a:'Cuando cumplía su Definición de Hecho y pasaba sus criterios de aceptación. La Product Owner la aceptaba en la Sprint Review.'},
-  {q:'¿Qué es la Sprint Review?',a:'Es la reunión al final del sprint donde mostramos lo construido y revisamos si cada historia cumple sus criterios: aceptada o no aceptada. Es distinta de la retrospectiva, que mejora la forma de trabajar.'}],
+  {q:'¿Qué es la Sprint Review?',a:'Es la reunión al final del sprint donde mostramos lo construido y revisamos si cada historia cumple sus criterios: aceptada o no aceptada. Es distinta de la retrospectiva, que mejora la forma de trabajar.'},
+  {q:'Denos un ejemplo de un sprint.',a:'El Sprint 1 fue del 12 al 20 de octubre. Su objetivo era construir la base de confianza: que el usuario encuentre un técnico confiable en su distrito. Trabajamos 5 historias: la plataforma, el perfil del técnico, el filtro por distrito, la tabla de tarifas y el perfil verificado. Sumaron 21 puntos con Planning Poker y se dividieron en 15 tareas con responsable. Tuvimos dailies por Meet, en la Sprint Review todo quedó en Hecho, y en la retrospectiva aprendimos a revisar los criterios de aceptación antes de programar.'},
+  {q:'¿Cuáles fueron las fechas de los sprints?',a:'Sprint 0, del 5 al 11 de octubre, de revisión. Sprint 1, del 12 al 20 de octubre. Sprint 2, del 21 al 29 de octubre. Sprint 3, del 30 de octubre al 7 de noviembre. El MVP se lanzó el 8 de noviembre.'},
+  {q:'¿Qué historias y puntos tuvo cada sprint?',a:'Sprint 1: HU03, HU01, HU11, HU02 y HU05, 21 puntos. Sprint 2: HU07, HU08, HU04 y HU10, 23 puntos. Sprint 3: HU06, HU12, HU09 y HU13, 23 puntos. En total 67 puntos y 45 tareas, 15 por sprint.'},
+  {q:'¿Cuál fue el objetivo de cada sprint?',a:'Sprint 1: construir la base, encontrar técnicos confiables en tu distrito. Sprint 2: contratar de forma segura, desde la cotización hasta la conformidad. Sprint 3: mejorar la rapidez, con horarios, ubicación, rastreo y emergencia.'},
+  {q:'¿Cuándo hicieron las dailies?',a:'Por Google Meet en la noche. Por ejemplo, el 17 de octubre a las 7:15 p. m. en el Sprint 1, el 20 de octubre a las 9 p. m. y el 28 de octubre a las 8:48 p. m. en el Sprint 3.'},
+  {q:'¿Qué historias pesaron más?',a:'El chat en línea (HU04) y el rastreo en tiempo real (HU09), con 8 puntos cada una, porque eran las más complejas. Las más livianas fueron la tabla de tarifas y el filtro por distrito, con 3.'}],
  23:[
   {q:'¿Cómo construyeron el MVP?',a:'Como un prototipo web navegable, hecho con apoyo de inteligencia artificial y con datos de ejemplo. Se abre desde el celular con el link.'},
   {q:'¿Es una app real?',a:'Es un prototipo con datos de ejemplo para validar la idea. La versión real se conectaría a una base de datos y a la verificación de DNI.'},
+  {q:'¿En cuántos clics se llega a un técnico?',a:'En 2 clics: desde el inicio eliges la categoría y luego el técnico, y ya estás en su perfil. Si usas los técnicos recomendados del inicio, es 1 solo clic. El criterio de la HU03 pedía máximo 3, así que lo cumplimos.'},
   {q:'¿Cómo lo validaron?',a:'Con 11 entrevistas mostrando el prototipo y una guía de 9 preguntas. La mayoría lo vio útil para emergencias. Salieron 2 ideas: la de emergencia, que reforzó la HU13, y la del asistente virtual, que quedó como HU14 para después.'}],
  24:[
   {q:'¿Quién facilitó la retrospectiva y cuándo?',a:'Yo, como Scrum Master, al final de cada sprint, en una reunión por Google Meet.'},
@@ -396,8 +411,19 @@ function renderMono(){ const who=V.mw||WHO, M=MONO[who], P=PACKS[who]; const tot
   <div class="tabs sm">${Object.keys(MONO).map(k=>`<button class="${k===who?'on':''}" data-a="mw" data-w="${k}">${PACKS[k].name}${k===WHO?' (tú)':''}</button>`).join('')}</div>
   <div class="card" style="gap:10px"><h2>Monólogo de ${P.name} · ${P.role}</h2><p class="inst">Diapositivas ${P.from} a ${P.to}. Léelo en voz alta mirando cada diapositiva. Luego activa el modo memoria y dilo solo con las pistas.</p>
    <div class="mbtns"><button class="ib" data-a="monoplay">${V.playing?'⏹ Detener':'🔊 Escuchar todo'}</button><button class="ib alt2" data-a="memo">${V.memo?'👁️ Ver texto completo':'🧠 Modo memoria'}</button><button class="ib alt2" data-a="clock">${V.t0?'⏹ '+fmt((Date.now()-V.t0)/1000):'⏱️ Practicar con cronómetro'}</button></div></div>
+  ${FICHA}
   <div class="mono">${M.map((m,k)=>`<div class="mc ${V.now===k?'now':''}" id="mc${k}"><img src="img/d-${String(m.n).padStart(2,'0')}.jpg" alt="Diapositiva ${m.n}"><div><div class="mt"><b>Diap. ${m.n} · ${SL_ALL[m.n]}</b><span>${m.t}</span></div><p>${V.memo?memo(m.x):m.x}</p><button class="say" data-a="monok" data-k="${k}">🔊 Escuchar</button>${repHTML(who,m.n)}</div></div>`).join('')}</div>
   <div class="tip">🎯 Meta: decirlo completo en unos 4 minutos y medio. Si te pasas, recorta ejemplos, nunca los números.</div>`; }
+const FICHA=`<details class="rp fs" open><summary>📅 Ficha de los sprints (fechas y datos)</summary>
+ <table class="ft"><tr><th>Sprint</th><th>Fechas</th><th>Objetivo</th><th>Historias</th><th>Pts</th></tr>
+ <tr><td><b>0</b></td><td>05/10 – 11/10</td><td>Revisión y preparación</td><td>—</td><td>—</td></tr>
+ <tr><td><b>1</b></td><td>12/10 – 20/10</td><td>¿En quién confío? La base</td><td>HU03 Plataforma (5) · HU01 Perfil (5) · HU11 Distrito (3) · HU02 Tarifas (3) · HU05 Verificado (5)</td><td><b>21</b></td></tr>
+ <tr><td><b>2</b></td><td>21/10 – 29/10</td><td>¿Cómo contrato seguro?</td><td>HU07 Garantía (5) · HU08 Reclamos (5) · HU04 Chat (8) · HU10 Conformidad (5)</td><td><b>23</b></td></tr>
+ <tr><td><b>3</b></td><td>30/10 – 07/11</td><td>¿Qué tan rápido llega?</td><td>HU06 Horarios (5) · HU12 Ubicación (5) · HU09 Rastreo (8) · HU13 Emergencia (5)</td><td><b>23</b></td></tr></table>
+ <p class="fn">Total: <b>13 historias · 45 tareas (15 por sprint) · 67 puntos</b>. Lanzamiento del MVP: <b>08/11</b>. Sustentación: <b>23/11</b>.<br>
+ Impedimentos: 10/10 comunicación (S1) · 16/10 validación de documentos (S1) · 23/10 servicio de mapas (S2).<br>
+ Dailies de ejemplo: 17/10 7:15 p. m. · 20/10 9:00 p. m. · 28/10 8:48 p. m.<br>
+ Retros: S1 revisar criterios antes de programar · S2 mini-revisión de calidad a mitad del sprint · S3 no acumular entregas al final.</p></details>`;
 function repHTML(who,n){ const R=(REPREG[who]||{})[n]; if(!R) return '';
   return `<details class="rp"><summary>🔎 Si te repreguntan (${R.length})</summary>${R.map(r=>`<div class="rq"><b>${r.q}</b><p>${r.a}</p>${r.c?`<span class="cf">⚠️ ${r.n||'No está escrito en la tesis: confírmalo con tu equipo antes de decirlo.'}</span>`:''}</div>`).join('')}</details>`; }
 function fmt(s){ s=Math.max(0,Math.round(s)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
