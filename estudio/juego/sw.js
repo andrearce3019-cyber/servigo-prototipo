@@ -1,4 +1,4 @@
-const CACHE='servigo-quest-v3';
+const CACHE='servigo-quest-v4';
 const SHELL=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./apple-touch-icon.png',
  './img/d-01.jpg','./img/d-02.jpg','./img/d-03.jpg','./img/d-04.jpg','./img/d-05.jpg','./img/d-06.jpg','./img/d-07.jpg','./img/d-08.jpg','./img/d-09.jpg','./img/d-10.jpg','./img/d-11.jpg','./img/d-12.jpg','./img/d-13.jpg','./img/d-14.jpg','./img/d-15.jpg','./img/d-16.jpg','./img/d-17.jpg','./img/d-18.jpg','./img/d-19.jpg','./img/d-20.jpg','./img/d-21.jpg','./img/d-22.jpg','./img/d-23.jpg','./img/d-24.jpg','./img/d-25.jpg','./img/d-26.jpg','./img/d-27.jpg'];
 self.addEventListener('install',e=>{ e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting())); });
